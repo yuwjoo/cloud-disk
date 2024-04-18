@@ -1,3 +1,3 @@
 <template>
-  <RouterView />
+  <div>login页</div>
 </template>
