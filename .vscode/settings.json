@@ -1,12 +1,7 @@
 {
-    "fileheader.customMade": {
-        "FileName": "",
-        "FilePath": "Do not edit",
-        "Date": "Do not edit",
-        "LastEditTime": "Do not edit",
-        "Description": ""
-    },
-    "fileheader.configObj": {
-        "useWorker": true
-    }
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
