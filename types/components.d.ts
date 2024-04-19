@@ -7,16 +7,24 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CommonLayout: typeof import('./../src/components/layout/CommonLayout.vue')['default']
+    CommonLayoutAside: typeof import('./../src/components/layout/CommonLayoutAside.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElHeader: typeof import('element-plus/es')['ElHeader']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElMain: typeof import('element-plus/es')['ElMain']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElMenuItemGroup: typeof import('element-plus/es')['ElMenuItemGroup']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    IEpDocument: typeof import('~icons/ep/document')['default']
+    IEpIconMenu: typeof import('~icons/ep/icon-menu')['default']
+    IEpLocation: typeof import('~icons/ep/location')['default']
+    IEpMenu: typeof import('~icons/ep/menu')['default']
+    IEpSetting: typeof import('~icons/ep/setting')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

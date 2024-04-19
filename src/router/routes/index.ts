@@ -1,18 +1,16 @@
-import LayoutView from '@/views/layout/LayoutView.vue';
-
 export const routes = [
   {
     path: '/',
     name: '/',
-    component: LayoutView,
-    redirect: { name: 'control' },
-    children: [
-      {
-        path: '/control',
-        name: 'control',
-        component: () => import('@/views/control/ControlView.vue')
-      }
-    ]
+    redirect: { name: 'control' }
+  },
+  {
+    path: '/control',
+    name: 'control',
+    component: () => import('@/views/control/ControlView.vue'),
+    meta: {
+      haveAside: true
+    }
   },
   {
     path: '/login',
@@ -20,7 +18,7 @@ export const routes = [
     component: () => import('@/views/login/LoginView.vue')
   },
   {
-    path: '/share',
+    path: '/share/:id',
     name: 'share',
     component: () => import('@/views/share/ShareView.vue')
   },

@@ -1,3 +1,5 @@
 <template>
-  <RouterView />
+  <common-layout>
+    <router-view />
+  </common-layout>
 </template>
