@@ -1,6 +1,6 @@
 <template>
-  <el-aside>
-    <el-menu default-active="2">
+  <el-aside class="common-layout-aside_aside">
+    <el-menu default-active="2" :collapse="isCollapse">
       <el-sub-menu index="1">
         <template #title>
           <el-icon><i-ep-location /></el-icon>
@@ -33,3 +33,12 @@
     </el-menu>
   </el-aside>
 </template>
+
+<script setup lang="ts">
+const isCollapse = defineModel('isCollapse', { type: Boolean, required: true }); // 是否折叠菜单
+</script>
+
+<style scoped>
+.common-layout-aside_aside {
+}
+</style>
