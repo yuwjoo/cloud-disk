@@ -48,10 +48,12 @@ const asideStore = useAsideStore();
 
 <style scoped>
 .control_aside {
-  position: sticky;
+  position: fixed;
   left: 0;
   top: var(--vue-header-height);
   border-right: 1px solid var(--el-border-color);
+  width: fit-content;
+  height: calc(100vh - var(--vue-header-height));
 }
 .control_aside_menu {
   border-right: none;
