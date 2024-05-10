@@ -7,8 +7,12 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    CommonLayout: typeof import('./../src/components/layout/CommonLayout.vue')['default']
-    CommonLayoutAside: typeof import('./../src/components/layout/CommonLayoutAside.vue')['default']
+    CommonHeader: typeof import('./../src/components/CommonHeader.vue')['default']
+    CommonLayout: typeof import('./../src/components/CommonLayout.vue')['default']
+    CommonLayoutAside: typeof import('./../src/components/controlLayout/CommonLayoutAside.vue')['default']
+    CommonMain: typeof import('./../src/components/commonLayout/CommonMain.vue')['default']
+    ControlHeader: typeof import('./../src/components/controlLayout/ControlHeader.vue')['default']
+    ControlLayout: typeof import('./../src/components/ControlLayout.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

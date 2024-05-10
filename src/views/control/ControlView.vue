@@ -46,14 +46,14 @@ import { useAsideStore } from '@/store/hooks/aside';
 const asideStore = useAsideStore();
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .control_aside {
   position: fixed;
   left: 0;
-  top: var(--vue-header-height);
+  top: var(--el-header-height);
   border-right: 1px solid var(--el-border-color);
   width: fit-content;
-  height: calc(100vh - var(--vue-header-height));
+  height: calc(100vh - var(--el-header-height));
 }
 .control_aside_menu {
   border-right: none;

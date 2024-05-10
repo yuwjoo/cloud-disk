@@ -9,6 +9,7 @@ import Components from 'unplugin-vue-components/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import IconsResolver from 'unplugin-icons/resolver';
 import Icons from 'unplugin-icons/vite';
+import Unocss from 'unocss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,19 +25,24 @@ export default defineConfig({
           prefix: 'Icon'
         })
       ],
-      dts: fileURLToPath(new URL('types/auto-imports.d.ts', import.meta.url))
+      dts: fileURLToPath(new URL('./types/auto-imports.d.ts', import.meta.url))
     }),
     Components({
       resolvers: [
-        ElementPlusResolver(),
+        ElementPlusResolver({
+          importStyle: 'sass'
+        }),
         IconsResolver({
           enabledCollections: ['ep']
         })
       ],
-      dts: fileURLToPath(new URL('types/components.d.ts', import.meta.url))
+      dts: fileURLToPath(new URL('./types/components.d.ts', import.meta.url))
     }),
     Icons({
       autoInstall: true
+    }),
+    Unocss({
+      configFile: fileURLToPath(new URL('./unocss.config.ts', import.meta.url))
     })
   ],
   resolve: {
@@ -44,6 +50,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `@use "@/assets/styles/elementVar.scss" as *;`
+  //     }
+  //   }
+  // },
   define: {
     __VUE_OPTIONS_API__: false
   }
