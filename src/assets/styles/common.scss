@@ -1,22 +1,37 @@
-:root {
-  // 主色
-  --color-primary: 39 186 155;
-  // 成功色
-  --color-success: 29 199 121;
-  // 警告色
-  --color-warning: 255 179 2;
-  // 危险色
-  --color-danger: 226 98 55;
-  // 错误色
-  --color-error: 207 68 68;
+// 切换主题模式-动画样式
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
 
+.dark::view-transition-old(root) {
+  z-index: 1;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 999;
+}
+
+::view-transition-old(root) {
+  z-index: 999;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+}
+
+:root {
   // 头部高度
   --header-height: 64px;
-
   // 侧边栏展开宽度
   --aside-expand-width: 200px;
   // 侧边栏收起宽度
   --aside-collapse-width: 80px;
+}
+
+input {
+  outline-style: none;
 }
 
 html.dark {

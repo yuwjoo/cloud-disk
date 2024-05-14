@@ -1,11 +1,14 @@
 <template>
-  <div class="text-gray-7 dark:text-gray-1">
-    <common-header />
-    <div class="flex h-[calc(100vh-var(--header-height))]">
-      <aside class="w-[var(--aside-expand-width)]">nav</aside>
-      <main class="flex-grow-1 dark:bg-[rgba(0,0,0,.4)]">main</main>
-    </div>
+  <common-header v-model:is-collapse="isCollapse" :show-collapse-btn="$route.meta.haveAside" />
+  <div class="flex h-[calc(100vh-var(--header-height))]">
+    <common-aside v-if="$route.meta.haveAside" :is-collapse="isCollapse" />
+    <common-main class="flex-grow-1">
+      <router-view />
+    </common-main>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const CommonAside = defineAsyncComponent(() => import('@/components/layout/CommonAside.vue'));
+const isCollapse = ref<boolean>(false); // 是否折叠侧边栏
+</script>

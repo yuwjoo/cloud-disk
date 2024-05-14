@@ -1,4 +1,6 @@
 import { defineConfig, presetUno, presetIcons, presetAttributify } from 'unocss';
+import { FileSystemIconLoader } from '@iconify/utils/lib/loader/node-loaders';
+import colors from 'tailwindcss/colors';
 
 export default defineConfig({
   presets: [
@@ -6,17 +8,16 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       collections: {
-        ep: () => import('@iconify-json/ep/icons.json').then((i) => i.default)
+        custom: FileSystemIconLoader('./src/assets/icons')
       }
     })
   ],
   theme: {
     colors: {
-      primary: 'rgb(var(--color-primary))',
-      success: 'rgb(var(--color-success))',
-      warning: 'rgb(var(--color-warning))',
-      danger: 'rgb(var(--color-danger))',
-      error: 'rgb(var(--color-error))'
+      primary: colors.indigo,
+      success: colors.green,
+      warning: colors.orange,
+      danger: colors.red
     }
   }
 });

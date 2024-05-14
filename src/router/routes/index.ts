@@ -2,28 +2,73 @@ export const routes = [
   {
     path: '/',
     name: '/',
-    redirect: { name: 'control' }
+    redirect: { name: 'overview' }
   },
   {
-    path: '/control',
-    name: 'control',
-    component: () => import('@/views/control/ControlView.vue'),
+    path: '/overview',
+    name: 'overview',
+    component: () => import('@/views/overview/OverviewView.vue'),
     meta: {
+      title: '总览',
       haveAside: true
+    }
+  },
+  {
+    path: '/picture',
+    name: 'picture',
+    component: () => import('@/views/picture/PictureView.vue'),
+    meta: {
+      title: '图片',
+      haveAside: true
+    }
+  },
+  {
+    path: '/video',
+    name: 'video',
+    component: () => import('@/views/video/VideoView.vue'),
+    meta: {
+      title: '视频',
+      haveAside: true
+    }
+  },
+  {
+    path: '/download',
+    name: 'download',
+    component: () => import('@/views/download/DownloadView.vue'),
+    meta: {
+      title: '下载',
+      haveAside: true
+    }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: () => import('@/views/settings/SettingsView.vue'),
+    meta: {
+      title: '设置'
     }
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/login/LoginView.vue')
+    component: () => import('@/views/login/LoginView.vue'),
+    meta: {
+      title: '登录'
+    }
   },
   {
     path: '/share/:id',
     name: 'share',
-    component: () => import('@/views/share/ShareView.vue')
+    component: () => import('@/views/share/ShareView.vue'),
+    meta: {
+      title: '分享'
+    }
   },
   {
     path: '/:pathMatch(.*)*',
-    component: () => import('@/views/notFound/NotFoundView.vue')
+    component: () => import('@/views/notFound/NotFoundView.vue'),
+    meta: {
+      title: '404'
+    }
   }
 ];
