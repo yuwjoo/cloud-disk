@@ -32,11 +32,11 @@ export const routes = [
     }
   },
   {
-    path: '/download',
-    name: 'download',
-    component: () => import('@/views/download/DownloadView.vue'),
+    path: '/taskCenter',
+    name: 'taskCenter',
+    component: () => import('@/views/taskCenter/TaskCenterView.vue'),
     meta: {
-      title: '下载',
+      title: '任务中心',
       haveAside: true
     }
   },

@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="flex items-center">
-      <div class="text-5.5 cursor-pointer" @click="themeStore.toggleDark($event)">
+      <div class="text-5.5 cursor-pointer" title="切换主题" @click="themeStore.toggleDark($event)">
         <i :aria-pressed="themeStore.isDark" class="block i-ep:sunny aria-pressed:i-ep:moon aria-pressed:text-5" />
       </div>
       <div

@@ -1,5 +1,6 @@
 <template>
-  <div>control</div>
+  <FileSystemHeader />
+  <FileSystemThumbnail />
 </template>
 
 <script setup lang="ts"></script>
