@@ -1,7 +1,7 @@
 <template>
   <common-header v-model:is-collapse="isCollapse" :show-collapse-btn="$route.meta.haveAside" />
   <div class="flex h-[calc(100vh-var(--header-height))]">
-    <common-aside v-if="$route.meta.haveAside" :is-collapse="isCollapse" />
+    <common-aside v-if="$route.meta.haveAside" class="flex-shrink-0" :is-collapse="isCollapse" />
     <main class="flex-grow-1 dark:bg-gray-900 p-5 box-border">
       <router-view />
     </main>
