@@ -8,6 +8,15 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import Unocss from 'unocss/vite';
 
+/**
+ * @description: 获取文件路径
+ * @param {string} fileUrl 文件url
+ * @return {string} 文件路径
+ */
+function getFilePath(fileUrl: string): string {
+  return fileURLToPath(new URL(fileUrl, import.meta.url));
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -17,14 +26,16 @@ export default defineConfig({
     AutoImport({
       imports: ['vue'],
       resolvers: [],
-      dts: fileURLToPath(new URL('./types/auto-imports.d.ts', import.meta.url))
+      dts: getFilePath('./types/auto-imports.d.ts')
     }),
     Components({
+      dirs: [getFilePath('./src/components')],
+      extensions: ['vue', 'tsx'],
       resolvers: [],
-      dts: fileURLToPath(new URL('./types/components.d.ts', import.meta.url))
+      dts: getFilePath('./types/components.d.ts')
     }),
     Unocss({
-      configFile: fileURLToPath(new URL('./unocss.config.ts', import.meta.url))
+      configFile: getFilePath('./unocss.config.ts')
     })
   ],
   resolve: {

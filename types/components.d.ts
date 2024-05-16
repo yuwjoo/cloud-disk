@@ -7,9 +7,15 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BaseCheckbox: typeof import('./../src/components/base/BaseCheckbox.vue')['default']
+    BaseFIcon: typeof import('./../src/components/base/BaseFIcon.tsx')['default']
+    BaseIcon: typeof import('./../src/components/base/BaseIcon.tsx')['default']
+    BaseInput: typeof import('./../src/components/base/BaseInput.vue')['default']
+    Checkbox: typeof import('./../src/components/common/Checkbox.vue')['default']
     CommonAside: typeof import('./../src/components/layout/CommonAside.vue')['default']
     CommonDialog: typeof import('./../src/components/CommonDialog.vue')['default']
     CommonHeader: typeof import('./../src/components/layout/CommonHeader.vue')['default']
+    FBaseIcon: typeof import('./../src/components/base/FBaseIcon.tsx')['default']
     FileSystemHeader: typeof import('./../src/components/fileSystem/FileSystemHeader.vue')['default']
     FileSystemThumbnail: typeof import('./../src/components/fileSystem/FileSystemThumbnail.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

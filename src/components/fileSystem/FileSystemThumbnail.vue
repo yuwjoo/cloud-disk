@@ -2,10 +2,10 @@
   <div class="m-l--5">
     <div
       v-for="(file, index) in fileList"
-      class="inline-block m-l-5 m-b-5 p-2 w-30 box-border cursor-pointer hover:bg-gray-100 rounded-md"
+      class="relative inline-block m-l-5 m-b-5 p-2 w-30 box-border cursor-pointer hover:bg-gray-100 rounded-md"
       :key="index"
     >
-      <input type="checkbox" />
+      <BaseCheckbox v-model="check" class="absolute" />
       <img
         v-if="file.type === 'folder'"
         class="block m-auto w-15 h-15"
@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+const check = ref<boolean>(true);
 defineProps({
   fileList: {
     type: Array as PropType<{ name: string; type: string }[]>,
