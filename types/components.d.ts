@@ -15,6 +15,8 @@ declare module 'vue' {
     CommonAside: typeof import('./../src/components/layout/CommonAside.vue')['default']
     CommonDialog: typeof import('./../src/components/CommonDialog.vue')['default']
     CommonHeader: typeof import('./../src/components/layout/CommonHeader.vue')['default']
+    copy: typeof import('./../src/components/base/FBaseIcon copy.tsx')['default']
+    FBaseCheckbox: typeof import('./../src/components/base/FBaseCheckbox.tsx')['default']
     FBaseIcon: typeof import('./../src/components/base/FBaseIcon.tsx')['default']
     FileSystemHeader: typeof import('./../src/components/fileSystem/FileSystemHeader.vue')['default']
     FileSystemThumbnail: typeof import('./../src/components/fileSystem/FileSystemThumbnail.vue')['default']

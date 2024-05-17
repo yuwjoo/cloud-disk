@@ -1,11 +1,14 @@
 <template>
+  <BaseCheckbox class="m-b-5" disabled @change="handleChangeAll">
+    <span class="text-sm text-gray-500">全选</span>
+  </BaseCheckbox>
   <div class="m-l--5">
     <div
       v-for="(file, index) in fileList"
-      class="relative inline-block m-l-5 m-b-5 p-2 w-30 box-border cursor-pointer hover:bg-gray-100 rounded-md"
+      class="group relative inline-block m-l-5 m-b-5 p-2 w-30 box-border cursor-pointer hover:bg-gray-100 rounded-md"
       :key="index"
     >
-      <BaseCheckbox v-model="check" class="absolute" />
+      <BaseCheckbox v-model="check" class="hidden! absolute top-2 left-2 group-hover:block!" @change="handleChange" />
       <img
         v-if="file.type === 'folder'"
         class="block m-auto w-15 h-15"
@@ -32,6 +35,15 @@
 
 <script setup lang="ts">
 const check = ref<boolean>(true);
+
+function handleChangeAll(value: boolean) {
+  check.value = value;
+}
+
+function handleChange(value: boolean) {
+  console.log(value);
+}
+
 defineProps({
   fileList: {
     type: Array as PropType<{ name: string; type: string }[]>,

@@ -1,4 +1,5 @@
 import type { ExtractPropTypes } from 'vue';
+import type { JSX } from 'vue/jsx-runtime';
 
 const propsOptions = {
   icon: {
@@ -7,8 +8,8 @@ const propsOptions = {
   }
 } as const;
 
-function FBaseIcon(props: ExtractPropTypes<typeof propsOptions>) {
-  return <i class={['inline-block', props.icon]}></i>;
+function FBaseIcon(props: ExtractPropTypes<typeof propsOptions>): JSX.Element {
+  return <div class="w-1em h-1em">{props.icon && <i class={['block', props.icon]}></i>}</div>;
 }
 
 FBaseIcon.props = propsOptions;
