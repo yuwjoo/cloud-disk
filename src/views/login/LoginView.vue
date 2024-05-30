@@ -1,7 +1,9 @@
 <template>
   <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
+      <h2
+        class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-gray-100"
+      >
         登录你的账号
       </h2>
     </div>
@@ -9,7 +11,11 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" action="#" method="POST">
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100">账号</label>
+          <label
+            for="email"
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+            >账号</label
+          >
           <div class="mt-2">
             <input
               id="email"
@@ -24,7 +30,9 @@
 
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+            <label
+              for="password"
+              class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
               >密码</label
             >
             <div class="text-sm">
@@ -64,3 +72,14 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { login } from '@/request/apis/common';
+
+login({
+  username: 'admin',
+  password: '123456'
+}).then((res) => {
+  console.log('返回', res);
+});
+</script>

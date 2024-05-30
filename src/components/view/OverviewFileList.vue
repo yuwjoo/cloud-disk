@@ -1,15 +1,20 @@
 <template>
-  <FeatureCheckbox
-    v-model="checkAll"
-    :indeterminate="indeterminate"
-    class="m-b-5"
-    @change="handleChangeAll"
-  >
-    <span v-if="indeterminate || checkAll" class="text-sm text-primary-600"
-      >已选中{{ selectionList.length }}个文件/文件夹</span
+  <div class="flex items-center justify-between">
+    <FeatureCheckbox
+      v-model="checkAll"
+      :indeterminate="indeterminate"
+      class="m-b-5"
+      @change="handleChangeAll"
     >
-    <span v-else class="text-sm text-gray-500">全选</span>
-  </FeatureCheckbox>
+      <span v-if="indeterminate || checkAll" class="text-sm text-primary-600"
+        >已选中{{ selectionList.length }}个文件/文件夹</span
+      >
+      <span v-else class="text-sm text-gray-500">全选</span>
+    </FeatureCheckbox>
+    <div class="hidden">
+      <BaseIcon class="i-ep:delete" />
+    </div>
+  </div>
   <div class="m-l--5">
     <FeatureCheckboxGroup v-model="selectionList" :disabled="disabled">
       <div
@@ -23,6 +28,9 @@
           :data-selected="selectionList.includes(file.name)"
         >
           <FeatureCheckbox :value="file.name" />
+        </div>
+        <div class="hidden absolute top-1.5 right-2 group-hover:block">
+          <BaseIcon class="i-ep:download text-gray-500 dark:text-gray-100" />
         </div>
         <img
           v-if="file.type === 'folder'"

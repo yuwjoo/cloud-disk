@@ -15,15 +15,7 @@
         </FeatureBreadcrumbItem>
       </FeatureBreadcrumb>
     </div>
-    {{ value }}
-    <BaseInput
-      v-model="value"
-      type="text"
-      placeholder="请输入"
-      prefix-icon="i-ep:search"
-      suffix-icon="i-ep:circle-close"
-    />
-    <button @click="add">加入</button>
+    <BaseText v-else>全部文件</BaseText>
   </div>
 </template>
 
@@ -31,15 +23,9 @@
 defineProps({
   paths: {
     type: Array as PropType<string[]>,
-    default: () => ['全部文件', '全功能']
+    default: () => []
   }
 });
-
-const value = ref('23423');
-
-function add() {
-  value.value += '0';
-}
 
 function handleClickItem(to: string | object) {
   console.log(to);

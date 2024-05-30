@@ -1,6 +1,6 @@
 <template>
-  <FileSystemHeader />
-  <FileSystemThumbnail />
+  <OverviewHeader />
+  <OverviewFileList />
 </template>
 
 <script setup lang="ts"></script>
