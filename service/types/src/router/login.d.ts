@@ -1,7 +1,18 @@
-import type { Request, Response } from 'express';
-/**
- * @description: 登录接口
- * @param {Request} req 请求
- * @param {Response} res 响应
- */
-export default function login(req: Request, res: Response): void;
+// 请求参数
+export type LoginReqParams = {
+  username: string;
+  password: string;
+};
+
+// 响应数据
+export type LoginResData = {
+  token: string;
+  info: {
+    name: string;
+    roleId: string;
+    role: string;
+    avatar: string | null;
+  };
+};
+
+export {};

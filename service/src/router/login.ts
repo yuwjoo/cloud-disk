@@ -1,34 +1,19 @@
 import type { Request, Response } from 'express';
 import type { ResponseBody } from '../utils/response';
 import { createResponseJSON, enumCode } from '../utils/response';
-import { RolesTable, UsersTable, useDatabase } from '../utils/database';
+import { type RolesTable, type UsersTable, useDatabase } from '../utils/database';
 import { createUserToken } from '../utils/jwt';
-
-// 请求参数
-type ReqBody = {
-  username: string;
-  password: string;
-};
-
-// 响应数据
-type ResBody = ResponseBody<
-  | {
-      token: string;
-      info: {
-        name: string;
-        role: string;
-        avatar?: string;
-      };
-    }
-  | undefined
->;
+import type { LoginReqParams, LoginResData } from 'types/src/router/login';
 
 /**
  * @description: 登录接口
  * @param {Request} req 请求
  * @param {Response} res 响应
  */
-export default async function login(req: Request<any, any, ReqBody>, res: Response<ResBody>) {
+export default async function login(
+  req: Request<any, any, LoginReqParams>,
+  res: Response<ResponseBody<LoginResData | undefined>>
+) {
   try {
     const data = req.body;
 
@@ -60,15 +45,18 @@ export default async function login(req: Request<any, any, ReqBody>, res: Respon
           WHERE id = '${user.role_id}';`
       ) // 查找当前用户角色名
     ]);
-    console.log(user.avatar, typeof user.avatar)
 
-    const token = await createUserToken({ id: user.id }); // 生成token
-    const info = {
-      name: user.username,
-      role: role?.name || '',
-      avatar: user.avatar
-    }; // 用户信息
-    res.json(createResponseJSON({ token, info }));
+    res.json(
+      createResponseJSON({
+        token: await createUserToken({ id: user.id, password: user.password }), // 生成token
+        info: {
+          name: user.username,
+          roleId: user.role_id,
+          role: role?.name || '',
+          avatar: user.avatar
+        } // 用户信息
+      })
+    );
   } catch (error) {
     res.json(createResponseJSON(undefined, '服务器内部错误', enumCode.serverError));
   }

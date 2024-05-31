@@ -6,8 +6,8 @@ export interface UsersTable {
   id: number;
   username: string;
   password: string;
-  avatar?: string;
-  last_login: number;
+  avatar: string | null;
+  last_login: string | null;
   account_status: 'active' | 'disabled';
   role_id: string;
 }
@@ -21,7 +21,7 @@ export interface DirectoriesTable {
   id: number;
   name: string;
   parent_id: number | null;
-  modified_date: number;
+  modified_date: string;
 }
 
 export interface FilesTable {
@@ -30,8 +30,8 @@ export interface FilesTable {
   directory_id: number | null;
   oss_path: string;
   file_size: number;
-  modified_date: number;
-  file_classification?: string;
+  modified_date: string;
+  file_classification: string | null;
 }
 
 export interface SqliteDB extends Database {
@@ -46,7 +46,7 @@ export interface SqliteDB extends Database {
  * @param {function} callback
  * @return {*}
  */
-function databaseFactory(filename: string, callback?: (err: Error) => void): SqliteDB {
+function databaseFactory(filename: string, callback?: (err: Error | null) => void): SqliteDB {
   const db = new sqlite3.Database(filename, callback);
   Object.defineProperty(db, 'promiseGet', { get: () => promiseGet });
   Object.defineProperty(db, 'promiseAll', { get: () => promiseAll });
@@ -128,7 +128,7 @@ function initDatabase() {
         -- 用户头像(可能是文件路径、URL或BLOB数据) 
         avatar TEXT,  
         -- 最后登录时间(时间戳或DATETIME类型, 取决于你的需求）  
-        last_login TIMESTAMP DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),  
+        last_login DATETIME,  
         -- 账号状态(例如：激活、禁用等）  
         account_status TEXT NOT NULL DEFAULT 'active',  
         -- 角色ID, 外键引用roles表的id字段, 不能为空, 默认为002(普通用户）  
@@ -164,7 +164,7 @@ function initDatabase() {
         -- 父目录ID, 如果是根目录则为NULL  
         parent_id INTEGER,  
         -- 修改日期, 默认为当前时间戳  
-        modified_date DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),  
+        modified_date DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),  
         -- 外键, 引用directories表的id字段, 当引用的目录被删除时, 级联删除子目录  
         FOREIGN KEY (parent_id) REFERENCES directories(id) ON DELETE CASCADE  
       );`
@@ -184,7 +184,7 @@ function initDatabase() {
         -- 文件大小, 以字节为单位  
         file_size INTEGER NOT NULL,  
         -- 修改日期, 默认为当前时间戳  
-        modified_date DATETIME DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),  
+        modified_date DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP,'localtime')),  
         -- 文件分类  
         file_classification TEXT,  
         -- 外键, 引用directories表的id字段, 当引用的目录被删除时, 级联删除文件  

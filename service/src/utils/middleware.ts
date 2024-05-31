@@ -1,34 +1,39 @@
 import type { Request, Response, NextFunction } from 'express';
+import type { JwtUserPayload } from './jwt';
 import { verifyUserToken } from './jwt';
 import { createResponseJSON, enumCode } from './response';
+import config from '../config';
 
 /**
- * @description: 校验是否登录
+ * @description: 身份验证
  * @param {Request} req 请求
  * @param {Response} res 响应
  * @param {NextFunction} next 通过函数
  */
-export async function isLogin(req: Request, res: Response, next: NextFunction) {
-  const whiteList = ['/login'];
+export async function authorization(
+  req: Request,
+  res: Response<any, JwtUserPayload>,
+  next: NextFunction
+) {
   const token = req.header('Authorization');
 
-  if (whiteList.includes(req.url)) {
+  if (config.apiWhiteList.includes(req.url)) {
     // 白名单接口，跳过认证
     next();
   } else if (!token) {
     // token不存在
-    res.json(createResponseJSON('', '用户未登录', enumCode.notLogin));
-  } else if (await verifyUserToken(token)) {
+    res.json(createResponseJSON(undefined, '用户未登录', enumCode.notLogin));
+  } else if ((res.locals = await verifyUserToken(token))) {
     // 认证通过
     next();
   } else {
     // 认证失败
-    res.json(createResponseJSON('', '无效的token', enumCode.tokenExpired));
+    res.json(createResponseJSON(undefined, '无效的token', enumCode.tokenExpired));
   }
 }
 
 /**
- * @description: 处理跨域问题
+ * @description: 处理跨域
  * @param {Request} req 请求
  * @param {Response} res 响应
  * @param {NextFunction} next 通过函数
