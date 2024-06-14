@@ -16,5 +16,5 @@
 const LayoutCommonAside = defineAsyncComponent(
   () => import('@/components/view/LayoutCommonAside.vue')
 );
-const isCollapse = ref<boolean>(false); // 是否折叠侧边栏
+const isCollapse = ref<boolean>(true); // 是否折叠侧边栏
 </script>

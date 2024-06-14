@@ -25,15 +25,15 @@
       >
         <div
           class="hidden absolute top-2 left-2 group-hover:block data-[selected=true]:block"
-          :data-selected="selectionList.includes(file.name)"
+          :data-selected="selectionList.includes(file.id)"
         >
-          <FeatureCheckbox :value="file.name" />
+          <FeatureCheckbox :value="file.id" />
         </div>
-        <div class="hidden absolute top-1.5 right-2 group-hover:block">
+        <div v-if="file.type !== 'dir'" class="hidden absolute top-1.5 right-2 group-hover:block">
           <BaseIcon class="i-ep:download text-gray-500 dark:text-gray-100" />
         </div>
         <img
-          v-if="file.type === 'folder'"
+          v-if="file.type === 'dir'"
           class="block m-auto w-15 h-15"
           src="@/assets/images/fileSystem/small/folder.png"
           alt=""
@@ -47,7 +47,7 @@
           @dragstart.prevent
         />
         <div
-          class="text-sm hover:text-primary-600 whitespace-nowrap text-ellipsis overflow-hidden"
+          class="text-sm hover:text-primary-600 whitespace-nowrap text-ellipsis overflow-hidden text-center"
           :title="file.name"
         >
           {{ file.name }}
@@ -58,53 +58,12 @@
 </template>
 
 <script setup lang="ts">
+import type { GetFileListResDataFileList } from 'types/src/request/apis/overview';
+
 const props = defineProps({
   fileList: {
-    type: Array as PropType<{ name: string; type: string }[]>,
-    default: () => [
-      { name: '全功能运营后台1', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'folder' },
-      { name: '全功能运营后台', type: 'zip' },
-      { name: '全功能运营后台', type: 'zip' },
-      { name: '全功能运营后台', type: 'zip' }
-    ]
+    type: Array as PropType<GetFileListResDataFileList>,
+    default: () => []
   }
 });
 
@@ -114,7 +73,7 @@ const emits = defineEmits<{
 
 const checkAll = ref<boolean>(false); // 全选
 const indeterminate = ref<boolean>(false); // 不确定状态
-const selectionList = ref<string[]>([]); // 复选框列表
+const selectionList = ref<number[]>([]); // 复选框列表
 const disabled = ref<boolean>(false);
 
 watchEffect(() => {
@@ -131,7 +90,7 @@ watchEffect(() => {
  */
 function handleChangeAll(value: boolean) {
   if (value) {
-    selectionList.value = props.fileList.map((file) => file.name);
+    selectionList.value = props.fileList.map((file) => file.id);
   } else {
     selectionList.value = [];
   }

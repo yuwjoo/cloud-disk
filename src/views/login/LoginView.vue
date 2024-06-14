@@ -9,30 +9,19 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
+      <form class="space-y-6" @submit.prevent="handleLogin()">
         <div>
-          <label
-            for="email"
-            class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+          <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
             >账号</label
           >
           <div class="mt-2">
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              class="block w-full rounded-md border-0 p-y-1.5 p-x-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 dark:text-gray-100 dark:bg-white/5 dark:ring-white/10"
-            />
+            <FeatureInput v-model="form.account" />
           </div>
         </div>
 
         <div>
           <div class="flex items-center justify-between">
-            <label
-              for="password"
-              class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
+            <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100"
               >密码</label
             >
             <div class="text-sm">
@@ -42,14 +31,7 @@
             </div>
           </div>
           <div class="mt-2">
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              class="block w-full rounded-md border-0 p-y-1.5 p-x-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6 dark:text-gray-100 dark:bg-white/5 dark:ring-white/10"
-            />
+            <FeatureInput v-model="form.password" type="password" show-password />
           </div>
         </div>
 
@@ -74,12 +56,23 @@
 </template>
 
 <script setup lang="ts">
+import type { LoginReqParams } from 'types/src/request/apis/common';
 import { login } from '@/request/apis/common';
+import router from '@/router';
 
-login({
-  username: 'admin',
-  password: '123456'
-}).then((res) => {
-  console.log('返回', res);
+const form = ref<LoginReqParams>({
+  account: '',
+  password: '',
+  temporary: false
 });
+
+/**
+ * @description: 处理登录
+ */
+function handleLogin() {
+  login(form.value).then((res) => {
+    localStorage.setItem('token', res.data?.token || '');
+    router.replace('/');
+  });
+}
 </script>
