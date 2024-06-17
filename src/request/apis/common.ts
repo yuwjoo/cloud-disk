@@ -34,7 +34,7 @@ export function sts(params: StsReqParams): Promise<StsResData> {
 
 export function testPost(data: any) {
   return request({
-    url: '/user/resetPassword',
+    url: '/user/register',
     method: 'post',
     data
   });
