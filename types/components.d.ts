@@ -10,7 +10,6 @@ declare module 'vue' {
     BaseCheckbox: typeof import('./../src/components/base/BaseCheckbox.tsx')['default']
     BaseIcon: typeof import('./../src/components/base/BaseIcon.tsx')['default']
     BaseText: typeof import('./../src/components/base/BaseText.tsx')['default']
-    BusinessFloatingButton: typeof import('./../src/components/feature/BusinessFloatingButton.vue')['default']
     FeatureBreadcrumb: typeof import('./../src/components/feature/FeatureBreadcrumb.vue')['default']
     FeatureBreadcrumbItem: typeof import('./../src/components/feature/FeatureBreadcrumbItem.vue')['default']
     FeatureCheckbox: typeof import('./../src/components/feature/FeatureCheckbox.vue')['default']

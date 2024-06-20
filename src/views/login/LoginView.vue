@@ -76,9 +76,9 @@ function handleLogin() {
   });
 }
 
-register({
-  nickname: 'yh', // 昵称
-  account: 'yuwjoo', // 账号
-  password: '123456' // 密码
-});
+// register({
+//   nickname: 'yh', // 昵称
+//   account: 'yuwjoo', // 账号
+//   password: '123456' // 密码
+// });
 </script>
