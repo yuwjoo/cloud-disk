@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import type { LoginReqParams } from 'types/src/request/apis/common';
-import { login } from '@/request/apis/common';
+import { login, register } from '@/request/apis/common';
 import router from '@/router';
 
 const form = ref<LoginReqParams>({
@@ -75,4 +75,10 @@ function handleLogin() {
     router.replace('/');
   });
 }
+
+register({
+  nickname: 'yh', // 昵称
+  account: 'yuwjoo', // 账号
+  password: '123456' // 密码
+});
 </script>
