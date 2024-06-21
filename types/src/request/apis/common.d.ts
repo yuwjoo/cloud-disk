@@ -28,7 +28,7 @@ export type StsResData = ResponseBody<{
   AccessKeySecret: string; // AccessKeySecret
   SecurityToken: string; // SecurityToken
   Expiration: string; // 过期时间
-  context: string; // oss操作路径
+  uploadPath: string; // 上传路径
 }>;
 
 export {};

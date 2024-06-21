@@ -2,7 +2,7 @@ import { sts } from '@/request/apis/common';
 import OSS from 'ali-oss';
 
 let client: OSS;
-let context: string;
+let uploadPath: string;
 
 /**
  * @description: 使用oss
@@ -37,7 +37,7 @@ async function getSts(): Promise<{
   stsToken: string;
 }> {
   return sts().then((res) => {
-    context = res.data!.context;
+    uploadPath = res.data!.uploadPath;
     return {
       accessKeyId: res.data!.AccessKeyId,
       accessKeySecret: res.data!.AccessKeySecret,
@@ -81,7 +81,7 @@ export async function putFile(file: File) {
 
   try {
     const client = await useOSS();
-    const result = await client.put(`storage/${context}/${file.name}`, file, options);
+    const result = await client.put(`${uploadPath}/${file.name}`, file, options);
     console.log(result);
     // batchCreateFile({
     //   fileList: [
