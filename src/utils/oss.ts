@@ -68,7 +68,7 @@ export async function putFile(file: File) {
       // 设置回调请求的服务器地址
       url: import.meta.env.VITE_APP_SERVERURL + '/oss/uploadCallback',
       // 设置发起回调时请求body的值。
-      body: 'bucket=${bucket}&object=${object}&name=${x:name}&size=${size}&type=${mimeType}&hash=${contentMd5}&token=${x:token}',
+      body: 'object=${object}&name=${x:name}&size=${size}&type=${mimeType}&hash=${contentMd5}&token=${x:token}',
       // 设置发起回调请求的Content-Type。
       contentType: 'application/x-www-form-urlencoded',
       // 设置发起回调请求的自定义参数。
