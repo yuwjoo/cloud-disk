@@ -1,5 +1,7 @@
 import { sts } from '@/request/apis/common';
+import { createFile, getResourceFlag } from '@/request/apis/overview';
 import OSS from 'ali-oss';
+import type { UploadCallbackResponseData } from 'types/src/request/apis/overview';
 
 let client: OSS;
 let uploadPath: string;
@@ -51,6 +53,19 @@ async function getSts(): Promise<{
  * @param {File} file 文件
  */
 export async function putFile(file: File) {
+  console.log(file);
+  const hash = await getFileHash(file);
+
+  const res = await getResourceFlag({ fileHash: hash, fileSize: file.size });
+
+  if (res.data?.resourceFlag) {
+    createFile({
+      resourceFlag: res.data?.resourceFlag,
+      fileName: file.name
+    });
+    return;
+  }
+
   const options = {
     headers: {
       // 指定Object的存储类型。
@@ -68,11 +83,12 @@ export async function putFile(file: File) {
       // 设置回调请求的服务器地址
       url: import.meta.env.VITE_APP_SERVERURL + '/oss/uploadCallback',
       // 设置发起回调时请求body的值。
-      body: 'object=${object}&name=${x:name}&size=${size}&type=${mimeType}&hash=${contentMd5}&token=${x:token}',
+      body: 'object=${object}&name=${x:name}&size=${size}&type=${mimeType}&hash=${x:hash}&token=${x:token}',
       // 设置发起回调请求的Content-Type。
       contentType: 'application/x-www-form-urlencoded',
       // 设置发起回调请求的自定义参数。
       customValue: {
+        hash,
         name: file.name,
         token: localStorage.getItem('token')
       }
@@ -81,18 +97,47 @@ export async function putFile(file: File) {
 
   try {
     const client = await useOSS();
-    const result = await client.put(`${uploadPath}/${file.name}`, file, options);
+    const result = await client.put(`${uploadPath}/${Date.now()}-${file.name}`, file, options);
     console.log(result);
-    // batchCreateFile({
-    //   fileList: [
-    //     {
-    //       name: file.name,
-    //       size: file.size,
-    //       ossPath: result.name
-    //     }
-    //   ]
-    // });
+    createFile({
+      resourceFlag: (result.data as UploadCallbackResponseData).data!.resourceFlag,
+      fileName: file.name
+    });
   } catch (e) {
     console.log(e);
   }
+}
+
+/**
+ * @description: 获取文件hash
+ * @param {File} file 文件
+ * @return {Promise<string>} 文件hash
+ */
+function getFileHash(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function (e: ProgressEvent<FileReader>) {
+      const buffer = e.target?.result;
+
+      if (!buffer) {
+        reject(new Error('读取失败'));
+        return;
+      }
+
+      crypto.subtle
+        .digest('SHA-256', buffer as ArrayBuffer)
+        .then((hashBuffer) => {
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, '0')).join('');
+          resolve(hashHex);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    };
+    reader.onerror = function (error) {
+      reject(error);
+    };
+    reader.readAsArrayBuffer(file);
+  });
 }

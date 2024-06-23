@@ -29,7 +29,11 @@
         >
           <FeatureCheckbox :value="file.id" />
         </div>
-        <div v-if="file.type !== 'dir'" class="hidden absolute top-1.5 right-2 group-hover:block">
+        <div
+          v-if="file.type !== 'dir'"
+          class="hidden absolute top-1.5 right-2 group-hover:block"
+          @click="handleDownload(file)"
+        >
           <BaseIcon class="i-ep:download text-gray-500 dark:text-gray-100" />
         </div>
         <img
@@ -58,11 +62,12 @@
 </template>
 
 <script setup lang="ts">
-import type { GetFileListResDataFileList } from 'types/src/request/apis/overview';
+import { downloadFile } from '@/request/apis/overview';
+import type { GetDirectoryListResponseData } from 'types/src/request/apis/overview';
 
 const props = defineProps({
   fileList: {
-    type: Array as PropType<GetFileListResDataFileList>,
+    type: Array as PropType<Required<GetDirectoryListResponseData>['data']['list']>,
     default: () => []
   }
 });
@@ -94,5 +99,15 @@ function handleChangeAll(value: boolean) {
   } else {
     selectionList.value = [];
   }
+}
+
+/**
+ * @description: 处理下载
+ * @param {Required<GetDirectoryListResponseData>['data']['list'][0]} file 文件
+ */
+function handleDownload(file: Required<GetDirectoryListResponseData>['data']['list'][0]) {
+  downloadFile({ fileId: file.id }).then((res) => {
+    open(res.data);
+  });
 }
 </script>
