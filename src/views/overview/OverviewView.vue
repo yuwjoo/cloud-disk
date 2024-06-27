@@ -23,11 +23,11 @@ import type { GetDirectoryListResponseData } from 'types/src/request/apis/overvi
 import { getDirectoryList } from '@/request/apis/overview';
 import { putFile } from '@/utils/oss';
 
-const fileList = ref<Required<GetDirectoryListResponseData>['data']['list']>([]); // 文件列表
+const fileList = ref<Required<GetDirectoryListResponseData>['data']['directoryList']>([]); // 文件列表
 const uploadInputRef = ref<HTMLInputElement | null>(null); // 上传输入框ref
 
 getDirectoryList({}).then((res) => {
-  fileList.value = res.data?.list || [];
+  fileList.value = res.data?.directoryList || [];
 });
 
 /**

@@ -58,10 +58,10 @@ export async function putFile(file: File) {
 
   const res = await getResourceFlag({ fileHash: hash, fileSize: file.size });
 
-  if (res.data?.resourceFlag) {
+  if (res.data) {
     createFile({
-      resourceFlag: res.data?.resourceFlag,
-      fileName: file.name
+      resourceFlag: res.data,
+      filename: file.name
     });
     return;
   }
@@ -83,13 +83,12 @@ export async function putFile(file: File) {
       // 设置回调请求的服务器地址
       url: import.meta.env.VITE_APP_SERVERURL + '/oss/uploadCallback',
       // 设置发起回调时请求body的值。
-      body: 'object=${object}&name=${x:name}&size=${size}&type=${mimeType}&hash=${x:hash}&token=${x:token}',
+      body: 'object=${object}&size=${size}&mimeType=${mimeType}&hash=${x:hash}&token=${x:token}',
       // 设置发起回调请求的Content-Type。
       contentType: 'application/x-www-form-urlencoded',
       // 设置发起回调请求的自定义参数。
       customValue: {
         hash,
-        name: file.name,
         token: localStorage.getItem('token')
       }
     }
@@ -101,7 +100,7 @@ export async function putFile(file: File) {
     console.log(result);
     createFile({
       resourceFlag: (result.data as UploadCallbackResponseData).data!.resourceFlag,
-      fileName: file.name
+      filename: file.name
     });
   } catch (e) {
     console.log(e);
