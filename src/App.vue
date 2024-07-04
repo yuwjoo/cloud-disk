@@ -1,20 +1,37 @@
 <template>
-  <LayoutCommonHeader v-model:is-collapse="isCollapse" :show-collapse-btn="$route.meta.haveAside" />
-  <div class="flex h-[calc(100vh-var(--header-height))]">
-    <LayoutCommonAside
-      v-if="$route.meta.haveAside"
-      class="flex-shrink-0"
-      :is-collapse="isCollapse"
-    />
-    <main class="flex-grow-1 dark:bg-gray-900 p-5 box-border">
+  <LayoutHeader />
+  <div class="layout__content">
+    <LayoutAside v-if="$route.meta.haveAside" class="layout__content-aside" />
+    <main class="layout__content-main">
       <RouterView />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-const LayoutCommonAside = defineAsyncComponent(
-  () => import('@/components/view/LayoutCommonAside.vue')
-);
-const isCollapse = ref<boolean>(true); // 是否折叠侧边栏
+const LayoutAside = defineAsyncComponent(() => import('@/components/layout/LayoutAside.vue'));
 </script>
+
+<style lang="scss" scoped>
+.layout__content {
+  display: flex;
+  height: calc(100vh - 64px);
+}
+
+.layout__content-aside {
+  flex-shrink: 0;
+}
+
+.layout__content-main {
+  flex-grow: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--light-main-bg-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .layout__content-main {
+    background-color: var(--dark-main-bg-color);
+  }
+}
+</style>

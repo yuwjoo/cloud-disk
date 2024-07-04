@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header_content-left">
       <div v-if="$route.meta.haveAside" class="header_content-left_collapse" @click="toggleAside()">
-        <un-i-ep-fold v-if="collapse" />
+        <un-i-ep-fold v-if="isCollapsed" />
         <un-i-ep-expand v-else />
       </div>
 
@@ -28,7 +28,7 @@ import { storeToRefs } from 'pinia';
 import { useAsideStore } from '@/store/hooks/aside';
 import { useThemeStore } from '@/store/hooks/theme';
 
-const { collapse } = storeToRefs(useAsideStore());
+const { isCollapsed } = storeToRefs(useAsideStore());
 const { isDark } = storeToRefs(useThemeStore());
 
 const { toggleAside } = useAsideStore();

@@ -38,7 +38,7 @@ defineProps({
 });
 
 const menuList = [
-  { label: '总览', icon: 'i-ep:reading', name: 'overview' },
+  { label: '总览', icon: 'i-ep-reading', name: 'overview' },
   { label: '图片', icon: 'i-ep:picture', name: 'picture' },
   { label: '视频', icon: 'i-ep:video-camera', name: 'video' },
   { label: '任务中心', icon: 'i-ep:cpu', name: 'download' }

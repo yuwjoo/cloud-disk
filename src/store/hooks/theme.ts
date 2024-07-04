@@ -2,34 +2,27 @@ import { defineStore } from 'pinia';
 import { useSettingsStore } from './settings';
 
 export const useThemeStore = defineStore('theme', () => {
-  const settingsStore = useSettingsStore();
-  const systemIsDark = ref<boolean>(false); // 系统是深色模式
-  const isDark = computed({
-    get() {
-      if (settingsStore.settings.theme.mode === 'followSystem') {
-        return systemIsDark.value;
-      } else {
-        return settingsStore.settings.theme.mode === 'dark';
-      }
-    },
-    set(val) {
-      settingsStore.updateSettings('theme', { mode: val ? 'dark' : 'light' });
-    }
+  const { mode } = toRef(useSettingsStore().settings.theme);
+  const systemIsDark = listenerSystemTheme();
+  const isDark = computed(() => {
+    return mode.value === 'followSystem' ? systemIsDark.value : mode.value === 'dark';
   });
 
-  init();
+  const { saveSettings } = useSettingsStore();
 
   watchEffect(() => {
     toggleHtmlClass(isDark.value);
   });
 
   /**
-   * @description: 初始化
+   * @description: 监听系统主题
+   * @return {Ref<boolean>} 是否深色模式
    */
-  function init() {
+  function listenerSystemTheme(): Ref<boolean> {
     const matchMedia = window.matchMedia('(prefers-color-scheme: dark)');
-    systemIsDark.value = matchMedia.matches;
+    const systemIsDark = ref<boolean>(matchMedia.matches); // 系统是深色模式
     matchMedia.addEventListener('change', (ev) => (systemIsDark.value = ev.matches));
+    return systemIsDark;
   }
 
   /**

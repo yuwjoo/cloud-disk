@@ -1,0 +1,23 @@
+:root {
+    --primary-color: #4f46e5; // 主题色
+    --success-color: #16a34a; // 成功色
+    --warning-color: #ea580c; // 警告色
+    --danger-color: #dc2626; // 危险色
+
+    --black-color: #000000; // 黑色
+    --white-color: #ffffff; // 白色
+
+    --light-text-color: #f3f4f6; // 亮系-文字色
+    --light-header-bg-color: var(--primary-color); // 亮系-header-背景色
+    --light-nav-bg-color: #f9fafb; // 亮系-nav-背景色
+    --light-main-bg-color: var(--white-color); // 亮系-main-背景色
+
+    --dark-text-color: #111827; // 暗系-文字色
+    --dark-header-bg-color: var(--black-color); // 暗系-header-背景色
+    --dark-nav-bg-color: #111827cc; // 暗系-nav-背景色
+    --dark-main-bg-color: #111827; // 暗系-main-背景色
+
+    --text-large-size: 16px; // 大号文字
+    --text-default-size: 14px; // 默认文字
+    --text-small-size: 12px; // 小号文字
+}

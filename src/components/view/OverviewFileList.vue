@@ -30,14 +30,14 @@
           <FeatureCheckbox :value="file.id" />
         </div>
         <div
-          v-if="file.type !== 'dir'"
+          v-if="file.type !== 'folder'"
           class="hidden absolute top-1.5 right-2 group-hover:block"
           @click="handleDownload(file)"
         >
           <BaseIcon class="i-ep:download text-gray-500 dark:text-gray-100" />
         </div>
         <img
-          v-if="file.type === 'dir'"
+          v-if="file.type === 'folder'"
           class="block m-auto w-15 h-15"
           src="@/assets/images/fileSystem/small/folder.png"
           alt=""
@@ -67,7 +67,7 @@ import type { GetDirectoryListResponseData } from 'types/src/request/apis/overvi
 
 const props = defineProps({
   fileList: {
-    type: Array as PropType<Required<GetDirectoryListResponseData>['data']['list']>,
+    type: Array as PropType<Required<GetDirectoryListResponseData>['data']['directoryList']>,
     default: () => []
   }
 });
@@ -103,9 +103,9 @@ function handleChangeAll(value: boolean) {
 
 /**
  * @description: 处理下载
- * @param {Required<GetDirectoryListResponseData>['data']['list'][0]} file 文件
+ * @param {Required<GetDirectoryListResponseData>['data']['directoryList'][0]} file 文件
  */
-function handleDownload(file: Required<GetDirectoryListResponseData>['data']['list'][0]) {
+function handleDownload(file: Required<GetDirectoryListResponseData>['data']['directoryList'][0]) {
   downloadFile({ fileId: file.id }).then((res) => {
     open(res.data);
   });
