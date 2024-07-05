@@ -1,6 +1,6 @@
 <template>
   <header
-    class="flex items-center justify-between box-border p-x-5 h-[var(--header-height)] shadow dark:shadow-black/10 relative z-1  bg-primary-600 dark:bg-gray-900 text-gray-100"
+    class="flex items-center justify-between box-border p-x-5 h-[var(--header-height)] shadow dark:shadow-black/10 relative z-1 bg-primary-600 dark:bg-gray-900 text-gray-100"
   >
     <div class="flex items-center">
       <div v-if="showCollapseBtn" class="text-5.5 cursor-pointer m-r-8" @click="toggleCollapse()">
@@ -13,19 +13,33 @@
     </div>
     <div class="flex items-center">
       <div class="text-5.5 cursor-pointer" title="切换主题" @click="themeStore.toggleDark($event)">
-        <i :aria-pressed="themeStore.isDark" class="block i-ep:sunny aria-pressed:i-ep:moon aria-pressed:text-5" />
+        <i
+          :aria-pressed="themeStore.isDark"
+          class="block i-ep:sunny aria-pressed:i-ep:moon aria-pressed:text-5"
+        />
       </div>
       <div
         class="text-4 cursor-pointer rounded-full bg-gray-100 p-1 text-gray-900 hover:text-primary-600 m-l-8"
+        ref="reference"
+        @click="showTips = !showTips"
       >
         <i class="block i-ep:user" />
       </div>
+      <div v-if="showTips" class="floating" ref="floating" :style="floatingStyles">我是提示</div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
 import { useThemeStore } from '@/store/hooks/theme';
+import { useFloating, autoUpdate } from '@floating-ui/vue';
+
+const showTips = ref<boolean>(false);
+const reference = ref(null);
+const floating = ref(null);
+const { floatingStyles } = useFloating(reference, floating, {
+  whileElementsMounted: autoUpdate
+});
 
 defineProps({
   // 展示侧边栏展开按钮
@@ -45,3 +59,13 @@ function toggleCollapse() {
   isCollapse.value = !isCollapse.value;
 }
 </script>
+
+<style lang="scss">
+.floating {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: max-content;
+  background-color: green;
+}
+</style>
