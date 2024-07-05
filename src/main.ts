@@ -1,6 +1,6 @@
 import '@unocss/reset/tailwind.css';
 import '@/assets/styles/variable.scss';
-import '@/assets/styles/common.scss';
+import '@/assets/styles/base.scss';
 import 'uno.css';
 
 import { createApp } from 'vue';

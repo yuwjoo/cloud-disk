@@ -1,23 +1,158 @@
+@use 'sass:color';
+@use 'sass:map';
+@use 'sass:math';
+
+/**
+ * 基础颜色
+ */
+$baseColors: (
+    // 白色
+    white: #ffffff,
+    // 黑色
+    black: #000000,
+    // 主题色
+    primary: #4f46e5,
+    // 成功色
+    success: #16a34a,
+    // 警告色
+    warning: #ea580c,
+    // 危险色
+    danger: #dc2626
+);
+
+/**
+ * 浅色主题-相关颜色
+ */
+$lightColors: (
+    // 基础文字色
+    light-text: #111827,
+    // 基础边框色
+    light-border: #e5e7eb,
+    // 基础背景色
+    light-bg: #ffffff,
+    // header背景色
+    light-header-bg: map.get($baseColors, 'primary'),
+    // nav背景色
+    light-nav-bg: #f9fafb,
+    // main背景色
+    light-main-bg: #ffffff,
+);
+
+/**
+ * 深色主题-相关颜色
+ */
+$darkColors: (
+    // 基础文字色
+    dark-text: #f3f4f6,
+    // 基础边框色
+    dark-border: #374151,
+    // 基础背景色
+    dark-bg: #111827,
+    // header背景色
+    dark-header-bg: #111827cc,
+    // nav背景色
+    dark-nav-bg: #111827cc,
+    // main背景色
+    dark-main-bg: #111827,
+);
+
+/**
+ * 字体大小
+ */
+$sizes: (
+    small: 12px,
+    default: 14px,
+    large: 16px,
+    xlarge: 20px,
+);
+
+/**
+ * 间距
+ */
+$spacings: (
+    small: 8px,
+    medium: 16px,
+    large: 24px,
+    xlarge: 32px,
+);
+
+/**
+ * 行高
+ */
+$lineHeights: (
+    small: 1.2,
+    default: 1.5,
+    large: 1.75,
+    xlarge: 2,
+);
+
+/**
+ * 阴影
+ */
+$shadows: (
+    small: 0 1px 3px rgba(0, 0, 0, 0.12),
+    medium: 0 3px 6px rgba(0, 0, 0, 0.16),
+    large: 0 10px 20px rgba(0, 0, 0, 0.19),
+    xlarge: 0 15px 30px rgba(0, 0, 0, 0.25),
+);
+
+/**
+ * 圆角
+ */
+$radiis: (
+    small: 4px,
+    default: 8px,
+    large: 12px,
+    xlarge: 16px,
+);
+
 :root {
-    --primary-color: #4f46e5; // 主题色
-    --success-color: #16a34a; // 成功色
-    --warning-color: #ea580c; // 警告色
-    --danger-color: #dc2626; // 危险色
 
-    --black-color: #000000; // 黑色
-    --white-color: #ffffff; // 白色
+    // 基础颜色
+    @each $name, $color in $baseColors {
+        #{"--" + $name + "-color"}: #{$color};
+        #{"--" + $name + "-r"}: #{color.red($color)};
+        #{"--" + $name + "-g"}: #{color.green($color)};
+        #{"--" + $name + "-b"}: #{color.blue($color)};
 
-    --light-text-color: #f3f4f6; // 亮系-文字色
-    --light-header-bg-color: var(--primary-color); // 亮系-header-背景色
-    --light-nav-bg-color: #f9fafb; // 亮系-nav-背景色
-    --light-main-bg-color: var(--white-color); // 亮系-main-背景色
+        @for $i from 1 through 9 {
+            #{"--" + $name + "-color-light-" + $i}: #{color.mix(#ffffff, $color, math.percentage(math.div($i, 10)))};
+            #{"--" + $name + "-color-dark-" + $i}: #{color.mix(#000000, $color, math.percentage(math.div($i, 10)))};
+        }
+    }
 
-    --dark-text-color: #111827; // 暗系-文字色
-    --dark-header-bg-color: var(--black-color); // 暗系-header-背景色
-    --dark-nav-bg-color: #111827cc; // 暗系-nav-背景色
-    --dark-main-bg-color: #111827; // 暗系-main-背景色
+    // 浅色主题-相关颜色
+    @each $name, $color in $lightColors {
+        #{"--" + $name + "-color"}: #{$color};
+    }
 
-    --text-large-size: 16px; // 大号文字
-    --text-default-size: 14px; // 默认文字
-    --text-small-size: 12px; // 小号文字
+    // 深色主题-相关颜色
+    @each $name, $color in $darkColors {
+        #{"--" + $name + "-color"}: #{$color};
+    }
+
+    // 字体大小
+    @each $name, $size in $sizes {
+        #{"--" + $name + "-size"}: #{$size};
+    }
+
+    // 间距
+    @each $name, $size in $spacings {
+        #{"--" + $name + "-spacing"}: #{$size};
+    }
+
+    // 行高
+    @each $name, $lineHeight in $lineHeights {
+        #{"--" + $name + "-line-height"}: #{$lineHeight};
+    }
+
+    // 阴影
+    @each $name, $shadow in $shadows {
+        #{"--" + $name + "-shadow"}: #{$shadow};
+    }
+
+    // 圆角
+    @each $name, $radii in $radiis {
+        #{"--" + $name + "-radii"}: #{$radii};
+    }
 }

@@ -29,7 +29,7 @@ const LayoutAside = defineAsyncComponent(() => import('@/components/layout/Layou
   background-color: var(--light-main-bg-color);
 }
 
-@media (prefers-color-scheme: dark) {
+:root.dark {
   .layout__content-main {
     background-color: var(--dark-main-bg-color);
   }

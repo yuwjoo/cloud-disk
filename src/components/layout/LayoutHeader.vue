@@ -1,22 +1,22 @@
 <template>
   <header class="header">
-    <div class="header_content-left">
-      <div v-if="$route.meta.haveAside" class="header_content-left_collapse" @click="toggleAside()">
-        <un-i-ep-fold v-if="isCollapsed" />
-        <un-i-ep-expand v-else />
+    <div class="header__content header__content--left">
+      <div v-if="$route.meta.haveAside" class="header__collapse" @click="toggleAside()">
+        <un-i-ep-expand v-if="isCollapsed" />
+        <un-i-ep-fold v-else />
       </div>
 
-      <div class="header_content-left_logo">
-        <un-i-custom-logo class="header_content-left_logo_icon" />
-        <span class="header_content-left_logo_text">cloud-disk</span>
+      <div class="header__logo">
+        <un-i-custom-logo class="header__logo-icon" />
+        <span class="header__logo-text">cloud-disk</span>
       </div>
     </div>
-    <div class="header_content-right">
-      <div class="header_content-right_theme" title="切换主题" @click="toggleDark($event)">
-        <un-i-ep-moon v-if="isDark" class="header_content-right_theme_moon" />
-        <un-i-ep-sunny v-else class="header_content-right_theme_sunny" />
+    <div class="header__content header__content--right">
+      <div class="header__theme-toggle" title="切换主题" @click="toggleDark($event)">
+        <un-i-ep-moon v-if="isDark" class="header__theme-icon header__theme-icon--moon" />
+        <un-i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
-      <div class="header_content-right_theme_user">
+      <div class="header__user-icon">
         <un-i-ep-user />
       </div>
     </div>
@@ -36,77 +36,74 @@ const { toggleDark } = useThemeStore();
 </script>
 
 <style lang="scss" scoped>
-:root.dark {
-  .header {
-    background-color: var(--dark-header-bg-color);
-
-    .header_content-left {
-      .header_content-left_logo {
-        color: var(--primary-color);
-      }
-    }
-  }
-}
-
 .header {
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 0 20px;
+  padding: 0 var(--large-spacing);
   height: 64px;
   background-color: var(--light-header-bg-color);
-  color: var(--light-text-color);
+  color: var(--dark-text-color);
 
-  .header_content-left,
-  .header_content-right {
+  &__content {
     display: flex;
     align-items: center;
-  }
 
-  .header_content-left {
-    .header_content-left_collapse {
-      font-size: 22px;
-      margin-right: 32px;
-      cursor: pointer;
-    }
-
-    .header_content-left_logo {
-      display: flex;
-      align-items: center;
-
-      .header_content-left_logo_icon {
-        font-size: 24px;
-      }
-
-      .header_content-left_logo_text {
-        font-size: 18px;
-        margin-left: 8px;
-        font-weight: bold;
-      }
-    }
-  }
-
-  .header_content-right {
-    .header_content-right_theme {
-      cursor: pointer;
-
-      .header_content-right_theme_moon {
-        font-size: 20px;
-      }
-
-      .header_content-right_theme_sunny {
+    &--left {
+      .header__collapse {
         font-size: 22px;
+        margin-right: var(--xlarge-spacing);
+        cursor: pointer;
+      }
+
+      .header__logo {
+        display: flex;
+        align-items: center;
+
+        &-icon {
+          font-size: 24px;
+        }
+
+        &-text {
+          font-size: 18px;
+          margin-left: var(--small-spacing);
+          font-weight: bold;
+        }
       }
     }
 
-    .header_content-right_theme_user {
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 50%;
-      background-color: var(--white-color);
-      padding: 4px;
-      color: var(--dark-text-color);
-      margin-left: 32px;
+    &--right {
+      .header__theme-toggle {
+        cursor: pointer;
+
+        .header__theme-icon {
+          &--moon {
+            font-size: 20px;
+          }
+
+          &--sunny {
+            font-size: 22px;
+          }
+        }
+      }
+
+      .header__user-icon {
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 50%;
+        background-color: var(--white-color);
+        padding: 4px;
+        color: var(--light-text-color);
+        margin-left: var(--xlarge-spacing);
+      }
+    }
+  }
+
+  :root.dark & {
+    background-color: var(--dark-header-bg-color);
+
+    &__content--left .header__logo {
+      color: var(--primary-color);
     }
   }
 }

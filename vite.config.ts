@@ -59,6 +59,11 @@ export default defineConfig({
           exclude: /node_modules/i // 排除node_modules文件夹下的文件
         })
       ]
+    },
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@forward '@/assets/styles/function.scss';`
+      }
     }
   },
   resolve: {

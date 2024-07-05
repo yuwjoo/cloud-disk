@@ -1,5 +1,5 @@
 <template>
-  <aside class="aside-menu" :class="{ 'aside-menu--collapsed': isCollapsed }">
+  <aside :class="['aside-menu', { 'aside-menu--collapsed': isCollapsed }]">
     <nav class="aside-menu__nav">
       <div
         v-for="(item, index) in menuItems"
@@ -13,7 +13,7 @@
       </div>
     </nav>
     <div class="aside-menu__settings" @click="$router.replace({ name: 'settings' })">
-      <un-i-ep-setting class="aside-menu__settings-icon" />
+      <un-i-ep-setting class="aside-menu__icon" />
       <span class="aside-menu__settings-label">设置</span>
     </div>
   </aside>
@@ -35,11 +35,11 @@ const menuItems = [
 
 <style lang="scss" scoped>
 .aside-menu {
+  display: flex;
+  flex-direction: column;
   width: 200px;
   background-color: var(--light-nav-bg-color);
   transition: width 0.3s ease;
-  display: flex;
-  flex-direction: column;
 
   &--collapsed {
     width: 80px;
@@ -52,15 +52,16 @@ const menuItems = [
 
 .aside-menu__nav {
   flex-grow: 1;
+  padding-top: var(--medium-spacing);
 }
 
 .aside-menu__item {
   display: flex;
   align-items: center;
-  margin: 0 20px 12px;
-  padding: 12px;
+  margin: 0 var(--medium-spacing) var(--medium-spacing);
+  padding: var(--medium-spacing);
   cursor: pointer;
-  border-radius: 0.5rem;
+  border-radius: var(--default-radii);
   transition:
     background-color 0.3s,
     color 0.3s;
@@ -68,65 +69,61 @@ const menuItems = [
 
   &--active,
   &:hover {
-    color: #007bff;
-    background-color: #f8f9fa;
+    color: var(--primary-color);
+    background-color: var(--primary-color-light-9);
   }
 }
 
 .aside-menu__icon {
   flex-shrink: 0;
+  font-size: 14px;
 }
 
 .aside-menu__label {
-  margin-left: 2px;
+  margin-left: var(--small-spacing);
   transition: opacity 0.3s;
 }
 
 .aside-menu__settings {
   display: flex;
   align-items: center;
-  padding: 8px;
-  border-top: 1px solid #e0e0e0;
-  box-shadow: 0 0 4px #0000001a;
+  padding: var(--small-spacing);
+  border-top: 1px solid var(--light-border);
+  // box-shadow: 0 0 4px #0000001a;
   cursor: pointer;
   transition:
     background-color 0.3s,
     color 0.3s;
 
   &:hover {
-    color: #007bff;
-    background-color: #f1f1f1;
+    color: var(--primary-color);
+    background-color: var(--primary-color-light-9);
   }
 }
 
-.aside-menu__settings-icon {
-  flex-shrink: 0;
-}
-
 .aside-menu__settings-label {
-  margin-left: 2px;
+  margin-left: var(--small-spacing);
 }
 
-@media (prefers-color-scheme: dark) {
+:root.dark {
   .aside-menu {
-    background-color: rgba(50, 50, 50, 0.8);
-    color: #f0f0f0;
-    border-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--dark-nav-bg-color);
+    color: var(--dark-text-color);
   }
 
   .aside-menu__item {
     &--active,
     &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: #007bff;
+      background-color: color-set-alpha('primary', 0.05);
+      color: var(--primary-color);
     }
   }
 
   .aside-menu__settings {
-    border-top-color: rgba(255, 255, 255, 0.15);
+    // border-top-color: rgba(255, 255, 255, 0.15);
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.05);
+      // background-color: rgba(255, 255, 255, 0.05);
     }
   }
 }
