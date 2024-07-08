@@ -15,6 +15,9 @@
       <BaseIcon class="i-ep:delete" />
     </div>
   </div>
+  <el-input />
+  <el-date-picker type="date" placeholder="Pick a day" />
+  <el-button type="primary">确定</el-button>
   <div class="m-l--5">
     <FeatureCheckboxGroup v-model="selectionList" :disabled="disabled">
       <div

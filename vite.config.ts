@@ -8,6 +8,7 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import Unocss from 'unocss/vite';
 import postcssPxtorem from 'postcss-pxtorem';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 /**
  * @description: 获取文件路径
@@ -32,13 +33,17 @@ export default defineConfig({
     VueDevTools(),
     AutoImport({
       imports: ['vue'],
-      resolvers: [],
+      resolvers: [ElementPlusResolver()],
       dts: getFilePath('./types/auto-imports.d.ts')
     }),
     Components({
       dirs: [getFilePath('./src/components')],
       extensions: ['vue', 'tsx'],
-      resolvers: [],
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: 'sass'
+        })
+      ],
       dts: getFilePath('./types/components.d.ts')
     }),
     Unocss({
@@ -62,7 +67,7 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
-        additionalData: `@forward '@/assets/styles/function.scss';`
+        additionalData: `@use '@/assets/styles/function.scss' as *;`
       }
     }
   },
