@@ -16,6 +16,7 @@ const LayoutAside = defineAsyncComponent(() => import('@/components/layout/Layou
 .layout__content {
   display: flex;
   height: calc(100vh - 64px);
+  background-color: el-getCssVar('button', 'text-color');
 }
 
 .layout__content-aside {

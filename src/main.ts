@@ -1,7 +1,7 @@
-import '@unocss/reset/tailwind.css';
-import '@/assets/styles/variable.scss';
 import '@/assets/styles/base.scss';
 import 'uno.css';
+import 'element-plus/theme-chalk/dark/css-vars.css';
+import '@/assets/styles/variable.scss';
 
 import { createApp } from 'vue';
 
