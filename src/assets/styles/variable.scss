@@ -1,17 +1,32 @@
+@use 'sass:color';
 @use 'sass:map';
+@use 'sass:math';
+@use './utils.scss' as *;
 
 // 主题模式
-$mode: '';
+$mode: '' !default;
+
+// 调色板
+$colors: (
+  'white': #ffffff,
+  'black': #000000,
+  'primary': #4f46e5,
+  'success': #16a34a,
+  'warning': #ea580c,
+  'danger': #dc2626,
+  'error': #dc2626,
+  'info': #909399
+) !default;
 
 // 基础颜色
-$color-white: #ffffff;
-$color-black: #000000;
-$color-primary: #4f46e5;
-$color-success: #16a34a;
-$color-warning: #ea580c;
-$color-danger: #dc2626;
-$color-error: #dc2626;
-$color-info: #909399;
+$color-white: map.get($colors, 'white') !default;
+$color-black: map.get($colors, 'black') !default;
+$color-primary: map.get($colors, 'primary') !default;
+$color-success: map.get($colors, 'success') !default;
+$color-warning: map.get($colors, 'warning') !default;
+$color-danger: map.get($colors, 'danger') !default;
+$color-error: map.get($colors, 'error') !default;
+$color-info: map.get($colors, 'info') !default;
 
 // 文字颜色
 $text-color: (
@@ -20,52 +35,52 @@ $text-color: (
   'secondary': #909399,
   'placeholder': #a8abb2,
   'disabled': #c0c4cc
-);
+) !default;
 
 // 边框颜色
 $border-color: (
-  '': #dcdfe6,
+  'default': #dcdfe6,
   'light': #e4e7ed,
   'lighter': #ebeef5,
   'extra-light': #f2f6fc,
   'dark': #d4d7de,
   'darker': #cdd0d6
-);
+) !default;
 
 // 填充颜色
 $fill-color: (
-  '': #f0f2f5,
+  'default': #f0f2f5,
   'light': #f5f7fa,
   'lighter': #fafafa,
   'extra-light': #fafcff,
   'dark': #ebedf0,
   'darker': #e6e8eb,
   'blank': #ffffff
-);
+) !default;
 
 // 背景颜色
 $bg-color: (
-  '': #ffffff,
+  'default': #ffffff,
   'page': #f2f3f5,
   'overlay': #ffffff
-);
+) !default;
 
 // 覆盖颜色
 $overlay-color: (
-  '': rgba(0, 0, 0, 0.8),
+  'default': rgba(0, 0, 0, 0.8),
   'light': rgba(0, 0, 0, 0.7),
   'lighter': rgba(0, 0, 0, 0.5)
-);
+) !default;
 
 // 遮罩颜色
 $mask-color: (
-  '': rgba(255, 255, 255, 0.9),
+  'default': rgba(255, 255, 255, 0.9),
   'extra-light': rgba(255, 255, 255, 0.3)
-);
+) !default;
 
 // 阴影
 $box-shadow: (
-  '': (
+  'default': (
     0px 12px 32px 4px rgba(0, 0, 0, 0.04),
     0px 8px 20px rgba(0, 0, 0, 0.08)
   ),
@@ -76,19 +91,19 @@ $box-shadow: (
     0px 12px 32px rgba(0, 0, 0, 0.12),
     0px 8px 16px -8px rgba(0, 0, 0, 0.16)
   )
-);
+) !default;
 
 // 禁用状态颜色
 $disabled: (
   'bg-color': map.get($fill-color, 'light'),
   'text-color': map.get($text-color, 'placeholder'),
   'border-color': map.get($border-color, 'light')
-);
+) !default;
 
 // 边框属性
-$border-width: 1px;
-$border-style: solid;
-$border-color-hover: map.get($text-color, 'disabled');
+$border-width: 1px !default;
+$border-style: solid !default;
+$border-color-hover: map.get($text-color, 'disabled') !default;
 
 // 边框半径
 $border-radius: (
@@ -96,13 +111,13 @@ $border-radius: (
   'small': 2px,
   'round': 20px,
   'circle': 100%
-);
+) !default;
 
 // 字体设置
 $font-family: (
-  '':
+  'default':
     "'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif"
-);
+) !default;
 
 // 字体大小
 $font-size: (
@@ -112,21 +127,21 @@ $font-size: (
   'base': 14px,
   'small': 13px,
   'extra-small': 12px
-);
+) !default;
 
 // Z-index 值
 $z-index: (
   'normal': 1,
   'top': 1000,
   'popper': 2000
-);
+) !default;
 
 // 通用组件尺寸
-$common-component-size: (
+$component-size: (
   'large': 40px,
   'default': 32px,
   'small': 24px
-);
+) !default;
 
 // 间距
 $spacing: (
@@ -134,7 +149,7 @@ $spacing: (
   'large': 24px,
   'medium': 16px,
   'small': 8px
-);
+) !default;
 
 // 行高
 $line-height: (
@@ -142,152 +157,83 @@ $line-height: (
   'large': 1.75,
   'default': 1.5,
   'small': 1.2
-);
+) !default;
 
-@function joinVarName($list) {
-  $name: '';
-  @each $item in $list {
-    @if $item != '' {
-      $name: $name + '-' + $item;
-    }
-  }
-  @return '--' + $name;
-}
-
-@mixin set-css-var-value($name, $value) {
-  #{joinVarName($name)}: #{$value};
-}
-
-// @include set-css-var-type('color', 'primary', $map);
-// --el-color-primary: #{map.get($map, 'primary')};
-@mixin set-css-var-type($name, $type, $variables) {
-  #{getCssVarName($name, $type)}: #{map.get($variables, $type)};
-}
-
-@mixin set-css-color-type($colors, $type) {
-  @include set-css-var-value(('color', $type), map.get($colors, $type, 'base'));
-
-  @each $i in (3, 5, 7, 8, 9) {
-    @include set-css-var-value(
-      ('color', $type, 'light', $i),
-      map.get($colors, $type, 'light-#{$i}')
-    );
-  }
-
-  @include set-css-var-value(('color', $type, 'dark-2'), map.get($colors, $type, 'dark-2'));
-}
-
-// set all css var for component by map
-@mixin set-component-css-var($name, $variables) {
-  @each $attribute, $value in $variables {
-    @if $attribute == 'default' {
-      #{getCssVarName($name)}: #{$value};
-    } @else {
-      #{getCssVarName($name, $attribute)}: #{$value};
-    }
-  }
-}
-
-@mixin set-css-color-rgb($type) {
-  $color: map.get($colors, $type, 'base');
-  @include set-css-var-value(('color', $type, 'rgb'), #{red($color), green($color), blue($color)});
-}
-
-:root#{$mode} {
+#{':root' + if($mode == '', '', '.' + $mode)} {
   // 基础颜色
-  @include set-css-var-value('color-white', $color-white);
-  @include set-css-var-value('color-black', $color-black);
+  @each $type in ('white', 'black', 'primary', 'success', 'warning', 'danger', 'error', 'info') {
+    #{joinCssVarName('color', $type)}: #{map.get($colors, $type)};
+  }
 
   // 基础颜色-rgb
-  @each $type in (primary, success, warning, danger, error, info) {
-    @include set-css-color-rgb($type);
+  @each $type in ('primary', 'success', 'warning', 'danger', 'error', 'info') {
+    $color: map.get($colors, $type);
+    $value: red($color) + ', ' + green($color) + ', ' + blue($color);
+    #{joinCssVarName('color', $type, 'rgb')}: #{$value};
   }
 
-  // Typography
-  @include set-component-css-var('font-size', $font-size);
-  @include set-component-css-var('font-family', $font-family);
+  // 基础颜色-light/dark
+  @each $type in ('primary', 'success', 'warning', 'danger', 'error', 'info') {
+    $color: map.get($colors, $type);
 
-  @include set-css-var-value('font-weight-primary', 500);
-  @include set-css-var-value('font-line-height-primary', 24px);
+    @each $i in (3, 5, 7, 8, 9) {
+      $value: color.mix(#ffffff, $color, math.percentage(math.div($i, 10)));
+      #{joinCssVarName('color', $type, 'light', $i)}: #{$value};
+    }
 
-  // z-index --el-index-#{$type}
-  @include set-component-css-var('index', $z-index);
+    @each $i in (2) {
+      $value: color.mix(#000000, $color, math.percentage(math.div($i, 10)));
+      #{joinCssVarName('color', $type, 'dark', $i)}: #{$value};
+    }
+  }
 
-  // --el-border-radius-#{$type}
-  @include set-component-css-var('border-radius', $border-radius);
+  // 文字颜色
+  @include set-css-var-by-object('text-color', $text-color);
 
-  // Transition
-  // refer to this website to get the bezier motion function detail
-  // https://cubic-bezier.com/#p1,p2,p3,p4 (change px as your function parameter)
-  @include set-component-css-var('transition-duration', $transition-duration);
+  // 边框颜色
+  @include set-css-var-by-object('border-color', $border-color);
 
-  @include set-component-css-var('transition-function', $transition-function);
-  @include set-component-css-var('transition', $transition);
+  // 填充颜色
+  @include set-css-var-by-object('fill-color', $fill-color);
 
-  // common component size
-  @include set-component-css-var('component-size', $common-component-size);
+  // 背景颜色
+  @include set-css-var-by-object('bg-color', $bg-color);
 
-  //   --color-white: $color-white;
-  //   @each $name, $color in $baseColors {
-  //     #{"--" + $name}: #{$color};
-  //     #{"--" + $name + "-rgb"}:
-  //       #{color.red($color),
-  //       color.green($color),
-  //       color.blue($color)};
+  // 覆盖颜色
+  @include set-css-var-by-object('overlay-color', $overlay-color);
 
-  //     @each $i in (3, 5, 7, 8, 9) {
-  //       @include set-css-var-value(
-  //         ('color', $type, 'light', $i),
-  //         map.get($colors, $type, 'light-#{$i}')
-  //       );
-  //     }
+  // 遮罩颜色
+  @include set-css-var-by-object('mask-color', $mask-color);
 
-  //     @for $i from 1 through 9 {
-  //       #{"--" + $name + "-light-" + $i}: #{color.mix(
-  //           #ffffff,
-  //           $color,
-  //           math.percentage(math.div($i, 10))
-  //         )};
-  //       #{"--" + $name + "-color-dark-" + $i}: #{color.mix(
-  //           #000000,
-  //           $color,
-  //           math.percentage(math.div($i, 10))
-  //         )};
-  //     }
-  //   }
+  // 阴影
+  @include set-css-var-by-object('box-shadow', $box-shadow);
 
-  //   // 浅色主题-相关颜色
-  //   @each $name, $color in $lightColors {
-  //     #{"--" + $name + "-color"}: #{$color};
-  //   }
+  // 禁用状态颜色
+  @include set-css-var-by-object('disabled', $disabled);
 
-  //   // 深色主题-相关颜色
-  //   @each $name, $color in $darkColors {
-  //     #{"--" + $name + "-color"}: #{$color};
-  //   }
+  // 边框属性
+  #{joinCssVarName('border-width')}: #{$border-width};
+  #{joinCssVarName('border-style')}: #{$border-style};
+  #{joinCssVarName('border-color-hover')}: #{$border-color-hover};
 
-  //   // 字体大小
-  //   @each $name, $size in $sizes {
-  //     #{"--" + $name + "-size"}: #{$size};
-  //   }
+  // 边框半径
+  @include set-css-var-by-object('border-radius', $border-radius);
 
-  //   // 间距
-  //   @each $name, $size in $spacings {
-  //     #{"--" + $name + "-spacing"}: #{$size};
-  //   }
+  // 字体设置
+  @include set-css-var-by-object('font-family', $font-family);
 
-  //   // 行高
-  //   @each $name, $lineHeight in $lineHeights {
-  //     #{"--" + $name + "-line-height"}: #{$lineHeight};
-  //   }
+  // 字体大小
+  @include set-css-var-by-object('font-size', $font-size);
 
-  //   // 阴影
-  //   @each $name, $shadow in $shadows {
-  //     #{"--" + $name + "-shadow"}: #{$shadow};
-  //   }
+  // Z-index 值
+  @include set-css-var-by-object('z-index', $z-index);
 
-  //   // 圆角
-  //   @each $name, $radii in $radiis {
-  //     #{"--" + $name + "-radii"}: #{$radii};
-  //   }
+  // 通用组件尺寸
+  @include set-css-var-by-object('component-size', $component-size);
+
+  // 间距
+  @include set-css-var-by-object('spacing', $spacing);
+
+  // 行高
+  @include set-css-var-by-object('line-height', $line-height);
 }

@@ -39,11 +39,7 @@ export default defineConfig({
     Components({
       dirs: [getFilePath('./src/components')],
       extensions: ['vue', 'tsx'],
-      resolvers: [
-        ElementPlusResolver({
-          importStyle: 'sass'
-        })
-      ],
+      resolvers: [ElementPlusResolver()],
       dts: getFilePath('./types/components.d.ts')
     }),
     Unocss({
@@ -64,14 +60,6 @@ export default defineConfig({
           exclude: /node_modules/i // 排除node_modules文件夹下的文件
         })
       ]
-    },
-    preprocessorOptions: {
-      scss: {
-        additionalData: `
-          @use '@/assets/styles/elementVariable.scss' as *;
-          @use '@/assets/styles/function.scss' as *;
-        `
-      }
     }
   },
   resolve: {

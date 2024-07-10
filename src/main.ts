@@ -1,7 +1,8 @@
-import '@/assets/styles/base.scss';
 import 'uno.css';
-import 'element-plus/theme-chalk/dark/css-vars.css';
-import '@/assets/styles/variable.scss';
+import '@/assets/styles/lightMode.scss';
+import '@/assets/styles/darkMode.scss';
+import '@/assets/styles/element.scss';
+import '@/assets/styles/base.scss';
 
 import { createApp } from 'vue';
 

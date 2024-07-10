@@ -1,0 +1,31 @@
+// 连接css变量名
+@function joinCssVarName($args...) {
+  $name: '-';
+  @each $item in $args {
+    @if $item != '' {
+      $name: $name + '-' + $item;
+    }
+  }
+  @return $name;
+}
+
+// 获取css变量
+@function getCssVar($args...) {
+  @return var(#{joinCssVarName($args...)});
+}
+
+// 通过透明度获取颜色
+@function getColorByAlpha($name, $alpha) {
+  @return rgba(var(--#{$name}-rgb), #{$alpha});
+}
+
+// 遍历object设置css变量
+@mixin set-css-var-by-object($name, $variables) {
+  @each $attribute, $value in $variables {
+    @if $attribute == 'default' {
+      #{joinCssVarName($name)}: #{$value};
+    } @else {
+      #{joinCssVarName($name, $attribute)}: #{$value};
+    }
+  }
+}

@@ -1,0 +1,88 @@
+$border-color-base: #f5f8ff;
+$fill-color-base: #fafcff;
+$text-color-base: #f0f5ff;
+
+@forward './variable.scss' with (
+  $mode: 'dark',
+
+  $bg-color: (
+    'default': #141414,
+    'page': #0a0a0a,
+    'overlay': #1d1e1f
+  ),
+
+  $border-color: (
+    'darker': rgba($border-color-base, 0.35),
+    'dark': rgba($border-color-base, 0.3),
+    'default': rgba($border-color-base, 0.25),
+    'light': rgba($border-color-base, 0.2),
+    'lighter': rgba($border-color-base, 0.15),
+    'extra-light': rgba($border-color-base, 0.1)
+  ),
+
+  $box-shadow: (
+    'default': (
+      0px 12px 32px 4px rgba(0, 0, 0, 0.36),
+      0px 8px 20px rgba(0, 0, 0, 0.72)
+    ),
+    'light': (
+      0px 0px 12px rgba(0, 0, 0, 0.72)
+    ),
+    'lighter': (
+      0px 0px 6px rgba(0, 0, 0, 0.72)
+    ),
+    'dark': (
+      0px 16px 48px 16px rgba(0, 0, 0, 0.72),
+      0px 12px 32px #000000,
+      0px 8px 16px -8px #000000
+    )
+  ),
+
+  $fill-color: (
+    'darker': rgba($fill-color-base, 0.2),
+    'dark': rgba($fill-color-base, 0.16),
+    'default': rgba($fill-color-base, 0.12),
+    'light': rgba($fill-color-base, 0.08),
+    'lighter': rgba($fill-color-base, 0.04),
+    'extra-light': rgba($fill-color-base, 0.02),
+    'blank': transparent
+  ),
+
+  $text-color: (
+    'primary': rgba($text-color-base, 0.95),
+    'regular': rgba($text-color-base, 0.85),
+    'secondary': rgba($text-color-base, 0.65),
+    'placeholder': rgba($text-color-base, 0.55),
+    'disabled': rgba($text-color-base, 0.4)
+  ),
+
+  $mask-color: (
+    'default': rgba(0, 0, 0, 0.8),
+    'extra-light': rgba(0, 0, 0, 0.3)
+  )
+);
+
+:root.dark {
+  color-scheme: dark;
+
+  .el-button {
+    --el-button-disabled-text-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .el-card {
+    --el-card-bg-color: var(--el-bg-color-overlay);
+  }
+
+  .el-empty {
+    --el-empty-fill-color-0: var(--el-color-black);
+    --el-empty-fill-color-1: #4b4b52;
+    --el-empty-fill-color-2: #36383d;
+    --el-empty-fill-color-3: #1e1e20;
+    --el-empty-fill-color-4: #262629;
+    --el-empty-fill-color-5: #202124;
+    --el-empty-fill-color-6: #212224;
+    --el-empty-fill-color-7: #1b1c1f;
+    --el-empty-fill-color-8: #1c1d1f;
+    --el-empty-fill-color-9: #18181a;
+  }
+}
