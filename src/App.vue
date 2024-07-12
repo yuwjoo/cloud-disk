@@ -6,6 +6,8 @@
       <RouterView />
     </main>
   </div>
+
+  <LayoutTaskDrawer />
 </template>
 
 <style lang="scss" scoped>

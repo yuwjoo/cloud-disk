@@ -1,52 +1,95 @@
+<!--
+ * @FileName: 页面-总览
+ * @FilePath: \cloud-disk\src\views\overview\OverviewView.vue
+ * @Author: YH
+ * @Date: 2024-04-30 17:29:06
+ * @LastEditors: YH
+ * @LastEditTime: 2024-07-12 15:18:36
+ * @Description: 
+-->
 <template>
-  <OverviewHeader />
-  <OverviewFileList :file-list="fileList" />
-
-  <FeatureFloatingButton @click="handleClickUploadFile()">
-    <div class="flex flex-col justify-center items-center">
-      <BaseIcon class="i-ep:upload" />
-      <div class="text-3.5 m-t-1">上传文件</div>
+  <div class="overview__header">
+    <el-breadcrumb class="overview__header-breadcrumb" separator="/">
+      <el-breadcrumb-item :to="{ path: '/' }">全部文件</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/' }">utils</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/' }">测试</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="overview__header-operate">
+      <el-dropdown @command="handleUploadCommand">
+        <el-button class="overview__dropdown-button" type="primary" @click="handleClickUpload">
+          <el-icon class="el-icon--left"><i-ep-upload /></el-icon>
+          <span>上传</span>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="uploadFile">上传文件</el-dropdown-item>
+            <el-dropdown-item command="uploadFolder">上传文件夹</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <el-button type="primary" @click="handleClickCreateFolder">
+        <el-icon class="el-icon--left"><i-ep-folder-add /></el-icon>
+        <span>新建文件夹</span>
+      </el-button>
     </div>
-  </FeatureFloatingButton>
+  </div>
 
-  <input
-    ref="uploadInputRef"
-    class="hidden"
-    type="file"
-    multiple
-    @change="handleChangeUploadFile()"
-  />
+  <el-empty class="overview__empty" description="暂无数据" />
+
+  <OverviewUploadFile ref="overviewUploadFileRef" />
 </template>
 
 <script setup lang="ts">
-import type { GetDirectoryListResponseData } from 'types/src/request/apis/overview';
-import { getDirectoryList } from '@/request/apis/overview';
-import { putFile } from '@/utils/oss';
+import OverviewUploadFile from './components/OverviewUploadFile.vue';
 
-const fileList = ref<Required<GetDirectoryListResponseData>['data']['directoryList']>([]); // 文件列表
-const uploadInputRef = ref<HTMLInputElement | null>(null); // 上传输入框ref
-
-getDirectoryList({}).then((res) => {
-  fileList.value = res.data?.directoryList || [];
-});
+const overviewUploadFileRef = ref<InstanceType<typeof OverviewUploadFile> | null>(null); // 上传文件组件ref
 
 /**
- * @description: 处理点击上传文件
+ * @description: 处理点击上传按钮
  */
-function handleClickUploadFile() {
-  console.log('点击上传文件');
-  uploadInputRef.value?.click();
+function handleClickUpload() {
+  overviewUploadFileRef.value?.open(false);
 }
 
 /**
- * @description: 处理上传文件改变
+ * @description: 处理点击上传下拉选项
+ * @param {string} command 指令字符
  */
-function handleChangeUploadFile() {
-  const files = [...(uploadInputRef.value?.files || [])];
-  files.forEach((file) => {
-    putFile(file);
-  });
+function handleUploadCommand(command: string) {
+  overviewUploadFileRef.value?.open(command === 'uploadFolder');
+}
+
+/**
+ * @description: 处理点击新建文件夹
+ */
+function handleClickCreateFolder() {
+  console.log('新建文件夹');
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.overview__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-medium);
+
+  .overview__header-breadcrumb {
+    font-weight: bold;
+  }
+
+  .overview__header-operate {
+    display: flex;
+    gap: 0 var(--spacing-small);
+
+    .overview__dropdown-button {
+      outline-style: none;
+    }
+  }
+}
+
+.overview__empty {
+  position: relative;
+  top: 20%;
+}
+</style>

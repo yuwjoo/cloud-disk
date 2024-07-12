@@ -1,3 +1,12 @@
+<!--
+ * @FileName: 页面-侧边栏
+ * @FilePath: \cloud-disk\src\components\layout\LayoutAside.vue
+ * @Author: YH
+ * @Date: 2024-07-06 13:52:53
+ * @LastEditors: YH
+ * @LastEditTime: 2024-07-12 15:29:32
+ * @Description: 
+-->
 <template>
   <aside :class="['aside-menu', { 'aside-menu--collapsed': isCollapsed }]">
     <nav class="aside-menu__nav">
