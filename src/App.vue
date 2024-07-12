@@ -8,15 +8,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const LayoutAside = defineAsyncComponent(() => import('@/components/layout/LayoutAside.vue'));
-</script>
-
 <style lang="scss" scoped>
 .layout__content {
   display: flex;
   height: calc(100vh - 64px);
-  background-color: el-getCssVar('button', 'text-color');
 }
 
 .layout__content-aside {
@@ -27,12 +22,6 @@ const LayoutAside = defineAsyncComponent(() => import('@/components/layout/Layou
   flex-grow: 1;
   padding: 20px;
   box-sizing: border-box;
-  background-color: var(--light-main-bg-color);
-}
-
-:root.dark {
-  .layout__content-main {
-    background-color: var(--dark-main-bg-color);
-  }
+  background-color: var(--bg-color);
 }
 </style>

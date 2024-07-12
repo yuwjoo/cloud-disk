@@ -1,13 +1,5 @@
-// 连接css变量名
-@function joinCssVarName($args...) {
-  $name: '-';
-  @each $item in $args {
-    @if $item != '' {
-      $name: $name + '-' + $item;
-    }
-  }
-  @return $name;
-}
+@use 'sass:color';
+@use 'sass:math';
 
 // 获取css变量
 @function getCssVar($args...) {
@@ -16,16 +8,48 @@
 
 // 通过透明度获取颜色
 @function getColorByAlpha($name, $alpha) {
-  @return rgba(var(--#{$name}-rgb), #{$alpha});
+  @return rgba(var(joinCssVarName($name, 'rgb')), #{$alpha});
 }
 
-// 遍历object设置css变量
-@mixin set-css-var-by-object($name, $variables) {
-  @each $attribute, $value in $variables {
-    @if $attribute == 'default' {
-      #{joinCssVarName($name)}: #{$value};
+// 连接名称
+@function joinName($args...) {
+  $result: '';
+  @each $arg in $args {
+    @if $result == '' {
+      $result: $arg;
     } @else {
-      #{joinCssVarName($name, $attribute)}: #{$value};
+      $result: $result + '-' + $arg;
+    }
+  }
+  @return $result;
+}
+
+// 连接css变量名
+@function joinCssVarName($args...) {
+  @return '--' + joinName($args...);
+}
+
+// 获取颜色RGB
+@function getColorRGB($color) {
+  @return color.red($color) + ', ' + color.green($color) + ', ' + color.blue($color);
+}
+
+// 获取混合后的颜色
+@function getColorMix($mix-color, $color, $num) {
+  @return color.mix($mix-color, $color, math.percentage(math.div($num, 10)));
+}
+
+// 递归设置css变量
+@mixin deep-set-css-vars($parent: '', $key, $value) {
+  @if type-of($value) == 'map' {
+    @each $k, $v in $value {
+      @include deep-set-css-vars(joinName($parent, $key), $k, $v);
+    }
+  } @else {
+    @if $key == 'default' {
+      #{joinCssVarName($parent)}: #{$value};
+    } @else {
+      #{joinCssVarName($parent, $key)}: #{$value};
     }
   }
 }

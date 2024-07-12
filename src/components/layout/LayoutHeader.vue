@@ -1,29 +1,41 @@
 <template>
   <header class="header">
     <div class="header__content header__content--left">
-      <div v-if="$route.meta.haveAside" class="header__collapse" @click="toggleAside()">
-        <un-i-ep-expand v-if="isCollapsed" />
-        <un-i-ep-fold v-else />
-      </div>
+      <component
+        v-if="$route.meta.haveAside"
+        :is="isCollapsed ? IEpExpand : IEpFold"
+        class="header__collapse"
+        @click="toggleAside()"
+      />
 
       <div class="header__logo">
-        <un-i-custom-logo class="header__logo-icon" />
+        <i-icons-logo class="header__logo-icon" />
         <span class="header__logo-text">cloud-disk</span>
       </div>
     </div>
     <div class="header__content header__content--right">
       <div class="header__theme-toggle" title="切换主题" @click="toggleDark($event)">
-        <un-i-ep-moon v-if="isDark" class="header__theme-icon header__theme-icon--moon" />
-        <un-i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
+        <i-ep-moon v-if="isDark" class="header__theme-icon header__theme-icon--moon" />
+        <i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
-      <div class="header__user-icon">
-        <un-i-ep-user />
-      </div>
+      <el-dropdown>
+        <el-avatar class="header__avatar" :size="26" src="https://empty">
+          <i-ep-user-filled />
+        </el-avatar>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import IEpExpand from '~icons/ep/expand';
+import IEpFold from '~icons/ep/fold';
 import { storeToRefs } from 'pinia';
 import { useAsideStore } from '@/store/hooks/aside';
 import { useThemeStore } from '@/store/hooks/theme';
@@ -40,19 +52,19 @@ const { toggleDark } = useThemeStore();
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 0 var(--large-spacing);
+  padding: 0 var(--spacing-large);
   height: 64px;
-  background-color: var(--light-header-bg-color);
-  color: var(--dark-text-color);
+  background-color: var(--bg-color-header);
+  color: var(--color-white);
 
-  &__content {
+  .header__content {
     display: flex;
     align-items: center;
 
     &--left {
       .header__collapse {
         font-size: 22px;
-        margin-right: var(--xlarge-spacing);
+        margin-right: var(--spacing-extra-large);
         cursor: pointer;
       }
 
@@ -66,7 +78,7 @@ const { toggleDark } = useThemeStore();
 
         &-text {
           font-size: 18px;
-          margin-left: var(--small-spacing);
+          margin-left: var(--spacing-small);
           font-weight: bold;
         }
       }
@@ -87,23 +99,12 @@ const { toggleDark } = useThemeStore();
         }
       }
 
-      .header__user-icon {
-        font-size: 16px;
+      .header__avatar {
         cursor: pointer;
-        border-radius: 50%;
-        background-color: var(--white-color);
-        padding: 4px;
-        color: var(--light-text-color);
-        margin-left: var(--xlarge-spacing);
+        outline-style: none;
+        font-size: 18px;
+        margin-left: var(--spacing-large);
       }
-    }
-  }
-
-  :root.dark & {
-    background-color: var(--dark-header-bg-color);
-
-    &__content--left .header__logo {
-      color: var(--primary-color);
     }
   }
 }

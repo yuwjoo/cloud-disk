@@ -1,5 +1,5 @@
-:root {
-  font-size: var(--font-size-base);
+body {
+  font-size: var(--text-size-base);
   color: var(--text-color-primary);
-  line-height: var(--line-height);
+  line-height: var(--text-line-height-none);
 }

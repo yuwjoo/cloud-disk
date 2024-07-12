@@ -1,6 +1,6 @@
-import 'uno.css';
-import '@/assets/styles/lightMode.scss';
-import '@/assets/styles/darkMode.scss';
+import 'normalize.css';
+import '@/assets/styles/theme/default/style.scss';
+import '@/assets/styles/theme/dark/style.scss';
 import '@/assets/styles/element.scss';
 import '@/assets/styles/base.scss';
 

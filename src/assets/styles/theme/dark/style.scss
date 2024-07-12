@@ -1,0 +1,63 @@
+@use 'sass:map';
+@use '@/assets/styles/utils.scss' as *;
+@use './var.scss' as *;
+
+:root.dark {
+  color-scheme: dark;
+
+  // 基础颜色
+  @include deep-set-css-vars($key: 'color', $value: $color);
+
+  // 文字
+  @include deep-set-css-vars($key: 'text', $value: $text);
+
+  // 边框
+  @include deep-set-css-vars($key: 'border', $value: $border);
+
+  // 阴影
+  @include deep-set-css-vars($key: 'box-shadow', $value: $box-shadow);
+
+  // 背景颜色
+  @include deep-set-css-vars($key: 'bg-color', $value: $bg-color);
+
+  // 覆盖颜色
+  @include deep-set-css-vars($key: 'overlay-color', $value: $overlay-color);
+
+  // 遮罩颜色
+  @include deep-set-css-vars($key: 'mask-color', $value: $mask-color);
+
+  // 填充颜色
+  @include deep-set-css-vars($key: 'fill-color', $value: $fill-color);
+
+  // 禁用状态颜色
+  @include deep-set-css-vars($key: 'disabled', $value: $disabled);
+
+  // z-index 值
+  @include deep-set-css-vars($key: 'z-index', $value: $z-index);
+
+  // 间距
+  @include deep-set-css-vars($key: 'spacing', $value: $spacing);
+}
+
+:root.dark {
+  .el-button {
+    --el-button-disabled-text-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .el-card {
+    --el-card-bg-color: var(--el-bg-color-overlay);
+  }
+
+  .el-empty {
+    --el-empty-fill-color-0: var(--el-color-black);
+    --el-empty-fill-color-1: #4b4b52;
+    --el-empty-fill-color-2: #36383d;
+    --el-empty-fill-color-3: #1e1e20;
+    --el-empty-fill-color-4: #262629;
+    --el-empty-fill-color-5: #202124;
+    --el-empty-fill-color-6: #212224;
+    --el-empty-fill-color-7: #1b1c1f;
+    --el-empty-fill-color-8: #1c1d1f;
+    --el-empty-fill-color-9: #18181a;
+  }
+}

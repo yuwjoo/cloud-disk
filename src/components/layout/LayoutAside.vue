@@ -8,28 +8,32 @@
         :title="isCollapsed ? item.label : ''"
         @click="$router.replace({ name: item.name })"
       >
-        <i :class="['aside-menu__icon', item.icon]" />
+        <component :is="item.icon" class="aside-menu__icon" />
         <span class="aside-menu__label">{{ item.label }}</span>
       </div>
     </nav>
-    <div class="aside-menu__settings" @click="$router.replace({ name: 'settings' })">
-      <un-i-ep-setting class="aside-menu__icon" />
-      <span class="aside-menu__settings-label">设置</span>
+    <div class="aside-menu__setting" @click="$router.replace({ name: 'settings' })">
+      <i-ep-setting class="aside-menu__setting-icon" />
+      <span class="aside-menu__setting-label">设置</span>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
+import IEpReading from '~icons/ep/reading';
+import IEpPicture from '~icons/ep/picture';
+import IEpVideoCamera from '~icons/ep/video-camera';
+import IEpCpu from '~icons/ep/cpu';
 import { useAsideStore } from '@/store/hooks/aside';
 import { storeToRefs } from 'pinia';
 
 const { isCollapsed } = storeToRefs(useAsideStore());
 
 const menuItems = [
-  { label: '总览', icon: 'i-ep-reading', name: 'overview' },
-  { label: '图片', icon: 'i-ep-picture', name: 'picture' },
-  { label: '视频', icon: 'i-ep-video-camera', name: 'video' },
-  { label: '任务中心', icon: 'i-ep-cpu', name: 'download' }
+  { label: '总览', icon: IEpReading, name: 'overview' },
+  { label: '图片', icon: IEpPicture, name: 'picture' },
+  { label: '视频', icon: IEpVideoCamera, name: 'video' },
+  { label: '任务中心', icon: IEpCpu, name: 'download' }
 ];
 </script>
 
@@ -37,93 +41,73 @@ const menuItems = [
 .aside-menu {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 200px;
-  background-color: var(--light-nav-bg-color);
+  background-color: var(--bg-color-nav);
   transition: width 0.3s ease;
 
   &--collapsed {
-    width: 80px;
+    width: 90px;
 
-    .aside-menu__label {
+    .aside-menu__label,
+    .aside-menu__setting-label {
       opacity: 0;
     }
   }
-}
 
-.aside-menu__nav {
-  flex-grow: 1;
-  padding-top: var(--medium-spacing);
-}
+  .aside-menu__nav {
+    padding-top: var(--spacing-medium);
 
-.aside-menu__item {
-  display: flex;
-  align-items: center;
-  margin: 0 var(--medium-spacing) var(--medium-spacing);
-  padding: var(--medium-spacing);
-  cursor: pointer;
-  border-radius: var(--default-radii);
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-  white-space: nowrap;
+    .aside-menu__item {
+      display: flex;
+      align-items: center;
+      margin: 0 var(--spacing-medium) var(--spacing-medium);
+      padding: var(--spacing-medium) 20px;
+      cursor: pointer;
+      border-radius: var(--border-radius-base);
+      transition:
+        background-color 0.3s,
+        color 0.3s;
+      white-space: nowrap;
 
-  &--active,
-  &:hover {
-    color: var(--primary-color);
-    background-color: var(--primary-color-light-9);
-  }
-}
+      &--active,
+      &:hover {
+        color: var(--color-primary);
+        background-color: rgba(var(--color-primary-rgb), 0.1);
+      }
 
-.aside-menu__icon {
-  flex-shrink: 0;
-  font-size: 14px;
-}
+      .aside-menu__icon {
+        flex-shrink: 0;
+        font-size: 18px;
+      }
 
-.aside-menu__label {
-  margin-left: var(--small-spacing);
-  transition: opacity 0.3s;
-}
-
-.aside-menu__settings {
-  display: flex;
-  align-items: center;
-  padding: var(--small-spacing);
-  border-top: 1px solid var(--light-border);
-  // box-shadow: 0 0 4px #0000001a;
-  cursor: pointer;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-
-  &:hover {
-    color: var(--primary-color);
-    background-color: var(--primary-color-light-9);
-  }
-}
-
-.aside-menu__settings-label {
-  margin-left: var(--small-spacing);
-}
-
-:root.dark {
-  .aside-menu {
-    background-color: var(--dark-nav-bg-color);
-    color: var(--dark-text-color);
-  }
-
-  .aside-menu__item {
-    &--active,
-    &:hover {
-      background-color: color-set-alpha('primary', 0.05);
-      color: var(--primary-color);
+      .aside-menu__label {
+        margin-left: var(--spacing-small);
+        transition: opacity 0.3s;
+      }
     }
   }
 
-  .aside-menu__settings {
-    // border-top-color: rgba(255, 255, 255, 0.15);
+  .aside-menu__setting {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-medium) 36px;
+    border-top: var(--border-width) var(--border-style) var(--border-color);
+    cursor: pointer;
+    transition: color 0.3s;
+    white-space: nowrap;
 
     &:hover {
-      // background-color: rgba(255, 255, 255, 0.05);
+      color: var(--color-primary);
+    }
+
+    .aside-menu__setting-icon {
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    .aside-menu__setting-label {
+      margin-left: var(--spacing-small);
     }
   }
 }
