@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-07-12 15:18:36
+ * @LastEditTime: 2024-07-15 11:25:58
  * @Description: 
 -->
 <template>
@@ -34,15 +34,20 @@
     </div>
   </div>
 
-  <el-empty class="overview__empty" description="暂无数据" />
+  <OverviewList :list="list" />
+
+  <el-empty v-if="list.length === 0" class="overview__empty" description="暂无数据" />
 
   <OverviewUploadFile ref="overviewUploadFileRef" />
 </template>
 
 <script setup lang="ts">
 import OverviewUploadFile from './components/OverviewUploadFile.vue';
+import OverviewList from './components/OverviewList.vue';
 
 const overviewUploadFileRef = ref<InstanceType<typeof OverviewUploadFile> | null>(null); // 上传文件组件ref
+
+const list = ref<any[]>([]); // 列表数据
 
 /**
  * @description: 处理点击上传按钮

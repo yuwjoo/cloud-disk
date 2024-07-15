@@ -1,12 +1,21 @@
-import router from '@/router';
+import router from '@/utils/router';
+import axios from 'axios';
 import type { AxiosInstance } from 'axios';
+
+const request = axios.create({
+  baseURL: import.meta.env.VITE_APP_SERVERURL,
+  timeout: 30000, // 请求超时时间
+  withCredentials: false // 表示跨域请求时是否需要使用凭证
+});
+
+addRequestInterceptor(request);
 
 /**
  * @description: 添加请求拦截器
  * @param {AxiosInstance} request 请求实例
  * @return {void}
  */
-export function addRequestInterceptor(request: AxiosInstance): void {
+function addRequestInterceptor(request: AxiosInstance): void {
   // 发送请求拦截器
   request.interceptors.request.use(
     (config) => {
@@ -41,3 +50,5 @@ export function addRequestInterceptor(request: AxiosInstance): void {
     }
   );
 }
+
+export default request;

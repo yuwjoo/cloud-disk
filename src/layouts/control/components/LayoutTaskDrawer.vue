@@ -1,12 +1,13 @@
 <!--
  * @FileName: 页面-任务抽屉
- * @FilePath: \cloud-disk\src\components\layout\LayoutTaskDrawer.vue
+ * @FilePath: \cloud-disk\src\layouts\control\components\LayoutTaskDrawer.vue
  * @Author: YH
  * @Date: 2024-07-12 15:00:58
  * @LastEditors: YH
- * @LastEditTime: 2024-07-12 17:34:32
+ * @LastEditTime: 2024-07-15 13:54:00
  * @Description: 
 -->
+
 <template>
   <el-drawer v-model="visible" direction="rtl" size="30%" :with-header="false">
     <!-- 头部 start -->
@@ -62,7 +63,7 @@ import IEpUpload from '~icons/ep/upload';
 import IEpDownload from '~icons/ep/download';
 import IEpDelete from '~icons/ep/delete';
 import IEpPause from '~icons/icons/pause';
-import { useTaskDrawerStore } from '@/store/hooks/taskDrawer';
+import { useTaskDrawerStore } from '@/store/taskDrawer';
 import { storeToRefs } from 'pinia';
 
 const { visible, uploadList, downloadList } = storeToRefs(useTaskDrawerStore());

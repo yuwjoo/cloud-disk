@@ -1,3 +1,4 @@
+import request from '@/utils/request';
 import type {
   CreateFileRequestQuery,
   CreateFileResponseData,
@@ -7,8 +8,7 @@ import type {
   GetResourceFlagResponseData,
   DownloadFileRequestQuery,
   DownloadFileResponseData
-} from 'types/src/request/apis/overview';
-import { request } from '..';
+} from 'types/src/api/overview';
 
 /**
  * @description: 获取文件列表

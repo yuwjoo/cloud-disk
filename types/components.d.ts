@@ -39,6 +39,7 @@ declare module 'vue' {
     FeatureInput: typeof import('./../src/components/feature/FeatureInput.vue')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
+    IEpDownload: typeof import('~icons/ep/download')['default']
     IEpExpand: typeof import('~icons/ep/expand')['default']
     IEpFold: typeof import('~icons/ep/fold')['default']
     IEpFolderAdd: typeof import('~icons/ep/folder-add')['default']

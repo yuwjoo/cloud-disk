@@ -1,10 +1,10 @@
 <!--
- * @FileName: 页面-侧边栏
- * @FilePath: \cloud-disk\src\components\layout\LayoutAside.vue
+ * @FileName: 布局-侧边栏
+ * @FilePath: \cloud-disk\src\layouts\control\components\LayoutAside.vue
  * @Author: YH
- * @Date: 2024-07-06 13:52:53
+ * @Date: 2024-07-15 13:42:19
  * @LastEditors: YH
- * @LastEditTime: 2024-07-12 15:29:32
+ * @LastEditTime: 2024-07-15 13:53:28
  * @Description: 
 -->
 <template>
@@ -33,7 +33,7 @@ import IEpReading from '~icons/ep/reading';
 import IEpPicture from '~icons/ep/picture';
 import IEpVideoCamera from '~icons/ep/video-camera';
 import IEpCpu from '~icons/ep/cpu';
-import { useAsideStore } from '@/store/hooks/aside';
+import { useAsideStore } from '@/store/aside';
 import { storeToRefs } from 'pinia';
 
 const { isCollapsed } = storeToRefs(useAsideStore());

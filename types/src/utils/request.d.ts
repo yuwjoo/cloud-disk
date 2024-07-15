@@ -10,5 +10,3 @@ export interface ResponseBody<T = any> {
   data?: T; // 响应数据
   msg: string; // 响应消息
 }
-
-export {};

@@ -1,10 +1,5 @@
-import type {
-  LoginReqParams,
-  LoginResData,
-  StsReqParams,
-  StsResData
-} from 'types/src/request/apis/common';
-import { request } from '..';
+import request from '@/utils/request';
+import type { LoginReqParams, LoginResData, StsReqParams, StsResData } from 'types/src/api/base';
 
 /**
  * @description: 登录

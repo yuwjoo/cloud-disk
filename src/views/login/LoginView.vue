@@ -56,9 +56,9 @@
 </template>
 
 <script setup lang="ts">
-import type { LoginReqParams } from 'types/src/request/apis/common';
-import { login, register } from '@/request/apis/common';
-import router from '@/router';
+import type { LoginReqParams } from 'types/src/api/base';
+import { login, register } from '@/api/base';
+import router from '@/utils/router';
 
 const form = ref<LoginReqParams>({
   account: '',

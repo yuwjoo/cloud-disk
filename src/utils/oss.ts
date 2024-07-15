@@ -1,7 +1,7 @@
-import { sts } from '@/request/apis/common';
-import { createFile, getResourceFlag } from '@/request/apis/overview';
+import { sts } from '@/api/base';
+import { createFile, getResourceFlag } from '@/api/overview';
 import OSS from 'ali-oss';
-import type { UploadCallbackResponseData } from 'types/src/request/apis/overview';
+import type { UploadCallbackResponseData } from 'types/src/api/overview';
 
 let client: OSS;
 let uploadPath: string;
