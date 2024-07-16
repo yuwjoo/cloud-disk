@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-12 15:00:58
  * @LastEditors: YH
- * @LastEditTime: 2024-07-15 13:54:00
+ * @LastEditTime: 2024-07-16 17:21:57
  * @Description: 
 -->
 
@@ -41,12 +41,22 @@
         @dragstart.prevent
       />
       <div class="layout-task-drawer__task-content">
-        <div class="layout-task-drawer__task-filename">README.md</div>
-        <el-progress class="layout-task-drawer__task-progress" :percentage="50" :stroke-width="4" />
-        <div class="layout-task-drawer__task-size">4KB</div>
+        <div class="layout-task-drawer__task-filename">{{ item.file.name }}</div>
+        <el-progress
+          class="layout-task-drawer__task-progress"
+          :percentage="item.progress"
+          :stroke-width="4"
+        />
+        <div class="layout-task-drawer__task-size">{{ item.file.size }}</div>
       </div>
       <div class="layout-task-drawer__task-operate">
-        <el-button type="primary" :icon="IEpPause" circle size="small" />
+        <el-button
+          v-if="item.state === 'upload'"
+          type="primary"
+          :icon="IEpPause"
+          circle
+          size="small"
+        />
         <el-button type="danger" :icon="IEpDelete" circle size="small" />
       </div>
     </div>

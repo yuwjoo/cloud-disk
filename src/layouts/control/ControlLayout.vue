@@ -12,9 +12,11 @@
   <div class="control-layout__content">
     <LayoutAside class="control-layout__aside" />
     <main class="control-layout__main">
-      <keep-alive>
-        <router-view />
-      </keep-alive>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </main>
   </div>
 

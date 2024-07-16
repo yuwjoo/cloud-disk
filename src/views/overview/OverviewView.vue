@@ -4,97 +4,213 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-07-15 11:25:58
+ * @LastEditTime: 2024-07-16 17:27:54
  * @Description: 
 -->
 <template>
-  <div class="overview__header">
-    <el-breadcrumb class="overview__header-breadcrumb" separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">全部文件</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/' }">utils</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/' }">测试</el-breadcrumb-item>
-    </el-breadcrumb>
-    <div class="overview__header-operate">
-      <el-dropdown @command="handleUploadCommand">
-        <el-button class="overview__dropdown-button" type="primary" @click="handleClickUpload">
-          <el-icon class="el-icon--left"><i-ep-upload /></el-icon>
-          <span>上传</span>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="uploadFile">上传文件</el-dropdown-item>
-            <el-dropdown-item command="uploadFolder">上传文件夹</el-dropdown-item>
-          </el-dropdown-menu>
+  <div v-loading="loading" style="height: 100%">
+    <div class="overview-top">
+      <div class="overview-top__nav">
+        <template v-if="pathList.length > 1">
+          <el-icon
+            class="overview-top__back"
+            @click="getFileList(pathList[pathList.length - 2]?.folderId)"
+          >
+            <i-ep-back />
+          </el-icon>
+          <el-divider direction="vertical" />
         </template>
-      </el-dropdown>
-      <el-button type="primary" @click="handleClickCreateFolder">
-        <el-icon class="el-icon--left"><i-ep-folder-add /></el-icon>
-        <span>新建文件夹</span>
-      </el-button>
+        <el-breadcrumb class="overview-top__breadcrumb" separator="/">
+          <el-breadcrumb-item
+            v-for="(item, index) in pathList"
+            :key="index"
+            @click="currentFolderId !== item.folderId ? getFileList(item.folderId) : null"
+          >
+            {{ item.folderName }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+      <div class="overview-top__tools">
+        <el-dropdown @command="handleCommand">
+          <el-button class="overview-top__dropdown-btn" type="primary" @click="selectFile">
+            <el-icon class="el-icon--left"><i-ep-upload /></el-icon>
+            <span>上传</span>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="uploadFile">上传文件</el-dropdown-item>
+              <el-dropdown-item command="uploadFolder">上传文件夹</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <el-button type="primary" @click="createFolder">
+          <el-icon class="el-icon--left"><i-ep-folder-add /></el-icon>
+          <span>新建文件夹</span>
+        </el-button>
+      </div>
     </div>
+
+    <div class="overview-list" :class="{ 'overview-list--empty': fileList.length === 0 }">
+      <div
+        class="overview-list__item"
+        v-for="(item, index) in fileList"
+        :key="index"
+        @click="item.type === 'folder' ? getFileList(item.id) : null"
+      >
+        <el-icon
+          v-if="item.type === 'file'"
+          class="overview-list__download"
+          @click="downloadFile(item.id)"
+        >
+          <i-ep-download />
+        </el-icon>
+        <img
+          class="overview-list__cover"
+          :src="useFileIcon(item.type, item.mimeType || '')"
+          alt=""
+          @dragstart.prevent
+        />
+        <div class="overview-list__name" :title="item.name">{{ item.name }}</div>
+        <div class="overview-list__modified-date">{{ item.modifiedDate }}</div>
+      </div>
+      <el-empty class="overview-list__empty" description="暂无数据" />
+    </div>
+
+    <input class="overview-select-file" ref="uploadRef" type="file" multiple @change="uploadFile" />
   </div>
-
-  <OverviewList :list="list" />
-
-  <el-empty v-if="list.length === 0" class="overview__empty" description="暂无数据" />
-
-  <OverviewUploadFile ref="overviewUploadFileRef" />
 </template>
 
 <script setup lang="ts">
-import OverviewUploadFile from './components/OverviewUploadFile.vue';
-import OverviewList from './components/OverviewList.vue';
+import { useFileIcon } from './hooks/fileIcon';
+import { useFileManage } from './hooks/fileManage';
+import { useUpload } from './hooks/upload';
 
-const overviewUploadFileRef = ref<InstanceType<typeof OverviewUploadFile> | null>(null); // 上传文件组件ref
-
-const list = ref<any[]>([]); // 列表数据
-
-/**
- * @description: 处理点击上传按钮
- */
-function handleClickUpload() {
-  overviewUploadFileRef.value?.open(false);
-}
-
-/**
- * @description: 处理点击上传下拉选项
- * @param {string} command 指令字符
- */
-function handleUploadCommand(command: string) {
-  overviewUploadFileRef.value?.open(command === 'uploadFolder');
-}
-
-/**
- * @description: 处理点击新建文件夹
- */
-function handleClickCreateFolder() {
-  console.log('新建文件夹');
-}
+const { loading, currentFolderId, pathList, fileList, getFileList, createFolder, downloadFile } =
+  useFileManage();
+const { uploadRef, selectFile, uploadFile, handleCommand } = useUpload(
+  currentFolderId,
+  getFileList
+);
 </script>
 
 <style lang="scss" scoped>
-.overview__header {
+.overview-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--spacing-medium);
 
-  .overview__header-breadcrumb {
-    font-weight: bold;
+  .overview-top__nav {
+    display: flex;
+    align-items: center;
+
+    .overview-top__back {
+      font-size: 18px;
+      cursor: pointer;
+      margin-right: var(--spacing-small);
+
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+
+    .overview-top__breadcrumb {
+      font-weight: bold;
+
+      :deep(.el-breadcrumb__item):not(:last-child) {
+        cursor: pointer;
+
+        .el-breadcrumb__inner:hover {
+          color: var(--color-primary);
+        }
+      }
+    }
   }
 
-  .overview__header-operate {
+  .overview-top__tools {
     display: flex;
     gap: 0 var(--spacing-small);
 
-    .overview__dropdown-button {
+    .overview-top__dropdown-btn {
       outline-style: none;
     }
   }
 }
 
-.overview__empty {
-  position: relative;
-  top: 20%;
+.overview-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-small);
+
+  &.overview-list--empty {
+    position: relative;
+    top: 20%;
+    justify-content: center;
+
+    .overview-list__empty {
+      display: block;
+    }
+  }
+
+  .overview-list__item {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    line-height: var(--text-line-height-base);
+    padding: var(--spacing-medium);
+    border-radius: var(--border-radius-base);
+    width: 140px;
+    box-sizing: border-box;
+
+    &:hover {
+      background-color: var(--fill-color);
+
+      .overview-list__download {
+        display: block;
+      }
+    }
+
+    .overview-list__download {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: var(--spacing-small);
+      color: var(--color-primary);
+      display: none;
+      font-size: 18px;
+    }
+
+    .overview-list__cover {
+      width: 60px;
+      height: 60px;
+    }
+
+    .overview-list__name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      font-size: var(--text-size-small);
+
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+
+    .overview-list__modified-date {
+      margin-top: 2px;
+      color: var(--text-color-secondary);
+      font-size: var(--text-size-extra-small);
+    }
+  }
+
+  .overview-list__empty {
+    display: none;
+  }
+}
+
+.overview-select-file {
+  display: none;
 }
 </style>

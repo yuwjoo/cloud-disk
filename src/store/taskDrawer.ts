@@ -1,10 +1,17 @@
+import { createFile, getResourceFlag } from '@/api/overview';
+import { putFile } from '@/utils/oss';
+import { getFileHash } from '@/utils/utils';
 import { defineStore } from 'pinia';
+import type { UploadCallbackResponseBody } from 'types/src/api/overview';
+import type { UploadList } from 'types/src/store/taskDrawer';
 
 export const useTaskDrawerStore = defineStore('taskDrawer', () => {
   const visible = ref<boolean>(false); // 显示任务抽屉
-  const uploadList = ref<string[]>([]); // 上传列表
-  const downloadList = ref<string[]>([]); // 下载列表
-  const taskCount = computed(() => uploadList.value.length + downloadList.value.length); // 任务总数
+  const uploadList = ref<UploadList>([]); // 上传列表
+  const downloadList = ref<UploadList>([]); // 下载列表
+  const taskCount = computed(
+    () => uploadList.value.filter((item) => item.state === 'upload').length
+  ); // 任务总数
 
   /**
    * @description: 打开抽屉
@@ -24,8 +31,36 @@ export const useTaskDrawerStore = defineStore('taskDrawer', () => {
    * @description: 上传
    * @param {File[]} files 文件列表
    */
-  function upload(files: File[]) {
-    console.log('开始上传', files);
+  function upload(folderId: number | undefined, files: File[], callback: () => void) {
+    const list: UploadList = files.map((file) => ({ file, state: 'upload', progress: 0 }));
+    const handleSuccess = (index: number) => {
+      uploadList.value[index].state = 'success';
+      callback();
+    };
+
+    list.forEach(async (item, index) => {
+      const hash = await getFileHash(item.file);
+      const res = await getResourceFlag({ fileHash: hash, fileSize: item.file.size });
+
+      if (res.data) {
+        createFile({
+          parentFolderId: folderId,
+          filename: item.file.name,
+          resourceFlag: res.data
+        }).then(() => handleSuccess(index));
+        return;
+      }
+
+      const result = await putFile(item.file, hash);
+
+      createFile({
+        parentFolderId: folderId,
+        filename: item.file.name,
+        resourceFlag: (result.data as UploadCallbackResponseBody).data.resourceFlag
+      }).then(() => handleSuccess(index));
+    });
+
+    uploadList.value.unshift(...list);
   }
 
   /**

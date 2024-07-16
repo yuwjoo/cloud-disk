@@ -17,6 +17,7 @@ declare module 'vue' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
@@ -37,6 +38,7 @@ declare module 'vue' {
     FeatureCheckboxGroup: typeof import('./../src/components/feature/FeatureCheckboxGroup.vue')['default']
     FeatureFloatingButton: typeof import('./../src/components/feature/FeatureFloatingButton.vue')['default']
     FeatureInput: typeof import('./../src/components/feature/FeatureInput.vue')['default']
+    IEpBack: typeof import('~icons/ep/back')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
     IEpDownload: typeof import('~icons/ep/download')['default']
@@ -64,5 +66,8 @@ declare module 'vue' {
     OverviewHeader: typeof import('./../src/components/view/OverviewHeader.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

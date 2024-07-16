@@ -5,8 +5,8 @@ export enum responseCode {
   serverError = 50501 // 服务器错误
 }
 
-export interface ResponseBody<T = any> {
+export interface ResponseBody<T = unknown> {
   code: responseCode; // 响应码
-  data?: T; // 响应数据
+  data: T; // 响应数据
   msg: string; // 响应消息
 }

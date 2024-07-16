@@ -1,7 +1,5 @@
 import { sts } from '@/api/base';
-import { createFile, getResourceFlag } from '@/api/overview';
 import OSS from 'ali-oss';
-import type { UploadCallbackResponseData } from 'types/src/api/overview';
 
 let client: OSS;
 let uploadPath: string;
@@ -51,21 +49,9 @@ async function getSts(): Promise<{
 /**
  * @description: 简单上传
  * @param {File} file 文件
+ * @param {string} hash hash值
  */
-export async function putFile(file: File) {
-  console.log(file);
-  const hash = await getFileHash(file);
-
-  const res = await getResourceFlag({ fileHash: hash, fileSize: file.size });
-
-  if (res.data) {
-    createFile({
-      resourceFlag: res.data,
-      filename: file.name
-    });
-    return;
-  }
-
+export async function putFile(file: File, hash: string) {
   const options = {
     headers: {
       // 指定Object的存储类型。
@@ -93,50 +79,8 @@ export async function putFile(file: File) {
       }
     }
   };
+  const client = await useOSS();
+  const result = await client.put(`${uploadPath}/${Date.now()}-${file.name}`, file, options);
 
-  try {
-    const client = await useOSS();
-    const result = await client.put(`${uploadPath}/${Date.now()}-${file.name}`, file, options);
-    console.log(result);
-    createFile({
-      resourceFlag: (result.data as UploadCallbackResponseData).data!.resourceFlag,
-      filename: file.name
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-/**
- * @description: 获取文件hash
- * @param {File} file 文件
- * @return {Promise<string>} 文件hash
- */
-function getFileHash(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = function (e: ProgressEvent<FileReader>) {
-      const buffer = e.target?.result;
-
-      if (!buffer) {
-        reject(new Error('读取失败'));
-        return;
-      }
-
-      crypto.subtle
-        .digest('SHA-256', buffer as ArrayBuffer)
-        .then((hashBuffer) => {
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, '0')).join('');
-          resolve(hashHex);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    };
-    reader.onerror = function (error) {
-      reject(error);
-    };
-    reader.readAsArrayBuffer(file);
-  });
+  return result;
 }

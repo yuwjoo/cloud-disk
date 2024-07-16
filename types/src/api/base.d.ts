@@ -1,4 +1,4 @@
-import { ResponseBody } from 'types/src/request/index';
+import type { ResponseBody } from "../utils/request";
 
 // 登录请求参数
 export type LoginReqParams = {
