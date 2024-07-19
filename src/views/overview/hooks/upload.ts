@@ -1,7 +1,7 @@
 import { useTaskDrawerStore } from '@/store/taskDrawer';
 import type { Ref } from 'vue';
 
-export function useUpload(currentFolderId: Ref<number | undefined>, getFileList: () => void) {
+export function useUpload(currentFolderPath: Ref<string>, getFileList: () => void) {
   const uploadRef = ref<HTMLInputElement | null>(null); // 上传 input ref
 
   /**
@@ -24,9 +24,13 @@ export function useUpload(currentFolderId: Ref<number | undefined>, getFileList:
    * @description: 上传文件
    */
   function uploadFile() {
-    useTaskDrawerStore().upload(currentFolderId.value, [...(uploadRef.value!.files || [])], () => {
-      getFileList();
-    });
+    useTaskDrawerStore().upload(
+      currentFolderPath.value,
+      [...(uploadRef.value!.files || [])],
+      () => {
+        getFileList();
+      }
+    );
   }
 
   /**

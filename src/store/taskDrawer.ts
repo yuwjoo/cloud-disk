@@ -1,5 +1,5 @@
 import { createFile, getResourceFlag } from '@/api/overview';
-import { putFile } from '@/utils/oss';
+import { putFile, multipartUpload } from '@/utils/oss';
 import { getFileHash } from '@/utils/utils';
 import { defineStore } from 'pinia';
 import type { UploadCallbackResponseBody } from 'types/src/api/overview';
@@ -31,7 +31,7 @@ export const useTaskDrawerStore = defineStore('taskDrawer', () => {
    * @description: 上传
    * @param {File[]} files 文件列表
    */
-  function upload(folderId: number | undefined, files: File[], callback: () => void) {
+  function upload(folderPath: string, files: File[], callback: () => void) {
     const list: UploadList = files.map((file) => ({ file, state: 'upload', progress: 0 }));
     const handleSuccess = (index: number) => {
       uploadList.value[index].state = 'success';
@@ -40,21 +40,23 @@ export const useTaskDrawerStore = defineStore('taskDrawer', () => {
 
     list.forEach(async (item, index) => {
       const hash = await getFileHash(item.file);
-      const res = await getResourceFlag({ fileHash: hash, fileSize: item.file.size });
+      const res =
+        { data: undefined } ||
+        (await getResourceFlag({ fileHash: hash, fileSize: item.file.size }));
 
       if (res.data) {
         createFile({
-          parentFolderId: folderId,
+          folderPath,
           filename: item.file.name,
           resourceFlag: res.data
         }).then(() => handleSuccess(index));
         return;
       }
 
-      const result = await putFile(item.file, hash);
+      const result = await multipartUpload(item.file, hash);
 
       createFile({
-        parentFolderId: folderId,
+        folderPath,
         filename: item.file.name,
         resourceFlag: (result.data as UploadCallbackResponseBody).data.resourceFlag
       }).then(() => handleSuccess(index));

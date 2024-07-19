@@ -10,27 +10,35 @@ export function useFileManage() {
   const loading = ref<boolean>(false); // 加载中
   const pathList = ref<PathList>([]); // 路径列表
   const fileList = ref<FileList>([]); // 文件列表
-  const currentFolderId = ref<number>(); // 当前文件夹id
+  const currentFolderPath = ref<string>('/'); // 当前文件夹路径
 
   getFileList();
 
   /**
    * @description: 获取文件列表
-   * @param {number} folderId 文件夹id
+   * @param {string} folderPath 文件夹路径
    */
-  function getFileList(folderId?: number) {
+  function getFileList(folderPath?: string) {
     loading.value = true;
-    getDirectoryList({ parentFolderId: folderId || currentFolderId.value })
+    getDirectoryList({ folderPath: folderPath || currentFolderPath.value })
       .then((res) => {
-        pathList.value = (res.data.folderPathList || []).map((item) => ({
-          ...item,
-          folderName: item.folderName === '/' ? '全部文件' : item.folderName
-        }));
-        fileList.value = (res.data.directoryList || []).map((item) => ({
+        const data = res.data;
+        // TODO: 测试代码
+        console.log(data);
+        const paths = [{ label: '全部文件', path: '/' }];
+        let parentPath = '';
+
+        for (const name of data.folderPath.split('/').filter(Boolean)) {
+          parentPath += '/' + name;
+          paths.push({ label: name, path: parentPath });
+        }
+
+        pathList.value = paths;
+        fileList.value = (data.list || []).map((item) => ({
           ...item,
           modifiedDate: dayjs(item.modifiedTime).format('YYYY-MM-DD HH:mm')
         }));
-        currentFolderId.value = pathList.value.slice(-1)[0].folderId;
+        currentFolderPath.value = data.folderPath;
       })
       .finally(() => {
         loading.value = false;
@@ -52,7 +60,7 @@ export function useFileManage() {
           return;
         }
         ctx.confirmButtonLoading = true;
-        fetchCreateFolder({ parentFolderId: currentFolderId.value, folderName: ctx.inputValue })
+        fetchCreateFolder({ folderPath: currentFolderPath.value, name: ctx.inputValue })
           .then(() => {
             ElMessage({
               type: 'success',
@@ -71,10 +79,10 @@ export function useFileManage() {
 
   /**
    * @description: 下载文件
-   * @param {number} fileId 文件id
+   * @param {string} filePath 文件路径
    */
-  function downloadFile(fileId: number) {
-    fetchDownloadFile({ fileId }).then((res) => {
+  function downloadFile(filePath: string) {
+    fetchDownloadFile({ filePath }).then((res) => {
       const a = document.createElement('a');
       a.href = res.data;
       a.download = 'download';
@@ -84,5 +92,13 @@ export function useFileManage() {
     });
   }
 
-  return { loading, currentFolderId, pathList, fileList, getFileList, createFolder, downloadFile };
+  return {
+    loading,
+    currentFolderPath,
+    pathList,
+    fileList,
+    getFileList,
+    createFolder,
+    downloadFile
+  };
 }

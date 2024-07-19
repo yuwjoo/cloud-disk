@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-07-16 17:27:54
+ * @LastEditTime: 2024-07-18 14:22:29
  * @Description: 
 -->
 <template>
@@ -14,7 +14,7 @@
         <template v-if="pathList.length > 1">
           <el-icon
             class="overview-top__back"
-            @click="getFileList(pathList[pathList.length - 2]?.folderId)"
+            @click="getFileList(pathList[pathList.length - 2]?.path)"
           >
             <i-ep-back />
           </el-icon>
@@ -24,9 +24,9 @@
           <el-breadcrumb-item
             v-for="(item, index) in pathList"
             :key="index"
-            @click="currentFolderId !== item.folderId ? getFileList(item.folderId) : null"
+            @click="currentFolderPath !== item.path ? getFileList(item.path) : null"
           >
-            {{ item.folderName }}
+            {{ item.label }}
           </el-breadcrumb-item>
         </el-breadcrumb>
       </div>
@@ -55,21 +55,16 @@
         class="overview-list__item"
         v-for="(item, index) in fileList"
         :key="index"
-        @click="item.type === 'folder' ? getFileList(item.id) : null"
+        @click="item.type === 'folder' ? getFileList(item.fullPath) : null"
       >
         <el-icon
           v-if="item.type === 'file'"
           class="overview-list__download"
-          @click="downloadFile(item.id)"
+          @click="downloadFile(item.fullPath)"
         >
           <i-ep-download />
         </el-icon>
-        <img
-          class="overview-list__cover"
-          :src="useFileIcon(item.type, item.mimeType || '')"
-          alt=""
-          @dragstart.prevent
-        />
+        <img class="overview-list__cover" :src="item.cover" alt="" @dragstart.prevent />
         <div class="overview-list__name" :title="item.name">{{ item.name }}</div>
         <div class="overview-list__modified-date">{{ item.modifiedDate }}</div>
       </div>
@@ -81,14 +76,13 @@
 </template>
 
 <script setup lang="ts">
-import { useFileIcon } from './hooks/fileIcon';
 import { useFileManage } from './hooks/fileManage';
 import { useUpload } from './hooks/upload';
 
-const { loading, currentFolderId, pathList, fileList, getFileList, createFolder, downloadFile } =
+const { loading, currentFolderPath, pathList, fileList, getFileList, createFolder, downloadFile } =
   useFileManage();
 const { uploadRef, selectFile, uploadFile, handleCommand } = useUpload(
-  currentFolderId,
+  currentFolderPath,
   getFileList
 );
 </script>
@@ -183,6 +177,7 @@ const { uploadRef, selectFile, uploadFile, handleCommand } = useUpload(
     .overview-list__cover {
       width: 60px;
       height: 60px;
+      object-fit: contain;
     }
 
     .overview-list__name {
@@ -192,6 +187,7 @@ const { uploadRef, selectFile, uploadFile, handleCommand } = useUpload(
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
       font-size: var(--text-size-small);
+      word-wrap: break-word;
 
       &:hover {
         color: var(--color-primary);
