@@ -1,6 +1,7 @@
 import { createFile, getResourceFlag } from '@/api/overview';
 import { putFile, multipartUpload } from '@/utils/oss';
 import { getFileHash } from '@/utils/utils';
+import axios from 'axios';
 import { defineStore } from 'pinia';
 import type { UploadCallbackResponseBody } from 'types/src/api/overview';
 import type { UploadList } from 'types/src/store/taskDrawer';
@@ -40,26 +41,59 @@ export const useTaskDrawerStore = defineStore('taskDrawer', () => {
 
     list.forEach(async (item, index) => {
       const hash = await getFileHash(item.file);
-      const res =
-        { data: undefined } ||
-        (await getResourceFlag({ fileHash: hash, fileSize: item.file.size }));
+      // const result = await multipartUpload(item.file, hash);
+      const result = await createFile({
+        fileHash: hash,
+        fileSize: item.file.size,
+        fileName: item.file.name,
+        folderPath: folderPath,
+        uploadMode: 'part',
+        forceUpload: true
+      });
 
-      if (res.data) {
-        createFile({
-          folderPath,
-          filename: item.file.name,
-          resourceFlag: res.data
-        }).then(() => handleSuccess(index));
-        return;
+      if (!result.data.isComplete) {
+        let offset = 0;
+        for (const url of result.data.uploadUrls!.slice(0, -1)) {
+          axios({
+            url,
+            method: 'put',
+            data: item.file.slice(offset, 1024 * 1024),
+            headers: {
+              'Content-Type': 'application/octet-stream'
+            }
+          });
+          offset += 1024 * 1024;
+        }
+        // axios({
+        //   url: result.data.uploadUrls!.slice(-1)[0],
+        //   method: 'post',
+        //   data: item.file.slice(offset, 1024 * 1024),
+        //   headers: {
+        //     'Content-Type': item.file.type
+        //   }
+        // });
       }
 
-      const result = await multipartUpload(item.file, hash);
+      // const res =
+      //   { data: undefined } ||
+      //   (await getResourceFlag({ fileHash: hash, fileSize: item.file.size }));
 
-      createFile({
-        folderPath,
-        filename: item.file.name,
-        resourceFlag: (result.data as UploadCallbackResponseBody).data.resourceFlag
-      }).then(() => handleSuccess(index));
+      // if (res.data) {
+      //   createFile({
+      //     folderPath,
+      //     filename: item.file.name,
+      //     resourceFlag: res.data
+      //   }).then(() => handleSuccess(index));
+      //   return;
+      // }
+
+      // const result = await multipartUpload(item.file, hash);
+
+      // createFile({
+      //   folderPath,
+      //   filename: item.file.name,
+      //   resourceFlag: (result.data as UploadCallbackResponseBody).data.resourceFlag
+      // }).then(() => handleSuccess(index));
     });
 
     uploadList.value.unshift(...list);

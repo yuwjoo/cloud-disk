@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 import type {
-  CreateFileRequestQuery,
+  CreateFileRequestBody,
   CreateFileResponseBody,
   GetDirectoryListRequestQuery,
   GetDirectoryListResponseBody,
@@ -29,14 +29,14 @@ export function getDirectoryList(
 
 /**
  * @description: 创建文件
- * @param {CreateFileRequestQuery} params 参数
+ * @param {CreateFileRequestBody} data 参数
  * @return {Promise<CreateFileResponseBody>} 响应
  */
-export function createFile(params: CreateFileRequestQuery): Promise<CreateFileResponseBody> {
+export function createFile(data: CreateFileRequestBody): Promise<CreateFileResponseBody> {
   return request({
     url: '/fileSystem/createFile',
-    method: 'get',
-    params
+    method: 'post',
+    data
   });
 }
 
