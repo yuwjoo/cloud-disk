@@ -39,40 +39,44 @@ export const useTaskDrawerStore = defineStore('taskDrawer', () => {
       callback();
     };
 
-    list.forEach(async (item, index) => {
+    list.forEach(async (item) => {
       const hash = await getFileHash(item.file);
+      const mimeType = item.file.type || 'application/octet-stream';
       // const result = await multipartUpload(item.file, hash);
       const result = await createFile({
-        fileHash: hash,
-        fileSize: item.file.size,
-        fileName: item.file.name,
         folderPath: folderPath,
-        uploadMode: 'part',
+        fileHash: hash,
+        fileSize: 1 * 1024 * 1024 * 1024,
+        fileName: item.file.name,
+        mimeType,
+        uploadMode: 'multipart',
         forceUpload: true
       });
 
-      if (!result.data.isComplete) {
-        let offset = 0;
-        for (const url of result.data.uploadUrls!.slice(0, -1)) {
-          axios({
-            url,
-            method: 'put',
-            data: item.file.slice(offset, 1024 * 1024),
-            headers: {
-              'Content-Type': 'application/octet-stream'
-            }
-          });
-          offset += 1024 * 1024;
-        }
-        // axios({
-        //   url: result.data.uploadUrls!.slice(-1)[0],
-        //   method: 'post',
-        //   data: item.file.slice(offset, 1024 * 1024),
-        //   headers: {
-        //     'Content-Type': item.file.type
-        //   }
-        // });
-      }
+      console.log(item.file);
+
+      // if (result.data.upload.mode === 'multipart') {
+      //   let offset = 0;
+      //   for (const uploadUrl of result.data.upload.multipartUrls!) {
+      //     axios({
+      //       url: uploadUrl,
+      //       method: 'put',
+      //       data: item.file.slice(offset, offset + 1024 * 1024),
+      //       headers: {
+      //         'Content-Type': mimeType
+      //       }
+      //     });
+      //     offset += 1024 * 1024;
+      //   }
+      //   // axios({
+      //   //   url: result.data.uploadUrls!.slice(-1)[0],
+      //   //   method: 'post',
+      //   //   data: item.file.slice(offset, 1024 * 1024),
+      //   //   headers: {
+      //   //     'Content-Type': item.file.type
+      //   //   }
+      //   // });
+      // }
 
       // const res =
       //   { data: undefined } ||

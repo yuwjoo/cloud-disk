@@ -1,5 +1,11 @@
 import request from '@/utils/request';
-import type { LoginReqParams, LoginResData, StsReqParams, StsResData } from 'types/src/api/base';
+import type {
+  GetMultipartResponseBody,
+  LoginReqParams,
+  LoginResData,
+  StsReqParams,
+  StsResData
+} from 'types/src/api/base';
 
 /**
  * @description: 登录
@@ -24,6 +30,18 @@ export function sts(params: StsReqParams): Promise<StsResData> {
     url: '/oss/sts',
     method: 'get',
     params
+  });
+}
+
+/**
+ * @description: 获取分片上传
+ * @param {string} url 请求地址
+ * @return {Promise<GetMultipartResponseBody>} 响应
+ */
+export function getMultipart(url: string): Promise<GetMultipartResponseBody> {
+  return request({
+    url,
+    method: 'get'
   });
 }
 

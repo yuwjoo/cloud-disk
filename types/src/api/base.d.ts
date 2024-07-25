@@ -1,4 +1,4 @@
-import type { ResponseBody } from "../utils/request";
+import type { ResponseBody } from '../utils/request';
 
 // 登录请求参数
 export type LoginReqParams = {
@@ -31,4 +31,11 @@ export type StsResData = ResponseBody<{
   uploadPath: string; // 上传路径
 }>;
 
-export {};
+// 获取分片上传接口-响应body
+export type GetMultipartResponseBody = ResponseBody<{
+  partSize: number; // 分片大小
+  startPartNumber: number; // 起始分片序号
+  multipartUrls: { partNumber: number; url: string }[]; // 分片上传的url
+  nextMultipartUrl?: string; // 继续分片上传的url
+  submitMultipartUrl?: string; // 提交分片上传的url
+}>;
