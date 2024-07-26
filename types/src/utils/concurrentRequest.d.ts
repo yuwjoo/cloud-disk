@@ -1,6 +1,6 @@
 export type RequestFun = (...arg: any) => Promise<any>;
 
-export type concurrentRequestOptions = { unshift?: boolean };
+export type concurrentRequestOptions = { axios?: AxiosInstance; unshift?: boolean };
 
 export type ConcurrentRequestAllOptions = { retry?: number; unshift?: boolean };
 
