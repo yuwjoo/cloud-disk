@@ -8,7 +8,35 @@ import type {
   AwaitRequestQueue
 } from 'types/src/utils/concurrentRequest';
 
-class Task extends Promise<any> {
+class Request<T = any> extends Promise<T> {
+  #resolve: (value: unknown) => void = () => {};
+  #reject: (reason?: any) => void = () => {};
+  status: 'pending' | 'fulfilled' | 'rejected' = 'pending';
+  config: AxiosRequestConfig;
+  axiosInstance: AxiosInstance;
+  cancelTokenSource: CancelTokenSource = axios.CancelToken.source();
+
+  constructor(config: AxiosRequestConfig, options: { axiosInstance?: AxiosInstance } = {}) {
+    const callbacks: any[] = [];
+    super((...arg) => callbacks.push(...arg));
+    this.#resolve = callbacks[0];
+    this.#reject = callbacks[1];
+    this.config = config;
+    this.axiosInstance = options.axiosInstance || axios;
+    this.#run();
+  }
+
+  #run(this: Request) {
+    const config = { ...this.config, cancelToken: this.cancelTokenSource.token };
+    this.axiosInstance(config).then(this.#resolve).catch(this.#reject);
+  }
+
+  cancel(this: Request) {
+    this.cancelTokenSource.cancel();
+  }
+}
+
+class Task<T = any> extends Promise<T> {
   resolve: (value: unknown) => void = () => {};
   reject: (reason?: any) => void = () => {};
   concurrentRequest: ConcurrentRequest;
@@ -35,33 +63,31 @@ class Task extends Promise<any> {
   run(this: Task) {
     if (this.isRun) return;
     this.isRun = true;
-    this.request({ ...this.params, cancelToken: this.cancelTokenSource.token })
-      .then(this.resolve)
-      .catch(this.reject)
-      .finally(this.#complete.bind(this));
+
+    const config = { ...this.params, cancelToken: this.cancelTokenSource.token };
+    const complete = () => {
+      let nextTask: Task | undefined = undefined;
+      this.concurrentRequest.taskPool.delete(this);
+      if ((nextTask = this.concurrentRequest.awaitQueue.shift())) {
+        this.concurrentRequest.taskPool.add(nextTask);
+        nextTask.run();
+      }
+    };
+
+    this.request(config).then(this.resolve).catch(this.reject).finally(complete);
   }
 
   cancel(this: Task) {
+    let pos: number = -1;
     if (this.isRun) {
       this.cancelTokenSource.cancel();
-    } else {
-      const pos = this.concurrentRequest.awaitQueue.indexOf(this);
-      if (pos === -1) return;
+    } else if ((pos = this.concurrentRequest.awaitQueue.indexOf(this)) === -1) {
       this.concurrentRequest.awaitQueue.splice(pos, 1);
-    }
-  }
-
-  #complete(this: Task) {
-    const nextTask = this.concurrentRequest.awaitQueue.shift();
-    this.concurrentRequest.taskPool.delete(this);
-    if (nextTask) {
-      this.concurrentRequest.taskPool.add(nextTask);
-      nextTask.run();
     }
   }
 }
 
-class ConcurrentRequest {
+export class ConcurrentRequest {
   maxTaskSize: number = 1; // 最大并发数
   taskPool: Set<Task> = new Set(); // 任务池
   awaitQueue: Task[] = []; // 等待队列
@@ -85,11 +111,9 @@ class ConcurrentRequest {
     return task;
   }
 
-  addBatchTask(paramsAll: AxiosRequestConfig[], options: concurrentRequestOptions = {}) {
-    const concurrentRequest = new ConcurrentRequest(this.maxTaskSize);
-    const tasks = new Set(); // 任务池
-    
-
+  clear(this: ConcurrentRequest) {
+    this.awaitQueue = [];
+    this.taskPool.forEach((task) => task.cancel());
   }
 }
 

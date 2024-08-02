@@ -4,7 +4,7 @@ import type { ResponseBody } from '../utils/request';
 export type MultipartUploadReqParams = {
   file: File; // 文件
   partSize: number; // 分片大小
-  multipartUrls: { partNumber: number; url: string }[]; // 上传url列表
+  multipartUrls: { partNumber: number; startPos: number; endPos: number; uploadUrl: string }[]; // 上传url列表
   nextMultipartUrl?: string; // 继续上传的url
   submitMultipartUrl?: string; // 提交分片的url
 };
