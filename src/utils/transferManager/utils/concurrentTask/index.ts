@@ -1,52 +1,64 @@
-import { Task } from './Task';
+import { Task } from './task';
 
-export type RunFun = (...args: any[]) => Promise<any>;
+export type Options = { limit?: number };
 
 export class ConcurrentTask {
-  limit: number; // 最大并发数
-  taskPool: Set<Task> = new Set(); // 任务池
-  awaitQueue: Task[] = []; // 等待队列
+  #limit: number; // 最大并发数
+  #taskPool: Set<Task> = new Set(); // 任务池
+  #awaitQueue: Task[] = []; // 等待队列
 
-  constructor(limit: number) {
-    this.limit = limit || 1;
+  get limit() {
+    return this.#limit;
   }
 
-  pushTask(this: ConcurrentTask, runFun: RunFun, ...args: any[]): Task {
-    return this.addTask(runFun, args, false);
+  get taskPool() {
+    return this.#taskPool;
   }
 
-  unshiftTask(this: ConcurrentTask, runFun: RunFun, ...args: any[]): Task {
-    return this.addTask(runFun, args, true);
+  get awaitQueue() {
+    return this.#awaitQueue;
   }
 
-  addTask(this: ConcurrentTask, runFun: RunFun, args: any[], isUnshift?: boolean): Task {
-    const task = new Task(runFun, args, () => {
-      const nextTask = this.awaitQueue.shift();
-      this.taskPool.delete(task);
-      if (nextTask) {
-        this.taskPool.add(nextTask);
-        nextTask.run();
-      }
+  constructor(options: Options = {}) {
+    this.#limit = options.limit || 1;
+  }
+
+  push(this: ConcurrentTask, runFun: Function, ...args: any[]): Task {
+    return this.#addTask(new Task(runFun, ...args), 'push');
+  }
+
+  unshift(this: ConcurrentTask, runFun: Function, ...args: any[]): Task {
+    return this.#addTask(new Task(runFun, ...args), 'unshift');
+  }
+
+  #addTask(this: ConcurrentTask, task: Task, operate: 'push' | 'unshift'): Task {
+    if (this.#taskPool.size < this.limit) {
+      this.#runTask(task);
+    } else {
+      this.#awaitQueue[operate](task);
+    }
+    task.finally(() => {
+      this.#taskPool.delete(task);
+      this.#runTask(this.#awaitQueue.shift());
     });
 
-    if (this.taskPool.size < this.limit) {
-      this.taskPool.add(task);
-      task.run();
-    } else if (isUnshift) {
-      this.awaitQueue.unshift(task);
-    } else {
-      this.awaitQueue.push(task);
-    }
     return task;
   }
 
+  #runTask(task?: Task) {
+    if (!task) return;
+    this.#taskPool.add(task);
+    task.run();
+  }
+
   deleteTask(this: ConcurrentTask, task: Task) {
-    const success = this.taskPool.delete(task);
-    if (!success) this.awaitQueue.splice(this.awaitQueue.indexOf(task), 1);
+    if (!this.#taskPool.delete(task)) {
+      this.#awaitQueue.splice(this.#awaitQueue.indexOf(task), 1);
+    }
   }
 
   clear(this: ConcurrentTask) {
-    this.taskPool.clear();
-    this.awaitQueue = [];
+    this.#taskPool.clear();
+    this.#awaitQueue = [];
   }
 }

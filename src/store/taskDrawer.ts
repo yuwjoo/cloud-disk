@@ -43,17 +43,29 @@ export const useTaskDrawerStore = defineStore('taskDrawer', () => {
       const hash = await getFileHash(item.file);
       const mimeType = item.file.type || 'application/octet-stream';
       // const result = await multipartUpload(item.file, hash);
+      // console.log(result)
       const result = await createFile({
         folderPath: folderPath,
         fileHash: hash,
         fileSize: 1 * 1024 * 1024 * 1024,
         fileName: item.file.name,
         mimeType,
-        uploadMode: 'multipart',
+        uploadMode: 'simple',
         forceUpload: true
       });
+      console.log('进入', result);
 
-      console.log(item.file);
+      axios({
+        url: result.data.upload.simpleUrl,
+        method: 'put',
+        data: item.file,
+        headers: {
+          'Content-Type': mimeType,
+          'x-oss-forbid-overwrite': true,
+          'x-oss-object-acl': 'private',
+          'x-oss-storage-class': 'Standard'
+        }
+      });
 
       // if (result.data.upload.mode === 'multipart') {
       //   let offset = 0;

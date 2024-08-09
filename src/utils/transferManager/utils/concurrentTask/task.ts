@@ -1,26 +1,32 @@
-import type { RunFun } from '.';
-
 export class Task<T = any> extends Promise<T> {
-  #resolve: (value: unknown) => void = () => {};
-  #reject: (reason?: any) => void = () => {};
+  #status: 'pending' | 'active' | 'fulfilled' | 'rejected' = 'pending';
+  #callback: any[];
+  #runFun: Function;
 
-  runFun: RunFun;
-  args: any[];
-  done: () => void;
+  get status() {
+    return this.#status;
+  }
 
-  constructor(runFun: RunFun, args: any[], done: () => void) {
-    const callbacks: any[] = [];
-    super((...arg) => callbacks.push(...arg));
-    this.#resolve = callbacks[0];
-    this.#reject = callbacks[1];
+  constructor(runFun: Function, ...args: any[]) {
+    let callback: any;
+    super((...arg) => (callback = arg));
+    this.#callback = callback;
+    this.#runFun = runFun.bind(this, ...args);
+  }
 
-    this.runFun = runFun;
-    this.args = args;
-    this.done = done;
+  #resolve(value: unknown) {
+    this.#status = 'fulfilled';
+    this.#callback[0](value);
+  }
+
+  #reject(reason?: any) {
+    this.#status = 'rejected';
+    this.#callback[1](reason);
   }
 
   run(this: Task) {
-    const promise = this.runFun(...this.args);
-    promise.then(this.#resolve).catch(this.#reject).finally(this.done);
+    if (this.#status !== 'pending') return;
+    this.#status = 'active';
+    this.#runFun().then(this.#resolve).catch(this.#reject);
   }
 }

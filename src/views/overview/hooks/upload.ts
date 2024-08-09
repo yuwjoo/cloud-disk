@@ -24,8 +24,8 @@ export function useUpload(currentFolderPath: Ref<string>, getFileList: () => voi
    * @description: 上传文件
    */
   function uploadFile() {
-    console.log(uploadRef.value!.files);
-    return;
+    // console.log(uploadRef.value!.files);
+    // return;
     useTaskDrawerStore().upload(
       currentFolderPath.value,
       [...(uploadRef.value!.files || [])],

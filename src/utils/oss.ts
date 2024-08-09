@@ -65,19 +65,19 @@ export async function putFile(file: File, hash: string) {
       // 指定PutObject操作时是否覆盖同名目标Object。此处设置为true，表示禁止覆盖同名Object。
       'x-oss-forbid-overwrite': 'false'
     },
-    callback: {
-      // 设置回调请求的服务器地址
-      url: import.meta.env.VITE_APP_SERVERURL + '/oss/uploadCallback',
-      // 设置发起回调时请求body的值。
-      body: 'object=${object}&size=${size}&mimeType=${mimeType}&hash=${x:hash}&token=${x:token}',
-      // 设置发起回调请求的Content-Type。
-      contentType: 'application/x-www-form-urlencoded',
-      // 设置发起回调请求的自定义参数。
-      customValue: {
-        hash,
-        token: localStorage.getItem('token')
-      }
-    }
+    // callback: {
+    //   // 设置回调请求的服务器地址
+    //   url: import.meta.env.VITE_APP_SERVERURL + '/oss/uploadCallback',
+    //   // 设置发起回调时请求body的值。
+    //   body: 'object=${object}&size=${size}&mimeType=${mimeType}&hash=${x:hash}&token=${x:token}',
+    //   // 设置发起回调请求的Content-Type。
+    //   contentType: 'application/x-www-form-urlencoded',
+    //   // 设置发起回调请求的自定义参数。
+    //   customValue: {
+    //     hash,
+    //     token: localStorage.getItem('token')
+    //   }
+    // }
   };
   const client = await useOSS();
   const result = await client.put(`${uploadPath}/${Date.now()}-${file.name}`, file, options);
