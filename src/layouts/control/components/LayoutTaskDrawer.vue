@@ -4,12 +4,12 @@
  * @Author: YH
  * @Date: 2024-07-12 15:00:58
  * @LastEditors: YH
- * @LastEditTime: 2024-07-16 17:21:57
+ * @LastEditTime: 2024-08-27 16:23:45
  * @Description: 
 -->
 
 <template>
-  <el-drawer v-model="visible" direction="rtl" size="30%" :with-header="false">
+  <el-drawer v-model="visible" direction="rtl" size="400px" :with-header="false">
     <!-- 头部 start -->
     <div class="layout-task-drawer__header">
       <span class="layout-task-drawer__header-title">传输列表</span>
@@ -51,7 +51,7 @@
       </div>
       <div class="layout-task-drawer__task-operate">
         <el-button
-          v-if="item.state === 'upload'"
+          v-if="item.status === 'upload'"
           type="primary"
           :icon="IEpPause"
           circle
@@ -74,16 +74,17 @@ import IEpDownload from '~icons/ep/download';
 import IEpDelete from '~icons/ep/delete';
 import IEpPause from '~icons/icons/pause';
 import { useTaskDrawerStore } from '@/store/taskDrawer';
+import { uploadTaskList } from '@/utils/uploadManager';
 import { storeToRefs } from 'pinia';
 
-const { visible, uploadList, downloadList } = storeToRefs(useTaskDrawerStore());
+const { visible } = storeToRefs(useTaskDrawerStore());
 const { close } = useTaskDrawerStore();
 const active = ref<string>('upload');
 const segmentedOptions = [
   { label: '上传中', value: 'upload', icon: IEpUpload },
   { label: '下载中', value: 'download', icon: IEpDownload }
 ];
-const list = computed(() => (active.value === 'upload' ? uploadList.value : downloadList.value));
+const list = computed(() => (active.value === 'upload' ? uploadTaskList.value : uploadTaskList.value));
 </script>
 
 <style lang="scss" scoped>
