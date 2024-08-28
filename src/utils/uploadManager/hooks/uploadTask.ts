@@ -4,13 +4,14 @@
  * @Author: YH
  * @Date: 2024-08-23 14:18:12
  * @LastEditors: YH
- * @LastEditTime: 2024-08-27 16:52:58
+ * @LastEditTime: 2024-08-28 17:28:37
  * @Description:
  */
 import request from '@/utils/request';
 import type { PostMessageData } from '../workers/fileHashWorker';
 import { useMultipartUpload } from './multipartUpload';
 import { useSimpleUpload } from './simpleUpload';
+import type { ResponseBody } from 'types/src/utils/request';
 
 export type GetFileHashParams = {
   file: File;
@@ -22,10 +23,10 @@ export type GetResourceTokenParams = {
   fileHash: string;
 };
 
-export type GetResourceTokenReturn = string | undefined;
+export type GetResourceTokenReturn = ResponseBody<string>;
 
 export type CreateFileParams = {
-  path: string;
+  folderPath: string;
   fileName: string;
   resourceToken: string;
 };
@@ -49,7 +50,7 @@ export type UploadTaskStatus =
 
 export type UploadTaskUploadType = 'fast' | 'simple' | 'multipart'; // 上传类型：fast: 秒传，simple: 简单上传，multipart: 分片上传
 
-const MIN_MULTIPART_SIZE = 1024 * 1024 * 100; // 启用分片上传的文件最小大小
+const MIN_MULTIPART_SIZE = 1024 * 1024 * 8; // 启用分片上传的文件最小大小
 const PART_SIZE = 1024 * 1024 * 1; // 分片大小
 
 /**
@@ -77,7 +78,7 @@ function getResourceToken(params: GetResourceTokenParams): Promise<GetResourceTo
   return request({
     url: '/fileSystem/getResourceToken',
     method: 'get',
-    data: params
+    params
   });
 }
 
@@ -155,7 +156,7 @@ export function createUploadTask(options: CreateUploadTaskOptions) {
 
     status.value = 'upload';
     try {
-      resourceToken = await getResourceToken({ fileHash: fileHash.value! }); // 获取资源token
+      resourceToken = (await getResourceToken({ fileHash: fileHash.value! })).data; // 获取资源token
 
       if (resourceToken) {
         // 秒传
@@ -208,7 +209,7 @@ export function createUploadTask(options: CreateUploadTaskOptions) {
    */
   async function onSuccess(resourceToken: string) {
     response.value = await createFile({
-      path: options.uploadPath,
+      folderPath: options.uploadPath,
       fileName: options.uploadName,
       resourceToken: resourceToken
     });

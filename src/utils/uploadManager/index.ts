@@ -32,8 +32,9 @@ export function addUploadTask(options: AddUploadTaskOptions) {
       }
 
       if (val === 'success' || val === 'fail' || val === 'cancel') {
-        execUploadTask();
         stopWatch();
+        uploadTaskPool.delete(uploadTask);
+        execUploadTask();
       }
     }
   );

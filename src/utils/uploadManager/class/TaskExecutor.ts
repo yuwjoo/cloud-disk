@@ -1,10 +1,10 @@
 /*
  * @FileName: 任务执行类
- * @FilePath: \cloud-disk\src\utils\transferManager\class\TaskExecutor.ts
+ * @FilePath: \cloud-disk\src\utils\uploadManager\class\TaskExecutor.ts
  * @Author: YH
  * @Date: 2024-08-14 16:56:01
  * @LastEditors: YH
- * @LastEditTime: 2024-08-27 11:42:48
+ * @LastEditTime: 2024-08-28 17:01:33
  * @Description:
  */
 export type TaskExecutorExecutor<T> = (

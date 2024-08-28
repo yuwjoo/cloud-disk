@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-13 16:50:00
  * @LastEditors: YH
- * @LastEditTime: 2024-08-27 17:43:45
+ * @LastEditTime: 2024-08-28 17:46:05
  * @Description:
  */
 import request from '@/utils/request';
@@ -29,7 +29,7 @@ export type MultipartUploadPart = {
 
 const MAX_TASK_SIZE = 6; // 最大并发任务数
 const DEFAULT_PART_SIZE = 1024 * 1024 * 1; // 默认分片大小
-const MAX_GET_PART_SIZE = 20; // 每次请求最多获取多少个分片的信息
+const MAX_GET_PART_SIZE = 5; // 每次请求最多获取多少个分片的信息
 
 export function useMultipartUpload(options: MultipartUploadOptions) {
   const { file, partSize = DEFAULT_PART_SIZE, defaultPartList = [] } = options;
@@ -143,8 +143,8 @@ export function useMultipartUpload(options: MultipartUploadOptions) {
       // 没有上传地址或者已经过期
       if (!part.url || (part.expire && Date.now() >= part.expire)) {
         fetchList.push(part);
-        if (fetchList.length > MAX_GET_PART_SIZE || taskExecutorManager.awaitingCount === 0) {
-          getParts(fetchList.splice(0, MAX_GET_PART_SIZE));
+        if (fetchList.length > MAX_GET_PART_SIZE) {
+          taskExecutorManager.add(getParts(fetchList.splice(0, MAX_GET_PART_SIZE)));
         }
         reject(TaskExecutor.CANCELLED);
         return;
@@ -157,13 +157,16 @@ export function useMultipartUpload(options: MultipartUploadOptions) {
           method: 'put',
           data: file.slice((part.number - 1) * partSize, part.number * partSize),
           headers: {
-            'Content-Type': file.type || 'application/octet-stream',
-            'x-oss-forbid-overwrite': true
+            'Content-Type': file.type || 'application/octet-stream'
           },
           cancelToken: token
         });
         part.ETag = res.headers['etag'];
         progress.value += 100 / partTotal;
+
+        if (fetchList.length && taskExecutorManager.awaitingCount === 0) {
+          taskExecutorManager.add(getParts(fetchList.splice(0, MAX_GET_PART_SIZE)));
+        }
         resolve();
       } catch (err) {
         reject(axios.isCancel(err) ? TaskExecutor.CANCELLED : err);
@@ -194,7 +197,7 @@ export function useMultipartUpload(options: MultipartUploadOptions) {
         });
         res.data.forEach((item: Required<Omit<MultipartUploadPart, 'ETag'>>) => {
           partList[item.number - 1] = item;
-          uploadPart(item);
+          taskExecutorManager.add(uploadPart(item));
         });
         resolve();
       } catch (err) {
@@ -209,27 +212,29 @@ export function useMultipartUpload(options: MultipartUploadOptions) {
    */
   function completePartUpload(): TaskExecutor {
     const { token, cancel } = axios.CancelToken.source();
-    const xml: string[] = [];
+    // const xml: string[] = [];
 
-    xml.push('<CompleteMultipartUpload>');
-    partList.forEach(({ number, ETag }: MultipartUploadPart) => {
-      xml.push(
-        `<Part> 
-            <PartNumber>${number}</PartNumber>  
-            <ETag>"${ETag}"</ETag> 
-        </Part>`
-      );
-    });
-    xml.push('</CompleteMultipartUpload>');
+    // xml.push('<CompleteMultipartUpload>');
+    // partList.forEach(({ number, ETag }: MultipartUploadPart) => {
+    //   xml.push(
+    //     `<Part>
+    //         <PartNumber>${number}</PartNumber>
+    //         <ETag>"${ETag}"</ETag>
+    //     </Part>`
+    //   );
+    // });
+    // xml.push('</CompleteMultipartUpload>');
 
     return new TaskExecutor(async (resolve, reject) => {
       try {
         const res = await request({
-          url: '/oss/completeMultipart',
+          url: 'oss/completeMultipart',
           method: 'post',
           data: {
             uploadId,
-            xmlData: xml.join('')
+            object,
+            fileHash: (options.file as any).hash,
+            partList: partList.map((part) => ({ number: part.number, etag: part.ETag }))
           },
           cancelToken: token
         });

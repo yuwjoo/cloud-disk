@@ -1,10 +1,10 @@
 /*
  * @FileName: 任务执行管理类
- * @FilePath: \cloud-disk\src\utils\transferManager\class\TaskExecutorManager.ts
+ * @FilePath: \cloud-disk\src\utils\uploadManager\class\TaskExecutorManager.ts
  * @Author: YH
  * @Date: 2024-08-02 13:28:44
  * @LastEditors: YH
- * @LastEditTime: 2024-08-27 13:59:01
+ * @LastEditTime: 2024-08-28 17:31:44
  * @Description:
  */
 import { TaskExecutor } from './TaskExecutor';
@@ -54,7 +54,9 @@ export class TaskExecutorManager {
     return new Promise<void>(async (resolve, reject) => {
       while (this.#taskPool.size > 0) {
         try {
-          const res = await Promise.race(this.#taskPool);
+          const promises: Promise<any>[] = [];
+          this.#taskPool.forEach((task) => promises.push(task.promise));
+          const res = await Promise.race(promises);
           options.onSuccess?.(res);
         } catch (err) {
           if (err === TaskExecutor.CANCELLED) {
@@ -92,7 +94,11 @@ export class TaskExecutorManager {
    * @param {TaskExecutor} task 任务执行器
    */
   add(this: TaskExecutorManager, task: TaskExecutor) {
-    this.#awaitQueue.push(task);
+    if (!this.#paused && this.#taskPool.size < this.#limit) {
+      this.#runTask(task);
+    } else {
+      this.#awaitQueue.push(task);
+    }
   }
 
   /**

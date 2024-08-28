@@ -4,11 +4,12 @@
  * @Author: YH
  * @Date: 2024-08-23 11:48:43
  * @LastEditors: YH
- * @LastEditTime: 2024-08-27 16:57:34
+ * @LastEditTime: 2024-08-28 16:00:11
  * @Description:
  */
 import axios, { type AxiosProgressEvent } from 'axios';
 import { TaskExecutor } from '../class/TaskExecutor';
+import request from '@/utils/request';
 
 export type SimpleUploadOptions = {
   file: File; // 文件
@@ -80,7 +81,7 @@ export function useSimpleUpload(options: SimpleUploadOptions) {
 
     return new TaskExecutor(async (resolve, reject) => {
       try {
-        const res = await axios({
+        const res = await request({
           url: 'oss/getUploadUrl',
           method: 'get',
           params: {
@@ -114,14 +115,16 @@ export function useSimpleUpload(options: SimpleUploadOptions) {
           data: options.file,
           headers: {
             'Content-Type': options.file.type || 'application/octet-stream',
-            'x-oss-forbid-overwrite': true
+            'x-oss-forbid-overwrite': true,
+            'x-oss-object-acl': 'private',
+            'x-oss-storage-class': 'Standard'
           },
           cancelToken: token,
           onUploadProgress: (progressEvent: AxiosProgressEvent) => {
             progress.value = (progressEvent.loaded / (progressEvent.total || 0)) * 100;
           }
         });
-        response.value = res.data;
+        response.value = res.data.data;
         resolve();
       } catch (err) {
         reject(axios.isCancel(err) ? TaskExecutor.CANCELLED : err);
