@@ -1,4 +1,4 @@
-import { createUploadTask } from './hooks/uploadTask';
+import { UploadTask, type UploadTaskStatus } from './uploadTask/UploadTask';
 
 export type AddUploadTaskOptions = {
   file: File;
@@ -6,10 +6,7 @@ export type AddUploadTaskOptions = {
   uploadName: string;
 };
 
-const MAX_TASK_NUM = 1; // 同时上传任务数
 export const uploadTaskList = ref<ReturnType<typeof createUploadTask>[]>([]); // 上传列表
-const uploadTaskPool = new Set(); // 上传池
-const awaitUploadTaskList = ref<ReturnType<typeof createUploadTask>[]>([]); // 等待上传列表
 
 /**
  * @description: 添加上传任务
@@ -17,46 +14,63 @@ const awaitUploadTaskList = ref<ReturnType<typeof createUploadTask>[]>([]); // �
  */
 export function addUploadTask(options: AddUploadTaskOptions) {
   const uploadTask = createUploadTask(options);
-
   uploadTaskList.value.push(uploadTask);
-  uploadTask.ready();
-  const stopWatch = watch(
-    () => uploadTask.status,
-    (val) => {
-      if (val === 'ready') {
-        if (awaitUploadTaskList.value.find((task) => task === uploadTask)) return;
-        awaitUploadTaskList.value.push(uploadTask);
-        execUploadTask();
-      } else {
-        awaitUploadTaskList.value = awaitUploadTaskList.value.filter((task) => task !== uploadTask);
-      }
-
-      if (val === 'success' || val === 'fail' || val === 'cancel') {
-        stopWatch();
-        uploadTaskPool.delete(uploadTask);
-        execUploadTask();
-      }
-    }
-  );
+  uploadTask.start();
 }
 
 /**
  * @description: 删除上传任务
+ * @param {ReturnType<typeof createUploadTask>} uploadTask 上传任务
  */
-export function deleteUploadTask(task: ReturnType<typeof createUploadTask>) {
-  task.cancel();
-  uploadTaskList.value = uploadTaskList.value.filter((item) => item !== task);
-  uploadTaskPool.delete(task);
-  awaitUploadTaskList.value = awaitUploadTaskList.value.filter((item) => item !== task);
+export function deleteUploadTask(uploadTask: ReturnType<typeof createUploadTask>) {
+  uploadTask.cancel();
+  uploadTaskList.value = uploadTaskList.value.filter((item) => item !== uploadTask);
 }
 
 /**
- * @description: 执行上传任务
+ * @description: 创建上传任务
+ * @param {AddUploadTaskOptions} options 配置
  */
-function execUploadTask() {
-  if (uploadTaskPool.size >= MAX_TASK_NUM) return;
-  const task = awaitUploadTaskList.value.shift();
-  if (!task) return;
-  uploadTaskPool.add(task);
-  task.start();
+function createUploadTask(options: AddUploadTaskOptions) {
+  const status = ref<UploadTaskStatus>('pausing'); // 状态
+  const progress = ref<number>(0); // 进度
+  const response = ref<any>(); // 响应结果
+  const uploadTask = new UploadTask({
+    ...options,
+    onInitialize: () => {
+      status.value = 'initialize';
+    },
+    onWaiting: () => {
+      status.value = 'waiting';
+    },
+    onUpload: () => {
+      status.value = 'uploading';
+    },
+    onProgress: (num) => {
+      progress.value = num;
+    },
+    onPause: () => {
+      status.value = 'pausing';
+    },
+    onCancel: () => {
+      status.value = 'cancel';
+    },
+    onSuccess: (res) => {
+      status.value = 'success';
+      response.value = res;
+    },
+    onFail: () => {
+      status.value = 'fail';
+    }
+  });
+
+  return reactive({
+    file: options.file,
+    status,
+    progress,
+    response,
+    start: uploadTask.start.bind(uploadTask),
+    pause: uploadTask.pause.bind(uploadTask),
+    cancel: uploadTask.cancel.bind(uploadTask)
+  });
 }

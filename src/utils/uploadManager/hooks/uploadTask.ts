@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-23 14:18:12
  * @LastEditors: YH
- * @LastEditTime: 2024-08-28 17:28:37
+ * @LastEditTime: 2024-08-29 09:57:02
  * @Description:
  */
 import request from '@/utils/request';
@@ -229,7 +229,7 @@ export function createUploadTask(options: CreateUploadTaskOptions) {
     fileHash,
     response,
     uploadType,
-    progress,
+    progress: computed(() => Math.floor(progress.value)),
     ready,
     start,
     pause,

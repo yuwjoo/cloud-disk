@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-13 16:50:00
  * @LastEditors: YH
- * @LastEditTime: 2024-08-28 17:46:05
+ * @LastEditTime: 2024-08-28 18:00:01
  * @Description:
  */
 import request from '@/utils/request';
@@ -30,6 +30,12 @@ export type MultipartUploadPart = {
 const MAX_TASK_SIZE = 6; // 最大并发任务数
 const DEFAULT_PART_SIZE = 1024 * 1024 * 1; // 默认分片大小
 const MAX_GET_PART_SIZE = 5; // 每次请求最多获取多少个分片的信息
+
+// 检查是否需要上传
+// 获取上传id
+// 获取分片数据
+// 循环上传分片
+// 完成分片上传
 
 export function useMultipartUpload(options: MultipartUploadOptions) {
   const { file, partSize = DEFAULT_PART_SIZE, defaultPartList = [] } = options;
