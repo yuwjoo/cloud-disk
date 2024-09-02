@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-12 15:00:58
  * @LastEditors: YH
- * @LastEditTime: 2024-08-29 10:19:01
+ * @LastEditTime: 2024-09-02 17:52:09
  * @Description: 
 -->
 
@@ -52,7 +52,7 @@
       <div class="layout-task-drawer__task-operate">
         {{ item.status }}
         <el-button
-          v-if="item.status === 'upload'"
+          v-if="item.status === 'uploading'"
           type="primary"
           :icon="IEpPause"
           circle
@@ -60,12 +60,12 @@
           @click="item.pause()"
         />
         <el-button
-          v-else-if="item.status === 'pause'"
+          v-else-if="item.status === 'pausing'"
           type="primary"
           :icon="ICaretRight"
           circle
           size="small"
-          @click="item.ready()"
+          @click="item.start()"
         />
         <el-button type="danger" :icon="IEpDelete" circle size="small" />
       </div>

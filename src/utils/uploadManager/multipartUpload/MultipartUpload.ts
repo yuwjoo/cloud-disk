@@ -4,15 +4,16 @@
  * @Author: YH
  * @Date: 2024-08-29 13:36:34
  * @LastEditors: YH
- * @LastEditTime: 2024-08-30 16:03:55
+ * @LastEditTime: 2024-09-02 17:48:41
  * @Description:
  */
 import request from '@/utils/request';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import { Part } from './Part';
-import { TaskExecutor } from '../taskExecutor/TaskExecutor';
 import type { FileAttribute } from '../fileAttribute/FileAttribute';
 import axios from 'axios';
+import { TaskExecutorPool } from '../taskExecutorPool/TaskExecutorPool';
+import { TaskExecutor } from '../taskExecutorPool/TaskExecutor';
 
 export type MultipartUploadOptions = {
   fileAttribute: FileAttribute;
@@ -35,7 +36,7 @@ export class MultipartUpload {
   response?: any; // 响应数据
   paused: boolean = true; // 暂停中
   fileAttribute: FileAttribute; // 文件属性
-  taskExecutor: TaskExecutor = new TaskExecutor({ maxExecNum: MAX_TASK_SIZE }); // 任务执行器
+  taskExecutorPool: TaskExecutorPool = new TaskExecutorPool({ maxExecCount: MAX_TASK_SIZE }); // 任务执行池
   onSuccess?: (response: any) => void; // 成功回调
   onFail?: () => void; // 失败回调
   onProgress?: (progress: number) => void; // 进度回调
@@ -79,14 +80,14 @@ export class MultipartUpload {
    */
   pause() {
     this.paused = true;
-    this.taskExecutor.clearTask();
+    this.taskExecutorPool.clear();
   }
 
   /**
    * @description: 初始化分片
-   * @return {Promise<void>} promise
+   * @return {Promise<any>} promise
    */
-  initMultipart(): Promise<void> {
+  initMultipart(): Promise<any> {
     if (this.uploadId) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
       axios: request,
@@ -103,17 +104,18 @@ export class MultipartUpload {
         maxRetryCount: 3
       }
     });
-    this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         const res = await axiosWrapper.send();
         this.uploadId = res.data.uploadId;
         this.object = res.data.object;
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
-    return TaskExecutor.all(this.taskExecutor);
+    this.taskExecutorPool.add(taskExecutor);
+    return this.taskExecutorPool.all();
   }
 
   /**
@@ -137,33 +139,43 @@ export class MultipartUpload {
         maxRetryCount: 3
       }
     });
-    this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         const res = await axiosWrapper.send();
-        res.data.forEach((part: Part) => {
-          this.partList[part.number - 1] = part;
+        res.data.forEach((data: any) => {
+          const part = Object.assign(this.partList[data.number - 1], {
+            url: data.url,
+            expire: data.expire
+          });
           this.addPartTask(part);
         });
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
+    this.taskExecutorPool.add(taskExecutor);
   }
 
   /**
    * @description: 上传分片
-   * @return {Promise<void>} promise
+   * @return {Promise<any>} promise
    */
-  uploadMultipart(): Promise<void> {
+  uploadMultipart(): Promise<any> {
     for (const part of this.partList) {
       if (part.etag) {
         continue; // 跳过已经上传完成的分片
-      } else {
+      }
+      if (part.isValid) {
         this.addPartTask(part);
+      } else {
+        this.invalidPartList.push(part);
       }
     }
-    return TaskExecutor.all(this.taskExecutor);
+    while (!this.taskExecutorPool.filled && this.invalidPartList.length) {
+      this.getMultiparts(this.invalidPartList.splice(0, MAX_GET_PART_SIZE));
+    }
+    return this.taskExecutorPool.all();
   }
 
   /**
@@ -185,7 +197,7 @@ export class MultipartUpload {
         maxRetryCount: 3
       }
     });
-    this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         if (part.isValid) {
           // 正常上传分片
@@ -197,20 +209,23 @@ export class MultipartUpload {
           this.invalidPartList.push(part);
         }
 
-        // 当失效分片到达每次分片最大请求数 或者 无等待的任务时，重新获取失效分片
-        if (this.invalidPartList.length > MAX_GET_PART_SIZE || this.taskExecutor.awaitCount === 0) {
+        // 无等待的任务 并且 失效列表有数据时，重新获取失效分片
+        if (this.taskExecutorPool.awaitCount === 0 && this.invalidPartList.length) {
           this.getMultiparts(this.invalidPartList.splice(0, MAX_GET_PART_SIZE));
         }
       },
-      onRemove: () => axiosWrapper.cancel()
+      onCancel: () => {
+        axiosWrapper.cancel();
+      }
     });
+    this.taskExecutorPool.add(taskExecutor);
   }
 
   /**
    * @description: 合并分片
-   * @return {Promise<void>} promise
+   * @return {Promise<any>} promise
    */
-  mergeMultipart(): Promise<void> {
+  mergeMultipart(): Promise<any> {
     if (this.response) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
       axios: request,
@@ -228,15 +243,16 @@ export class MultipartUpload {
         maxRetryCount: 3
       }
     });
-    this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         const res = await axiosWrapper.send();
         this.response = res.data;
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
-    return TaskExecutor.all(this.taskExecutor);
+    this.taskExecutorPool.add(taskExecutor);
+    return this.taskExecutorPool.all();
   }
 }

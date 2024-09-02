@@ -4,16 +4,16 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-08-30 17:48:06
+ * @LastEditTime: 2024-09-02 17:20:46
  * @Description:
  */
 import request from '@/utils/request';
 import { FileAttribute } from '../fileAttribute/FileAttribute';
 import { MultipartUpload } from '../multipartUpload/MultipartUpload';
 import { SimpleUpload } from '../simpleUpload/SimpleUpload';
-import type { Task } from '../taskExecutor/Task';
-import { TaskExecutor } from '../taskExecutor/TaskExecutor';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
+import { TaskExecutorPool } from '../taskExecutorPool/TaskExecutorPool';
+import { TaskExecutor } from '../taskExecutorPool/TaskExecutor';
 
 export type UploadTaskOptions = {
   file: File;
@@ -42,16 +42,16 @@ const MIN_MULTIPART_SIZE = 1024 * 1024 * 8; // 启用分片上传的最小文件
 const MAX_UPLOAD_TASK_NUM = 1; // 最大同时执行的上传任务数
 
 export class UploadTask {
-  static taskExecutor = new TaskExecutor({ maxExecNum: MAX_UPLOAD_TASK_NUM }); // 任务执行器
+  static taskExecutorPool = new TaskExecutorPool({ maxExecCount: MAX_UPLOAD_TASK_NUM }); // 任务执行池
 
   status: UploadTaskStatus = 'pausing'; // 状态: initialize: 初始化, waiting: 等待中, pausing: 暂停中, uploading: 上传中, success: 成功, fail: 失败, cancel: 取消
   progress: number = 0; // 上传进度
   response?: any; // 响应数据
   fileAttribute: FileAttribute; // 文件属性
-  queueTask?: Task; // 队列中的任务
+  queueTask?: TaskExecutor; // 队列中的任务
   simpleUpload: SimpleUpload; // 简单上传控制器
   multipartUpload: MultipartUpload; // 分片上传控制器
-  taskExecutor: TaskExecutor = new TaskExecutor({ maxExecNum: 1 }); // 任务执行器
+  taskExecutorPool: TaskExecutorPool = new TaskExecutorPool({ maxExecCount: 1 }); // 任务执行池
   onInitialize?: () => void; // 初始化回调
   onWaiting?: () => void; // 等待中回调
   onUpload?: () => void; // 上传回调
@@ -100,18 +100,19 @@ export class UploadTask {
       await this.getFileHash();
       this.status = 'waiting';
       this.onWaiting?.();
-      this.queueTask = UploadTask.taskExecutor.addTask({
+      this.queueTask = new TaskExecutor({
         onExecutor: async () => {
           this.status = 'uploading';
           this.onUpload?.();
           const resourceToken = (await this.verifyFile()) || (await this.uploadFile());
           await this.createFile(resourceToken);
         },
-        onRemove: () => {
-          this.taskExecutor.clearTask();
+        onCancel: () => {
+          this.taskExecutorPool.clear();
         }
       });
-      this.response = await this.queueTask;
+      UploadTask.taskExecutorPool.add(this.queueTask);
+      this.response = await this.queueTask.promise;
       this.status = 'success';
       this.onSuccess?.(this.response);
     } catch (err) {
@@ -126,7 +127,7 @@ export class UploadTask {
    * @description: 暂停
    */
   pause() {
-    if (this.queueTask) UploadTask.taskExecutor.removeTask(this.queueTask);
+    if (this.queueTask) UploadTask.taskExecutorPool.delete(this.queueTask);
     this.status = 'pausing';
     this.onPause?.();
   }
@@ -151,7 +152,7 @@ export class UploadTask {
         this.onProgress?.(num);
       }
     });
-    if (this.queueTask) UploadTask.taskExecutor.removeTask(this.queueTask);
+    if (this.queueTask) UploadTask.taskExecutorPool.delete(this.queueTask);
     this.status = 'cancel';
     this.onCancel?.();
   }
@@ -194,14 +195,16 @@ export class UploadTask {
         maxRetryCount: 3
       }
     });
-    return this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         return (await axiosWrapper.send()).data;
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
+    this.taskExecutorPool.add(taskExecutor);
+    return taskExecutor.promise;
   }
 
   /**
@@ -209,7 +212,7 @@ export class UploadTask {
    * @return {Promise<string>} promise
    */
   uploadFile(): Promise<string> {
-    return this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: () => {
         if (this.fileAttribute.size > MIN_MULTIPART_SIZE) {
           return this.multipartUpload.start();
@@ -217,7 +220,7 @@ export class UploadTask {
           return this.simpleUpload.start();
         }
       },
-      onRemove: () => {
+      onCancel: () => {
         if (this.fileAttribute.size > MIN_MULTIPART_SIZE) {
           this.multipartUpload.pause();
         } else {
@@ -225,6 +228,8 @@ export class UploadTask {
         }
       }
     });
+    this.taskExecutorPool.add(taskExecutor);
+    return taskExecutor.promise;
   }
 
   /**
@@ -248,13 +253,15 @@ export class UploadTask {
         maxRetryCount: 3
       }
     });
-    return this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: () => {
         return axiosWrapper.send();
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
+    this.taskExecutorPool.add(taskExecutor);
+    return taskExecutor.promise;
   }
 }

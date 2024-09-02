@@ -1,8 +1,9 @@
 import request from '@/utils/request';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import type { FileAttribute } from '../fileAttribute/FileAttribute';
-import { TaskExecutor } from '../taskExecutor/TaskExecutor';
 import axios, { type AxiosProgressEvent } from 'axios';
+import { TaskExecutorPool } from '../taskExecutorPool/TaskExecutorPool';
+import { TaskExecutor } from '../taskExecutorPool/TaskExecutor';
 
 export type SimpleUploadOptions = {
   fileAttribute: FileAttribute;
@@ -20,7 +21,7 @@ export class SimpleUpload {
   response?: any; // 响应数据
   paused: boolean = true; // 暂停中
   fileAttribute: FileAttribute; // 文件属性
-  taskExecutor: TaskExecutor = new TaskExecutor({ maxExecNum: MAX_TASK_SIZE }); // 任务执行器
+  taskExecutorPool: TaskExecutorPool = new TaskExecutorPool({ maxExecCount: MAX_TASK_SIZE }); // 任务执行池
   onSuccess?: (response: any) => void; // 成功回调
   onFail?: () => void; // 失败回调
   onProgress?: (progress: number) => void; // 进度回调
@@ -56,14 +57,14 @@ export class SimpleUpload {
    */
   pause() {
     this.paused = true;
-    this.taskExecutor.clearTask();
+    this.taskExecutorPool.clear();
   }
 
   /**
    * @description: 获取上传url
-   * @return {Promise<void>} promise
+   * @return {Promise<any>} promise
    */
-  getUploadUrl(): Promise<void> {
+  getUploadUrl(): Promise<any> {
     if (this.uploadUrl && (!this.expire || Date.now() < this.expire)) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
       axios: request,
@@ -80,24 +81,25 @@ export class SimpleUpload {
         maxRetryCount: 3
       }
     });
-    this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         const res = await axiosWrapper.send();
         this.uploadUrl = res.data.uploadUrl;
         this.expire = res.data.expire;
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
-    return TaskExecutor.all(this.taskExecutor);
+    this.taskExecutorPool.add(taskExecutor);
+    return this.taskExecutorPool.all();
   }
 
   /**
    * @description: 上传文件
-   * @return {Promise<void>} promise
+   * @return {Promise<any>} promise
    */
-  uploadFile(): Promise<void> {
+  uploadFile(): Promise<any> {
     if (this.response) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
       axios: axios,
@@ -120,15 +122,16 @@ export class SimpleUpload {
         maxRetryCount: 3
       }
     });
-    this.taskExecutor.addTask({
+    const taskExecutor = new TaskExecutor({
       onExecutor: async () => {
         const res = await axiosWrapper.send();
         this.response = res.data.data;
       },
-      onRemove: () => {
+      onCancel: () => {
         axiosWrapper.cancel();
       }
     });
-    return TaskExecutor.all(this.taskExecutor);
+    this.taskExecutorPool.add(taskExecutor);
+    return this.taskExecutorPool.all();
   }
 }
