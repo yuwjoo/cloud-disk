@@ -35,7 +35,10 @@ function addRequestInterceptor(request: AxiosInstance): void {
       if (res.code === 20200) {
         return res;
       } else if (res.code === 40400 || res.code === 50501) {
-        console.error(res.msg);
+        ElMessage({
+          type: 'error',
+          message: res.msg
+        });
         return Promise.reject(res);
       } else if (res.code === 40401) {
         localStorage.clear();

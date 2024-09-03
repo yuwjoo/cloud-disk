@@ -89,15 +89,30 @@ export type GetResourceFlagRequestQuery = {
 // 获取资源标识接口-响应body
 export type GetResourceFlagResponseBody = ResponseBody<string>; // 资源标识
 
-// 删除文件接口-请求query
-export type RemoveFileRequestQuery = {
-  filePath: DirectorysTable['path']; // 文件路径
+// 删除文件接口-请求body
+export type DeleteFilesRequestBody = {
+  filePaths: string[]; // 文件路径列表
 };
 
+// 删除文件接口-请求query
+export type DeleteFilesRequestQuery = void;
+
 // 删除文件接口-响应body
-export type RemoveFileResponseBody = ResponseBody<void>;
+export type DeleteFilesResponseBody = ResponseBody<void>;
 
 // oss上传回调接口-响应body
 export type UploadCallbackResponseBody = ResponseBody<{
   resourceFlag: string; // 资源标识
 }>;
+
+// 重命名接口-请求body
+export type RenameRequestBody = void;
+
+// 重命名接口-请求query
+export type RenameRequestQuery = {
+  filePath: string; // 文件路径
+  newName: string; // 新文件名
+};
+
+// 重命名接口-响应body
+export type RenameResponseBody = ResponseBody<void>;

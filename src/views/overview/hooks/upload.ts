@@ -25,8 +25,14 @@ export function useUpload(currentFolderPath: Ref<string>, getFileList: () => voi
    */
   function uploadFile() {
     for (const file of uploadRef.value!.files || []) {
-      addUploadTask({ file, uploadName: file.name, uploadPath: currentFolderPath.value });
+      addUploadTask({
+        file,
+        uploadName: file.name,
+        uploadPath: currentFolderPath.value,
+        onSuccess: () => getFileList()
+      });
     }
+    uploadRef.value!.value = '';
   }
 
   /**

@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-06 13:52:53
  * @LastEditors: YH
- * @LastEditTime: 2024-07-15 14:24:40
+ * @LastEditTime: 2024-09-03 16:43:01
  * @Description: 
 -->
 <template>
@@ -20,14 +20,23 @@
         <i-icons-logo class="header__logo-icon" />
         <span class="header__logo-text">cloud-disk</span>
       </div>
+
+      <el-input
+        class="header__search"
+        v-model="searchValue"
+        :prefix-icon="IESearch"
+        placeholder="模糊搜索"
+        clearable
+      />
     </div>
+
     <div class="header__content header__content--right">
       <el-badge
         class="header__task-badge"
-        :value="taskCount"
+        :value="uploadTaskCount"
         :max="99"
         :show-zero="false"
-        @click="taskDrawerOpen()"
+        @click="visible = true"
       >
         <i-ep-sort class="header__task-icon" />
       </el-badge>
@@ -36,7 +45,7 @@
         <i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
       <el-dropdown>
-        <el-avatar class="header__avatar" :size="26" src="https://empty">
+        <el-avatar class="header__avatar" :size="26" src="">
           <i-ep-user-filled />
         </el-avatar>
         <template #dropdown>
@@ -51,16 +60,17 @@
 </template>
 
 <script setup lang="ts">
+import IESearch from '~icons/ep/search';
 import IEpExpand from '~icons/ep/expand';
 import IEpFold from '~icons/ep/fold';
 import { storeToRefs } from 'pinia';
 import { useAsideStore } from '@/store/aside';
 import { useThemeStore } from '@/store/theme';
-import { useTaskDrawerStore } from '@/store/taskDrawer';
+import { useFileSystem } from '@/store/fileSystem';
+import { uploadTaskCount, visible } from '@/utils/uploadManager';
 
+const { searchValue } = storeToRefs(useFileSystem());
 const { isCollapsed } = storeToRefs(useAsideStore());
-const { taskCount } = storeToRefs(useTaskDrawerStore());
-const { open: taskDrawerOpen } = useTaskDrawerStore();
 const { isDark } = storeToRefs(useThemeStore());
 
 const { toggleAside } = useAsideStore();
@@ -86,11 +96,13 @@ const { toggleDark } = useThemeStore();
       .header__collapse {
         font-size: 22px;
         cursor: pointer;
+        flex-shrink: 0;
       }
 
       .header__logo {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
 
         &-icon {
           font-size: 24px;
@@ -101,6 +113,10 @@ const { toggleDark } = useThemeStore();
           margin-left: var(--spacing-small);
           font-weight: bold;
         }
+      }
+
+      .header__search {
+        width: 300px;
       }
     }
 

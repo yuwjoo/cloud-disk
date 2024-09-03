@@ -9,7 +9,11 @@ import type {
   DownloadFileRequestQuery,
   DownloadFileResponseBody,
   CreateFolderRequestQuery,
-  CreateFolderResponseBody
+  CreateFolderResponseBody,
+  DeleteFilesRequestBody,
+  DeleteFilesResponseBody,
+  RenameRequestQuery,
+  RenameResponseBody
 } from 'types/src/api/overview';
 
 /**
@@ -76,6 +80,32 @@ export function getResourceFlag(
 export function downloadFile(params: DownloadFileRequestQuery): Promise<DownloadFileResponseBody> {
   return request({
     url: '/fileSystem/downloadFile',
+    method: 'get',
+    params
+  });
+}
+
+/**
+ * @description: 删除文件
+ * @param {DeleteFilesRequestBody} data 参数
+ * @return {Promise<DeleteFilesResponseBody>} 响应
+ */
+export function deleteFiles(data: DeleteFilesRequestBody): Promise<DeleteFilesResponseBody> {
+  return request({
+    url: '/fileSystem/deleteFiles',
+    method: 'post',
+    data
+  });
+}
+
+/**
+ * @description: 重命名文件
+ * @param {RenameRequestQuery} params 参数
+ * @return {Promise<RenameResponseBody>} 响应
+ */
+export function rename(params: RenameRequestQuery): Promise<RenameResponseBody> {
+  return request({
+    url: '/fileSystem/rename',
     method: 'get',
     params
   });

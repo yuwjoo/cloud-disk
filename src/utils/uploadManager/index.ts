@@ -8,11 +8,18 @@ export type AddUploadTaskOptions = {
 
 export const uploadTaskList = ref<ReturnType<typeof createUploadTask>[]>([]); // 上传列表
 
+export const uploadTaskCount = computed(() => {
+  return uploadTaskList.value.filter((item) => !['success', 'fail', 'cancel'].includes(item.status))
+    .length;
+}); // 正在上传的任务数
+
+export const visible = ref<boolean>(false); // 显示任务抽屉
+
 /**
  * @description: 添加上传任务
  * @param {AddUploadTaskOptions} options 配置
  */
-export function addUploadTask(options: AddUploadTaskOptions) {
+export function addUploadTask(options: AddUploadTaskOptions & { onSuccess?: (res: any) => void }) {
   const uploadTask = createUploadTask(options);
   uploadTaskList.value.push(uploadTask);
   uploadTask.start();
@@ -31,7 +38,7 @@ export function deleteUploadTask(uploadTask: ReturnType<typeof createUploadTask>
  * @description: 创建上传任务
  * @param {AddUploadTaskOptions} options 配置
  */
-function createUploadTask(options: AddUploadTaskOptions) {
+function createUploadTask(options: AddUploadTaskOptions & { onSuccess?: (res: any) => void }) {
   const status = ref<UploadTaskStatus>('pausing'); // 状态
   const progress = ref<number>(0); // 进度
   const response = ref<any>(); // 响应结果
@@ -58,6 +65,7 @@ function createUploadTask(options: AddUploadTaskOptions) {
     onSuccess: (res) => {
       status.value = 'success';
       response.value = res;
+      options.onSuccess?.(res);
     },
     onFail: () => {
       status.value = 'fail';

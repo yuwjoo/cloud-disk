@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-12 15:00:58
  * @LastEditors: YH
- * @LastEditTime: 2024-09-02 17:52:09
+ * @LastEditTime: 2024-09-03 17:52:48
  * @Description: 
 -->
 
@@ -12,28 +12,19 @@
   <el-drawer v-model="visible" direction="rtl" size="400px" :with-header="false">
     <!-- 头部 start -->
     <div class="layout-task-drawer__header">
-      <span class="layout-task-drawer__header-title">传输列表</span>
-      <el-icon class="layout-task-drawer__header-close" @click="close()"><i-ep-close /></el-icon>
+      <span class="layout-task-drawer__header-title">上传列表</span>
+      <el-icon class="layout-task-drawer__header-close" @click="visible = false"
+        ><i-ep-close
+      /></el-icon>
     </div>
     <!-- 头部 end -->
 
-    <!-- 切换按钮 start -->
-    <el-segmented
-      v-model="active"
-      class="layout-task-drawer__segmented"
-      :options="segmentedOptions"
-    >
-      <template #default="{ item }">
-        <div class="layout-task-drawer__segmented-item">
-          <el-icon><component :is="item.icon" /></el-icon>
-          <div>{{ item.label }}</div>
-        </div>
-      </template>
-    </el-segmented>
-    <!-- 切换按钮 end -->
-
     <!-- 任务列表 start -->
-    <div v-for="(item, index) in list" :key="index" class="layout-task-drawer__task">
+    <div
+      v-for="(item, index) in uploadTaskList"
+      :key="(item.file as any).hash || index"
+      class="layout-task-drawer__task"
+    >
       <img
         class="layout-task-drawer__task-icon"
         src="@/assets/images/fileSystem/small/compressedFile.png"
@@ -41,18 +32,19 @@
         @dragstart.prevent
       />
       <div class="layout-task-drawer__task-content">
-        <div class="layout-task-drawer__task-filename">{{ item.file.name }}</div>
+        <div class="layout-task-drawer__task-filename" :title="item.file.name">
+          {{ item.file.name }}
+        </div>
         <el-progress
           class="layout-task-drawer__task-progress"
-          :percentage="item.progress"
+          :percentage="Math.floor(item.progress * 100) / 100"
           :stroke-width="4"
         />
-        <div class="layout-task-drawer__task-size">{{ item.file.size }}</div>
+        <div class="layout-task-drawer__task-size">{{ getFileSize(item.file.size) }}</div>
       </div>
       <div class="layout-task-drawer__task-operate">
-        {{ item.status }}
         <el-button
-          v-if="item.status === 'uploading'"
+          v-if="item.status === 'waiting' || item.status === 'uploading'"
           type="primary"
           :icon="IEpPause"
           circle
@@ -67,37 +59,55 @@
           size="small"
           @click="item.start()"
         />
-        <el-button type="danger" :icon="IEpDelete" circle size="small" />
+        <el-button
+          type="danger"
+          :icon="IEpDelete"
+          circle
+          size="small"
+          @click="handleDelete(item)"
+        />
       </div>
     </div>
     <!-- 任务列表 end -->
 
     <!-- 空状态 start -->
-    <el-empty v-if="list.length === 0" class="overview__empty" description="暂无数据" />
+    <el-empty v-if="uploadTaskList.length === 0" class="overview__empty" description="暂无数据" />
     <!-- 空状态 end -->
   </el-drawer>
 </template>
 
 <script setup lang="ts">
-import IEpUpload from '~icons/ep/upload';
-import IEpDownload from '~icons/ep/download';
 import IEpDelete from '~icons/ep/delete';
 import IEpPause from '~icons/icons/pause';
 import ICaretRight from '~icons/ep/caretRight';
-import { useTaskDrawerStore } from '@/store/taskDrawer';
+import { visible } from '@/utils/uploadManager';
 import { uploadTaskList } from '@/utils/uploadManager';
-import { storeToRefs } from 'pinia';
 
-const { visible } = storeToRefs(useTaskDrawerStore());
-const { close } = useTaskDrawerStore();
-const active = ref<string>('upload');
-const segmentedOptions = [
-  { label: '上传中', value: 'upload', icon: IEpUpload },
-  { label: '下载中', value: 'download', icon: IEpDownload }
-];
-const list = computed(() =>
-  active.value === 'upload' ? uploadTaskList.value : uploadTaskList.value
-);
+/**
+ * @description: 获取文件大小
+ * @param {number} size 大小（字节）
+ * @return {string} 大小字符
+ */
+function getFileSize(size: number): string {
+  if (size < 1024) {
+    return `${size}B`;
+  } else if (size < 1024 * 1024) {
+    return `${(size / 1024).toFixed(2)}KB`;
+  } else if (size < 1024 * 1024 * 1024) {
+    return `${(size / 1024 / 1024).toFixed(2)}MB`;
+  } else {
+    return `${(size / 1024 / 1024 / 1024).toFixed(2)}GB`;
+  }
+}
+
+/**
+ * @description: 处理删除
+ * @param {(typeof uploadTaskList.value)[0]} item 任务
+ */
+function handleDelete(item: (typeof uploadTaskList.value)[0]) {
+  item.pause();
+  uploadTaskList.value = uploadTaskList.value.filter((task) => task !== item);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -135,7 +145,15 @@ const list = computed(() =>
     margin-right: var(--spacing-medium);
   }
   .layout-task-drawer__task-content {
-    flex: 1;
+    flex-grow: 1;
+    width: 0;
+
+    .layout-task-drawer__task-filename {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: var(--spacing-small);
+    }
 
     .layout-task-drawer__task-size {
       font-size: var(--text-size-extra-small);

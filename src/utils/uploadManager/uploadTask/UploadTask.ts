@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-02 17:20:46
+ * @LastEditTime: 2024-09-03 16:26:37
  * @Description:
  */
 import request from '@/utils/request';
@@ -38,7 +38,7 @@ export type UploadTaskStatus =
   | 'fail'
   | 'cancel';
 
-const MIN_MULTIPART_SIZE = 1024 * 1024 * 8; // 启用分片上传的最小文件大小
+const MIN_MULTIPART_SIZE = 1024 * 1024 * 10; // 启用分片上传的最小文件大小
 const MAX_UPLOAD_TASK_NUM = 1; // 最大同时执行的上传任务数
 
 export class UploadTask {
@@ -114,9 +114,10 @@ export class UploadTask {
       UploadTask.taskExecutorPool.add(this.queueTask);
       this.response = await this.queueTask.promise;
       this.status = 'success';
+      this.progress = 100;
+      this.onProgress?.(100);
       this.onSuccess?.(this.response);
     } catch (err) {
-      console.log(err);
       if (this.status === 'pausing' || this.status === 'cancel') return;
       this.status = 'fail';
       this.onFail?.();

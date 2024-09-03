@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-29 13:36:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-02 17:48:41
+ * @LastEditTime: 2024-09-03 10:23:48
  * @Description:
  */
 import request from '@/utils/request';
@@ -24,7 +24,7 @@ export type MultipartUploadOptions = {
 
 const MAX_TASK_SIZE = 6; // 最大并发任务数
 const DEFAULT_PART_SIZE = 1024 * 1024 * 1; // 默认分片大小
-const MAX_GET_PART_SIZE = 5; // 每次请求最多获取多少个分片的信息
+const MAX_GET_PART_SIZE = 20; // 每次请求最多获取多少个分片的信息
 
 export class MultipartUpload {
   uploadId?: string; // 上传id
@@ -202,7 +202,7 @@ export class MultipartUpload {
         if (part.isValid) {
           // 正常上传分片
           part.etag = (await axiosWrapper.send()).headers['etag'];
-          this.progress = Math.min(Math.ceil(this.progress + 100 / this.partTotal), 100);
+          this.progress += 100 / this.partTotal;
           this.onProgress?.(this.progress);
         } else {
           // 分片已经失效
