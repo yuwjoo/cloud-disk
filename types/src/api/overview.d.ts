@@ -75,7 +75,7 @@ export type GetDirectoryListResponseBody = ResponseBody<{
     size: DirectorysTable['size']; // 大小
     type: DirectorysTable['type']; // 类型
     cover: DirectorysTable['cover']; // 封面
-    createTime: number; // 创建日期时间戳
+    createDate: string; // 创建日期
     modifiedTime: number; // 修改日期时间戳
   }[];
 }>;
