@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-09-03 17:45:10
+ * @LastEditTime: 2024-09-04 17:58:23
  * @Description: 
 -->
 <template>
@@ -74,7 +74,8 @@
       @change="handleCheckedChange"
     >
       <div class="overview-list" :class="{ 'overview-list--empty': filterFileList.length === 0 }">
-        <div
+        <directory-item v-for="(item, index) in filterFileList" :key="index" :item="item" />
+        <!-- <div
           class="overview-list__item"
           v-for="(item, index) in filterFileList"
           :key="index"
@@ -104,8 +105,12 @@
           <img class="overview-list__cover" :src="getCover(item.cover)" alt="" @dragstart.prevent />
           <div class="overview-list__name" :title="item.name">{{ item.name }}</div>
           <div class="overview-list__modified-date">{{ item.modifiedDate }}</div>
-        </div>
-        <el-empty class="overview-list__empty" description="暂无数据" />
+        </div> -->
+        <el-empty
+          v-if="filterFileList.length === 0"
+          class="overview-list__empty"
+          description="暂无数据"
+        />
       </div>
     </el-checkbox-group>
 
@@ -125,6 +130,7 @@ import type { CheckboxValueType } from 'element-plus';
 import type { FileList } from './types/fileManage';
 import { useFileSystem } from '@/store/fileSystem';
 import { storeToRefs } from 'pinia';
+import DirectoryItem from './components/directoryItem.vue';
 
 const {
   loading,

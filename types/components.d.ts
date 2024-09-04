@@ -27,6 +27,7 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElProgress: typeof import('element-plus/es')['ElProgress']
     ElSegmented: typeof import('element-plus/es')['ElSegmented']
+    ElText: typeof import('element-plus/es')['ElText']
     FeatureBreadcrumb: typeof import('./../src/components/feature/FeatureBreadcrumb.vue')['default']
     FeatureBreadcrumbItem: typeof import('./../src/components/feature/FeatureBreadcrumbItem.vue')['default']
     FeatureCheckbox: typeof import('./../src/components/feature/FeatureCheckbox.vue')['default']
