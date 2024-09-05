@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-04 21:39:10
  * @LastEditors: YH
- * @LastEditTime: 2024-09-04 23:03:50
+ * @LastEditTime: 2024-09-05 13:14:57
  * @Description: 
 -->
 <template>
@@ -27,12 +27,8 @@
 
     <div class="overview-header__operate">
       <!-- 上传按钮 start -->
-      <el-dropdown @command="handleUpload">
-        <el-button
-          class="overview-header__dropdown-btn"
-          type="primary"
-          @click="handleUpload('file')"
-        >
+      <el-dropdown ref="uploadDropdownRef" @command="handleUpload">
+        <el-button class="overview-header__dropdown-btn" type="primary" @click="handleClickUpload">
           <el-icon class="el-icon--left"><i-ep-upload /></el-icon>
           <span>上传</span>
         </el-button>
@@ -75,6 +71,7 @@
 <script setup lang="ts">
 import { createFolder, deleteFiles } from '@/api/overview';
 import { addUploadTask } from '@/utils/uploadManager';
+import type { ElDropdown } from 'element-plus/es';
 
 type Nav = {
   name: string;
@@ -83,6 +80,7 @@ type Nav = {
 
 type Emits = {
   nav: [path: string]; // 导航
+  addFile: [file: any]; // 添加文件
   change: []; // 改变
 };
 
@@ -106,6 +104,7 @@ const navList = computed<Nav[]>(() => {
     path: props.parentPath.slice(0, props.parentPath.indexOf(name)) + name || '/'
   }));
 }); // 导航列表
+const uploadDropdownRef = ref<InstanceType<typeof ElDropdown>>(); // 上传下拉组件ref
 const selectFileRef = ref<HTMLInputElement>(); // 选择文件ref
 
 /**
@@ -132,6 +131,14 @@ function handleUpload(command: string) {
 }
 
 /**
+ * @description: 处理点击上传按钮
+ */
+function handleClickUpload() {
+  uploadDropdownRef.value?.handleClose();
+  handleUpload('file');
+}
+
+/**
  * @description: 处理选择的文件
  */
 function handleSelectFile() {
@@ -140,8 +147,10 @@ function handleSelectFile() {
       file,
       uploadName: file.name,
       uploadPath: props.parentPath,
-      onSuccess: () => {
-        emits('change');
+      onSuccess: (res) => {
+        if (res.data.folderPath === props.parentPath) {
+          emits('addFile', res.data.file);
+        }
       }
     });
   }

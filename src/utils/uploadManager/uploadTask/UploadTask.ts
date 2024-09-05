@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-03 16:26:37
+ * @LastEditTime: 2024-09-05 13:16:18
  * @Description:
  */
 import request from '@/utils/request';
@@ -105,7 +105,7 @@ export class UploadTask {
           this.status = 'uploading';
           this.onUpload?.();
           const resourceToken = (await this.verifyFile()) || (await this.uploadFile());
-          await this.createFile(resourceToken);
+          return await this.createFile(resourceToken);
         },
         onCancel: () => {
           this.taskExecutorPool.clear();

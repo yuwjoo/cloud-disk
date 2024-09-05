@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-04 17:05:10
  * @LastEditors: YH
- * @LastEditTime: 2024-09-04 23:44:54
+ * @LastEditTime: 2024-09-05 10:19:45
  * @Description: 
 -->
 <template>
@@ -31,10 +31,6 @@
       </template>
     </el-dropdown>
     <!-- 顶部操作按钮 end -->
-
-    <div class="overview-file-item__progress-mask" @mouseover.stop>
-      <el-progress type="circle" :percentage="25" :stroke-width="8" :width="100" />
-    </div>
 
     <!-- 文件信息 start -->
     <img class="overview-file-item__cover" :src="cover" alt="" @dragstart.prevent />
@@ -70,9 +66,9 @@ type Item = {
 };
 
 type Emits = {
-  enter: []; // 点击进入
+  enter: []; // 进入
   delete: []; // 删除
-  change: [item: Item]; // 改变
+  modify: [item: Item]; // 修改
 };
 
 const emits = defineEmits<Emits>();
@@ -138,7 +134,11 @@ function handleRename() {
             type: 'success',
             message: '修改成功'
           });
-          emits('change', { ...props.item, name: ctx.inputValue });
+          emits('modify', {
+            ...props.item,
+            name: ctx.inputValue,
+            fullPath: props.item.fullPath.slice(0, -props.item.name.length) + ctx.inputValue
+          });
           close();
         })
         .finally(() => {
@@ -218,21 +218,6 @@ function handleDelete() {
       padding: var(--spacing-small);
       outline-style: none;
     }
-  }
-
-  .overview-file-item__progress-mask {
-    --el-text-color-regular: white;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 9;
-    width: 100%;
-    height: 100%;
-    background-color: rgba($color: black, $alpha: 0.5);
-    border-radius: var(--border-radius-base);
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 
   .overview-file-item__cover {

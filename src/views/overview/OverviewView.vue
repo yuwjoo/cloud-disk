@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-09-04 23:41:36
+ * @LastEditTime: 2024-09-05 13:21:13
  * @Description: 
 -->
 <template>
@@ -14,6 +14,7 @@
       :parentPath="currentFolderPath"
       :checkedList="checkedList"
       @nav="getFileList($event)"
+      @add-file="handleFileAdd($event)"
       @change="getFileList()"
     />
     <!-- 头部 end -->
@@ -41,7 +42,7 @@
         :item="item"
         @enter="handleFileEnter(item)"
         @delete="handleFileDelete(index)"
-        @change="handleFileChange($event as unknown as any, index)"
+        @modify="handleFileModify($event as unknown as any, index)"
       />
     </el-checkbox-group>
     <!-- 列表 end -->
@@ -83,33 +84,6 @@ const filterFileList = computed(() => {
 });
 
 /**
- * @description: 处理文件进入
- * @param {FileList[0]} item 数据
- */
-function handleFileEnter(item: FileList[0]) {
-  if (item.type === 'folder') {
-    getFileList(item.fullPath);
-  }
-}
-
-/**
- * @description: 处理文件删除
- * @param {number} index 下标
- */
-function handleFileDelete(index: number) {
-  fileList.value.splice(index, 1);
-}
-
-/**
- * @description: 处理文件改变
- * @param {FileList[0]} item 数据
- * @param {number} index 下标
- */
-function handleFileChange(item: FileList[0], index: number) {
-  fileList.value.splice(index, 1, item);
-}
-
-/**
  * @description: 处理全选
  * @param {CheckboxValueType} val 选中状态
  */
@@ -126,6 +100,51 @@ function handleCheckGroupChange(value: CheckboxValueType[]) {
   const checkedCount = value.length;
   checkAll.value = checkedCount === fileList.value.length;
   isIndeterminate.value = checkedCount > 0 && checkedCount < fileList.value.length;
+}
+
+/**
+ * @description: 处理文件添加
+ * @param {FileList[0]} item 数据
+ */
+function handleFileAdd(item: FileList[0]) {
+  let pos: number = -1;
+  for (let i = fileList.value.length - 1; i >= 0; i--) {
+    if (fileList.value[i].type !== item.type) continue;
+    pos = i;
+    if (fileList.value[i].name < item.name) {
+      pos += 1;
+      break;
+    }
+  }
+  fileList.value.splice(pos, 0, item);
+}
+
+/**
+ * @description: 处理文件进入
+ * @param {FileList[0]} item 数据
+ */
+function handleFileEnter(item: FileList[0]) {
+  if (item.type === 'folder') {
+    getFileList(item.fullPath);
+  }
+}
+
+/**
+ * @description: 处理文件删除
+ * @param {number} index 被删除的下标
+ */
+function handleFileDelete(index: number) {
+  fileList.value.splice(index, 1);
+}
+
+/**
+ * @description: 处理文件改修改
+ * @param {FileList[0]} item 新数据
+ * @param {number} index 被修改的下标
+ */
+function handleFileModify(item: FileList[0], index: number) {
+  fileList.value.splice(index, 1);
+  handleFileAdd(item);
 }
 </script>
 
