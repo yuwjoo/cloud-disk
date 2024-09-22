@@ -59,11 +59,11 @@
 import type { LoginReqParams } from 'types/src/api/base';
 import { login, register } from '@/api/base';
 import router from '@/utils/router';
+import { useUserStore } from '@/store/user';
 
 const form = ref<LoginReqParams>({
   account: '',
-  password: '',
-  temporary: false
+  password: ''
 });
 
 /**
@@ -72,6 +72,7 @@ const form = ref<LoginReqParams>({
 function handleLogin() {
   login(form.value).then((res) => {
     localStorage.setItem('token', res.data?.token || '');
+    useUserStore().setUser(res.data.user);
     router.replace('/');
   });
 }

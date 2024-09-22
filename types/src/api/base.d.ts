@@ -4,18 +4,21 @@ import type { ResponseBody } from '../utils/request';
 export type LoginReqParams = {
   account: string; // 账号
   password: string; // 密码
-  temporary: boolean; // 是否临时登录
 };
 
 // 登录响应数据
 export type LoginResData = ResponseBody<{
   token: string; // token
   user: {
-    nickname: string; // 昵称
     account: string; // 账号
-    roleId: string; // 角色id
-    role: string; // 角色名
-    avatar: string | null; // 头像
+    nickname: string; // 昵称
+    avatar: string; // 头像
+    status: string; // 状态
+    role: {
+      name: string; // 角色名称
+      describe: string; // 角色详情
+    };
+    storageOrigin: string; // 存储起点
   };
 }>;
 

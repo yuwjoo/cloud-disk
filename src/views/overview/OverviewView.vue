@@ -4,16 +4,21 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-09-05 13:21:13
+ * @LastEditTime: 2024-09-22 21:41:13
  * @Description: 
 -->
 <template>
   <div class="overview" v-loading="loading">
     <!-- 头部 start -->
     <overview-header
-      :parentPath="currentFolderPath"
+      :parentPath="parentPath"
       :checkedList="checkedList"
-      @nav="getFileList($event)"
+      @nav="
+        (ev) => {
+          parentPath = ev;
+          getFileList();
+        }
+      "
       @add-file="handleFileAdd($event)"
       @change="getFileList()"
     />
@@ -64,7 +69,7 @@ import { storeToRefs } from 'pinia';
 
 const {
   loading,
-  currentFolderPath,
+  parentPath,
   pathList,
   fileList,
   checkAll,
@@ -88,7 +93,7 @@ const filterFileList = computed(() => {
  * @param {CheckboxValueType} val 选中状态
  */
 function handleCheckAllChange(val: CheckboxValueType) {
-  checkedList.value = val ? fileList.value.map((item) => item.fullPath) : [];
+  checkedList.value = val ? fileList.value.map((item) => item.path) : [];
   isIndeterminate.value = false;
 }
 
@@ -109,7 +114,7 @@ function handleCheckGroupChange(value: CheckboxValueType[]) {
 function handleFileAdd(item: FileList[0]) {
   let pos: number = -1;
   for (let i = fileList.value.length - 1; i >= 0; i--) {
-    if (fileList.value[i].type !== item.type) continue;
+    if (fileList.value[i].isDirectory !== item.isDirectory) continue;
     pos = i;
     if (fileList.value[i].name < item.name) {
       pos += 1;
@@ -124,8 +129,9 @@ function handleFileAdd(item: FileList[0]) {
  * @param {FileList[0]} item 数据
  */
 function handleFileEnter(item: FileList[0]) {
-  if (item.type === 'folder') {
-    getFileList(item.fullPath);
+  if (item.isDirectory) {
+    parentPath.value = item.path;
+    getFileList();
   }
 }
 

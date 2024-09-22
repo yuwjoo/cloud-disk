@@ -63,21 +63,27 @@ export type DownloadFileResponseBody = ResponseBody<string>;
 
 // 获取目录列表接口-请求query
 export type GetDirectoryListRequestQuery = {
-  folderPath?: string; // 文件夹路径
+  parent: string; // 父级路径
 };
 
 // 获取目录列表接口-响应body
 export type GetDirectoryListResponseBody = ResponseBody<{
-  folderPath: string; // 文件夹路径
-  list: {
-    fullPath: string; // 完整路径
-    name: DirectorysTable['name']; // 名称
-    size: DirectorysTable['size']; // 大小
-    type: DirectorysTable['type']; // 类型
-    cover: DirectorysTable['cover']; // 封面
-    createDate: string; // 创建日期
-    modifiedTime: number; // 修改日期时间戳
-  }[];
+  current: number; // 当前页
+  size: number; // 每页条数
+  total: number; // 总数
+  records: [
+    {
+      path: string; // 路径
+      parent: string; // 父级路径
+      level: number; // 层级
+      name: string; // 名称
+      isDirectory: boolean; // 是否为文件夹
+      createdTime: number; // 创建时间
+      updatedTime: number; // 修改时间
+      readable: boolean; // 是否可读
+      writable: boolean; // 是否可写
+    }
+  ];
 }>;
 
 // 获取资源标识接口-请求query

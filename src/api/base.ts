@@ -14,7 +14,7 @@ import type {
  */
 export function login(data: LoginReqParams): Promise<LoginResData> {
   return request({
-    url: '/user/login',
+    url: '/api/auth/login',
     method: 'post',
     data
   });

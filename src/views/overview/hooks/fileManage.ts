@@ -8,12 +8,26 @@ import {
 import dayjs from 'dayjs';
 import { useFileSystem } from '@/store/fileSystem';
 import type { FileList, PathList } from '../types/fileManage';
+import { useUserStore } from '@/store/user';
 
 export function useFileManage() {
   const loading = ref<boolean>(false); // 加载中
-  const pathList = ref<PathList>([]); // 路径列表
+  const parentPath = ref<string>(useUserStore().user.storageOrigin); // 当前父级路径
+  const pathList = computed(() => {
+    const paths = [{ label: '全部文件', path: useUserStore().user.storageOrigin }];
+    let parent = useUserStore().user.storageOrigin;
+
+    for (const name of parentPath.value
+      .slice(useUserStore().user.storageOrigin.length)
+      .split('/')
+      .filter(Boolean)) {
+      parent += '/' + name;
+      paths.push({ label: name, path: parent });
+    }
+
+    return paths;
+  }); // 路径列表
   const fileList = ref<FileList>([]); // 文件列表
-  const currentFolderPath = ref<string>('/'); // 当前文件夹路径
   const checkAll = ref(false); // 是否全选
   const isIndeterminate = ref(true); // 是否中间状态
   const checkedList = ref<string[]>([]); // 选中列表
@@ -23,27 +37,12 @@ export function useFileManage() {
 
   /**
    * @description: 获取文件列表
-   * @param {string} folderPath 文件夹路径
    */
-  function getFileList(folderPath?: string) {
+  function getFileList() {
     loading.value = true;
-    getDirectoryList({ folderPath: folderPath || currentFolderPath.value })
+    getDirectoryList({ parent: parentPath.value })
       .then((res) => {
-        const data = res.data;
-        const paths = [{ label: '全部文件', path: '/' }];
-        let parentPath = '';
-
-        for (const name of data.folderPath.split('/').filter(Boolean)) {
-          parentPath += '/' + name;
-          paths.push({ label: name, path: parentPath });
-        }
-
-        pathList.value = paths;
-        fileList.value = (data.list || []).map((item) => ({
-          ...item,
-          modifiedDate: dayjs(item.modifiedTime).format('YYYY-MM-DD HH:mm')
-        }));
-        currentFolderPath.value = data.folderPath;
+        fileList.value = res.data.records;
 
         checkAll.value = false;
         isIndeterminate.value = false;
@@ -70,7 +69,7 @@ export function useFileManage() {
           return;
         }
         ctx.confirmButtonLoading = true;
-        fetchCreateFolder({ folderPath: currentFolderPath.value, name: ctx.inputValue })
+        fetchCreateFolder({ folderPath: parentPath.value, name: ctx.inputValue })
           .then(() => {
             ElMessage({
               type: 'success',
@@ -146,7 +145,7 @@ export function useFileManage() {
           return;
         }
         ctx.confirmButtonLoading = true;
-        rename({ filePath: item.fullPath, newName: ctx.inputValue })
+        rename({ filePath: item.path, newName: ctx.inputValue })
           .then(() => {
             ElMessage({
               type: 'success',
@@ -165,7 +164,7 @@ export function useFileManage() {
 
   return {
     loading,
-    currentFolderPath,
+    parentPath,
     pathList,
     fileList,
     checkAll,

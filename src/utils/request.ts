@@ -19,7 +19,7 @@ function addRequestInterceptor(request: AxiosInstance): void {
   // 发送请求拦截器
   request.interceptors.request.use(
     (config) => {
-      config.headers['Authorization'] = localStorage.getItem('token');
+      config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
       return config;
     },
     (error) => {
@@ -32,15 +32,15 @@ function addRequestInterceptor(request: AxiosInstance): void {
     (response) => {
       const res = response.data;
 
-      if (res.code === 20200) {
+      if (res.code === 200) {
         return res;
-      } else if (res.code === 40400 || res.code === 50501) {
+      } else if (res.code === 400 || res.code === 500) {
         ElMessage({
           type: 'error',
           message: res.msg
         });
         return Promise.reject(res);
-      } else if (res.code === 40401) {
+      } else if (res.code === 401) {
         localStorage.clear();
         router.replace('/login');
         return Promise.reject(res);
