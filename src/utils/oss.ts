@@ -1,4 +1,4 @@
-import { sts } from '@/api/base';
+import { sts } from '@/api/auth';
 import OSS from 'ali-oss';
 
 let client: OSS;

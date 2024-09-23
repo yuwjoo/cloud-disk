@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import type { LoginReqParams } from 'types/src/api/base';
-import { login, register } from '@/api/base';
+import { login, register } from '@/api/auth';
 import router from '@/utils/router';
 import { useUserStore } from '@/store/user';
 
