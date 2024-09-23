@@ -1,5 +1,4 @@
 import type { ApiLogin } from '@/api/types/auth';
-import type { Entity } from '@/types/entity';
 import { defineStore } from 'pinia';
 import { login as apiLogin, logout as apiLogout } from '@/api/auth';
 import { useRouter } from '@/librarys/vue-router';
@@ -10,7 +9,7 @@ import { useRouter } from '@/librarys/vue-router';
 export const useUserStore = defineStore('user', setup);
 
 function setup() {
-  const user = ref<Entity.User>(JSON.parse(localStorage.getItem('user') || '{}')); // 用户信息
+  const user = ref<ApiLogin.User>(JSON.parse(localStorage.getItem('user') || '{}')); // 用户信息
   const token = ref<string>(localStorage.getItem('token') || ''); // token
 
   /**

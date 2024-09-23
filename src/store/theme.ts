@@ -1,7 +1,12 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { useSettingsStore } from './settings';
 
-export const useThemeStore = defineStore('theme', () => {
+/**
+ * @description: 主题-仓库
+ */
+export const useThemeStore = defineStore('theme', setup);
+
+function setup() {
   const isDark = computedIsDark(listenerSystemIsDark()); // 是否深色模式
 
   insertTransitionCSS();
@@ -99,31 +104,31 @@ export const useThemeStore = defineStore('theme', () => {
     const styleElement = document.createElement('style');
 
     styleElement.textContent = `
-      ::view-transition-old(root),
-      ::view-transition-new(root) {
-        animation: none;
-        mix-blend-mode: normal;
-      }
-
-      .dark::view-transition-old(root) {
-        z-index: 1;
-      }
-
-      .dark::view-transition-new(root) {
-        z-index: 999;
-      }
-
-      ::view-transition-old(root) {
-        z-index: 999;
-      }
-
-      ::view-transition-new(root) {
-        z-index: 1;
-      }
-    `;
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation: none;
+          mix-blend-mode: normal;
+        }
+  
+        .dark::view-transition-old(root) {
+          z-index: 1;
+        }
+  
+        .dark::view-transition-new(root) {
+          z-index: 999;
+        }
+  
+        ::view-transition-old(root) {
+          z-index: 999;
+        }
+  
+        ::view-transition-new(root) {
+          z-index: 1;
+        }
+      `;
 
     document.head.appendChild(styleElement);
   }
 
   return { isDark, toggleDark };
-});
+}

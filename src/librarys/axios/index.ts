@@ -15,6 +15,8 @@ request.interceptors.response.use(responseInterceptor);
  * @description: 获取request
  * @return {Promise<AxiosResponse>} 请求结果
  */
-export function useRequest(config: AxiosRequestConfig): Promise<AxiosResponse> {
+export function useRequest<T = any, R = AxiosResponse<T>, D = any>(
+  config: AxiosRequestConfig<D>
+): Promise<R> {
   return request(config);
 }
