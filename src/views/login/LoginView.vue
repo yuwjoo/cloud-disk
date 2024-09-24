@@ -56,12 +56,10 @@
 </template>
 
 <script setup lang="ts">
-import type { LoginReqParams } from 'types/src/api/base';
-import { login, register } from '@/api/auth';
-import router from '@/utils/router';
 import { useUserStore } from '@/store/user';
+import type { ApiLogin } from '@/api/types/auth';
 
-const form = ref<LoginReqParams>({
+const form = ref<ApiLogin.Request>({
   account: '',
   password: ''
 });
@@ -70,16 +68,6 @@ const form = ref<LoginReqParams>({
  * @description: 处理登录
  */
 function handleLogin() {
-  login(form.value).then((res) => {
-    localStorage.setItem('token', res.data?.token || '');
-    useUserStore().setUser(res.data.user);
-    router.replace('/');
-  });
+  useUserStore().login(form.value);
 }
-
-// register({
-//   nickname: 'yh', // 昵称
-//   account: 'yuwjoo', // 账号
-//   password: '123456' // 密码
-// });
 </script>

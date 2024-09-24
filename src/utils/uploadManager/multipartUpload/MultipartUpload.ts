@@ -4,10 +4,10 @@
  * @Author: YH
  * @Date: 2024-08-29 13:36:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-03 10:23:48
+ * @LastEditTime: 2024-09-24 11:36:02
  * @Description:
  */
-import request from '@/utils/request';
+import { useRequest } from '@/library/axios';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import { Part } from './Part';
 import type { FileAttribute } from '../fileAttribute/FileAttribute';
@@ -90,7 +90,7 @@ export class MultipartUpload {
   initMultipart(): Promise<any> {
     if (this.uploadId) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
-      axios: request,
+      axios: useRequest as any,
       configs: {
         url: 'oss/getUploadId',
         method: 'get',
@@ -124,7 +124,7 @@ export class MultipartUpload {
    */
   getMultiparts(parts: Part[]) {
     const axiosWrapper = new AxiosWrapper({
-      axios: request,
+      axios: useRequest as any,
       configs: {
         url: '/oss/getMultiparts',
         method: 'post',
@@ -228,7 +228,7 @@ export class MultipartUpload {
   mergeMultipart(): Promise<any> {
     if (this.response) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
-      axios: request,
+      axios: useRequest,
       configs: {
         url: 'oss/completeMultipart',
         method: 'post',

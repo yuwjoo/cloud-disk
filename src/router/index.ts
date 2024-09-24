@@ -3,14 +3,14 @@ const routes = [
     path: '/',
     name: 'commonLayout',
     component: () => import('@/layout/CommonLayout.vue'),
-    redirect: { name: 'overview' },
+    redirect: { name: 'storage' },
     children: [
       {
-        path: 'overview',
-        name: 'overview',
-        component: () => import('@/views/overview/OverviewView.vue'),
+        path: 'storage',
+        name: 'storage',
+        component: () => import('@/views/storage/storage-view.vue'),
         meta: {
-          title: '总览'
+          title: '存储'
         }
       },
       {

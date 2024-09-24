@@ -4,10 +4,10 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-05 13:16:18
+ * @LastEditTime: 2024-09-24 11:33:37
  * @Description:
  */
-import request from '@/utils/request';
+import { useRequest } from '@/library/axios';
 import { FileAttribute } from '../fileAttribute/FileAttribute';
 import { MultipartUpload } from '../multipartUpload/MultipartUpload';
 import { SimpleUpload } from '../simpleUpload/SimpleUpload';
@@ -184,7 +184,7 @@ export class UploadTask {
    */
   verifyFile(): Promise<string> {
     const axiosWrapper = new AxiosWrapper({
-      axios: request,
+      axios: useRequest as any,
       configs: {
         url: '/fileSystem/getResourceToken',
         method: 'get',
@@ -240,7 +240,7 @@ export class UploadTask {
    */
   createFile(resourceToken: string): Promise<void> {
     const axiosWrapper = new AxiosWrapper({
-      axios: request,
+      axios: useRequest as any,
       configs: {
         url: '/fileSystem/createFile',
         method: 'post',

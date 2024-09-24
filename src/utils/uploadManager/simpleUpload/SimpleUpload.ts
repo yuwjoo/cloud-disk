@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import { useRequest } from '@/library/axios';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import type { FileAttribute } from '../fileAttribute/FileAttribute';
 import axios, { type AxiosProgressEvent } from 'axios';
@@ -67,7 +67,7 @@ export class SimpleUpload {
   getUploadUrl(): Promise<any> {
     if (this.uploadUrl && (!this.expire || Date.now() < this.expire)) return Promise.resolve();
     const axiosWrapper = new AxiosWrapper({
-      axios: request,
+      axios: useRequest as any,
       configs: {
         url: 'oss/getUploadUrl',
         method: 'get',

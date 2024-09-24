@@ -1,4 +1,4 @@
-import { useRequest } from '@/librarys/axios';
+import { useRequest } from '@/library/axios';
 import type { ApiLogin, ApiLogout, ApiRegister } from './types/auth';
 
 /**

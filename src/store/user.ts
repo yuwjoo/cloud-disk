@@ -1,7 +1,7 @@
 import type { ApiLogin } from '@/api/types/auth';
 import { defineStore } from 'pinia';
 import { login as apiLogin, logout as apiLogout } from '@/api/auth';
-import { useRouter } from '@/librarys/vue-router';
+import { useRouter } from '@/library/vue-router';
 
 /**
  * @description: 用户-仓库

@@ -1,4 +1,4 @@
-import { useRequest } from '@/librarys/axios';
+import { useRequest } from '@/library/axios';
 import type { ApiGetMultiparts, ApiMergeMultipart, ApiPreCheckFile } from './types/upload';
 
 /**

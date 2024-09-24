@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { requestInterceptor, responseInterceptor } from './interceptor';
 
 const request = axios.create({
@@ -13,10 +12,5 @@ request.interceptors.response.use(responseInterceptor);
 
 /**
  * @description: 获取request
- * @return {Promise<AxiosResponse>} 请求结果
  */
-export function useRequest<T = any, R = AxiosResponse<T>, D = any>(
-  config: AxiosRequestConfig<D>
-): Promise<R> {
-  return request(config);
-}
+export const useRequest = request;

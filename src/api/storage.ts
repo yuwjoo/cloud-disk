@@ -1,4 +1,4 @@
-import { useRequest } from '@/librarys/axios';
+import { useRequest } from '@/library/axios';
 import type {
   ApiCreateFile,
   ApiDeleteFile,

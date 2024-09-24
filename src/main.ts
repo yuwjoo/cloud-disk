@@ -5,8 +5,8 @@ import '@/assets/styles/element.scss';
 import '@/assets/styles/base.scss';
 import App from '@/App.vue';
 import { createApp } from 'vue';
-import { usePinia } from './librarys/pinia';
-import { useRouter } from './librarys/vue-router';
+import { usePinia } from './library/pinia';
+import { useRouter } from './library/vue-router';
 
 const app = createApp(App);
 
