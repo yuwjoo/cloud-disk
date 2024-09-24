@@ -1,8 +1,8 @@
 const routes = [
   {
     path: '/',
-    name: 'controlLayout',
-    component: () => import('@/layouts/control/ControlLayout.vue'),
+    name: 'commonLayout',
+    component: () => import('@/layout/CommonLayout.vue'),
     redirect: { name: 'overview' },
     children: [
       {
@@ -36,14 +36,7 @@ const routes = [
         meta: {
           title: '任务中心'
         }
-      }
-    ]
-  },
-  {
-    path: '/',
-    name: 'otherLayout',
-    component: () => import('@/layouts/other/OtherLayout.vue'),
-    children: [
+      },
       {
         path: 'settings',
         name: 'settings',

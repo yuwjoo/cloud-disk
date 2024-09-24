@@ -8,13 +8,13 @@
  * @Description: 
 -->
 <template>
-  <aside :class="['aside-menu', { 'aside-menu--collapsed': isCollapsed }]">
+  <aside :class="['aside-menu', { 'aside-menu--collapsed': layoutStore.isCollapsed }]">
     <nav class="aside-menu__nav">
       <div
         v-for="(item, index) in menuItems"
         :key="index"
         :class="['aside-menu__item', { 'aside-menu__item--active': $route.name === item.name }]"
-        :title="isCollapsed ? item.label : ''"
+        :title="layoutStore.isCollapsed ? item.label : ''"
         @click="$router.replace({ name: item.name })"
       >
         <component :is="item.icon" class="aside-menu__icon" />
@@ -33,11 +33,9 @@ import IEpReading from '~icons/ep/reading';
 import IEpPicture from '~icons/ep/picture';
 import IEpVideoCamera from '~icons/ep/video-camera';
 import IEpCpu from '~icons/ep/cpu';
-import { useAsideStore } from '@/store/aside';
-import { storeToRefs } from 'pinia';
+import { useLayoutStore } from '@/store/layout';
 
-const { isCollapsed } = storeToRefs(useAsideStore());
-
+const layoutStore = useLayoutStore(); // 布局仓库
 const menuItems = [
   { label: '总览', icon: IEpReading, name: 'overview' },
   { label: '图片', icon: IEpPicture, name: 'picture' },

@@ -11,6 +11,7 @@ export const useUserStore = defineStore('user', setup);
 function setup() {
   const user = ref<ApiLogin.User>(JSON.parse(localStorage.getItem('user') || '{}')); // 用户信息
   const token = ref<string>(localStorage.getItem('token') || ''); // token
+  const isLogin = computed<boolean>(() => !!token.value); // 是否已经登录
 
   /**
    * @description: 登录
@@ -35,5 +36,11 @@ function setup() {
     useRouter().replace('/login');
   };
 
-  return { user: readonly(user), token: readonly(token), login, logout };
+  return {
+    user: readonly(user),
+    token: readonly(token),
+    isLogin: readonly(isLogin),
+    login,
+    logout
+  };
 }

@@ -11,9 +11,9 @@
   <header class="header">
     <div class="header__content header__content--left">
       <component
-        :is="isCollapsed ? IEpExpand : IEpFold"
+        :is="layoutStore.isCollapsed ? IEpExpand : IEpFold"
         class="header__collapse"
-        @click="toggleAside()"
+        @click="layoutStore.toggleAside()"
       />
 
       <div class="header__logo">
@@ -22,8 +22,9 @@
       </div>
 
       <el-input
+        v-if="userStore.isLogin"
         class="header__search"
-        v-model="searchValue"
+        v-model="layoutStore.searchValue"
         :prefix-icon="IESearch"
         placeholder="模糊搜索"
         clearable
@@ -32,6 +33,7 @@
 
     <div class="header__content header__content--right">
       <el-badge
+        v-if="userStore.isLogin"
         class="header__task-badge"
         :value="uploadTaskCount"
         :max="99"
@@ -40,8 +42,8 @@
       >
         <i-ep-sort class="header__task-icon" />
       </el-badge>
-      <div class="header__theme-toggle" title="切换主题" @click="toggleDark($event)">
-        <i-ep-moon v-if="isDark" class="header__theme-icon header__theme-icon--moon" />
+      <div class="header__theme-toggle" title="切换主题" @click="themeStore.toggleDark($event)">
+        <i-ep-moon v-if="themeStore.isDark" class="header__theme-icon header__theme-icon--moon" />
         <i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
       <el-dropdown>
@@ -50,8 +52,13 @@
         </el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <template v-if="userStore.isLogin">
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item>退出登录</el-dropdown-item>
+            </template>
+            <template v-else>
+              <el-dropdown-item>前往登录</el-dropdown-item>
+            </template>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -63,18 +70,14 @@
 import IESearch from '~icons/ep/search';
 import IEpExpand from '~icons/ep/expand';
 import IEpFold from '~icons/ep/fold';
-import { storeToRefs } from 'pinia';
-import { useAsideStore } from '@/store/aside';
 import { useThemeStore } from '@/store/theme';
-import { useFileSystem } from '@/store/fileSystem';
 import { uploadTaskCount, visible } from '@/utils/uploadManager';
+import { useLayoutStore } from '@/store/layout';
+import { useUserStore } from '@/store/user';
 
-const { searchValue } = storeToRefs(useFileSystem());
-const { isCollapsed } = storeToRefs(useAsideStore());
-const { isDark } = storeToRefs(useThemeStore());
-
-const { toggleAside } = useAsideStore();
-const { toggleDark } = useThemeStore();
+const layoutStore = useLayoutStore(); // 布局仓库
+const themeStore = useThemeStore(); // 主题仓库
+const userStore = useUserStore(); // 用户仓库
 </script>
 
 <style lang="scss" scoped>

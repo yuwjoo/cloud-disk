@@ -1,10 +1,10 @@
 <!--
- * @FileName: 布局-控制台页面
- * @FilePath: \cloud-disk\src\layouts\control\ControlLayout.vue
+ * @FileName: 基本布局
+ * @FilePath: \cloud-disk\src\layout\CommonLayout.vue
  * @Author: YH
  * @Date: 2024-07-15 13:40:29
  * @LastEditors: YH
- * @LastEditTime: 2024-08-29 10:15:15
+ * @LastEditTime: 2024-09-24 11:04:17
  * @Description: 
 -->
 <template>
