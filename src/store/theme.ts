@@ -1,5 +1,4 @@
-import { defineStore, storeToRefs } from 'pinia';
-import { useSettingsStore } from './settings';
+import { defineStore } from 'pinia';
 
 /**
  * @description: 主题-仓库
@@ -7,47 +6,8 @@ import { useSettingsStore } from './settings';
 export const useThemeStore = defineStore('theme', setup);
 
 function setup() {
-  const isDark = computedIsDark(listenerSystemIsDark()); // 是否深色模式
-
-  insertTransitionCSS();
-
-  watchEffect(() => toggleHtmlClass(isDark.value));
-
-  /**
-   * @description: 监听系统是否深色模式
-   * @return {Ref<boolean>} 是否深色模式
-   */
-  function listenerSystemIsDark(): Ref<boolean> {
-    const matchMedia = window.matchMedia('(prefers-color-scheme: dark)');
-    const systemIsDark = ref<boolean>(matchMedia.matches); // 系统是深色模式
-
-    matchMedia.addEventListener('change', (ev) => (systemIsDark.value = ev.matches));
-    return systemIsDark;
-  }
-
-  /**
-   * @description: 计算是否是深色模式
-   * @param {Ref<boolean>} systemIsDark 系统是否深色模式
-   * @return {Ref<boolean>} 是否深色模式
-   */
-  function computedIsDark(systemIsDark: Ref<boolean>): Ref<boolean> {
-    const { settings } = storeToRefs(useSettingsStore());
-    const { saveSettings } = useSettingsStore();
-
-    return computed({
-      get: () => {
-        if (settings.value.theme.mode === 'followSystem') {
-          return systemIsDark.value;
-        } else {
-          return settings.value.theme.mode === 'dark';
-        }
-      },
-      set: (val) => {
-        settings.value.theme.mode = val ? 'dark' : 'light';
-        saveSettings();
-      }
-    });
-  }
+  const matchMedia = window.matchMedia('(prefers-color-scheme: dark)'); // 浏览器主题查询器
+  const isDark = ref<boolean>(matchMedia.matches); // 是否深色模式
 
   /**
    * @description: 切换深色模式
@@ -62,12 +22,13 @@ function setup() {
 
     // 兼容低版本浏览器，不做动画处理，直接切换模式
     if (!startViewTransitionFun) {
+      toggleClass(darkMode);
       isDark.value = darkMode;
       return;
     }
 
     // 启动视图转换动画
-    startViewTransitionFun(() => toggleHtmlClass(darkMode)).ready.then(() => {
+    startViewTransitionFun(() => toggleClass(darkMode)).ready.then(() => {
       document.documentElement.animate(
         {
           clipPath: darkMode ? clipPath : clipPath.reverse()
@@ -82,53 +43,50 @@ function setup() {
     });
   }
 
-  /**
-   * @description: 切换 HTML 类名
-   * @param {boolean} darkMode 是否深色模式
-   */
-  function toggleHtmlClass(darkMode: boolean) {
-    const classList = document.documentElement.classList;
-    if (darkMode) {
-      classList.add('dark');
-      classList.remove('light');
-    } else {
-      classList.add('light');
-      classList.remove('dark');
-    }
-  }
-
-  /**
-   * @description: 插入动画样式
-   */
-  function insertTransitionCSS() {
-    const styleElement = document.createElement('style');
-
-    styleElement.textContent = `
-        ::view-transition-old(root),
-        ::view-transition-new(root) {
-          animation: none;
-          mix-blend-mode: normal;
-        }
-  
-        .dark::view-transition-old(root) {
-          z-index: 1;
-        }
-  
-        .dark::view-transition-new(root) {
-          z-index: 999;
-        }
-  
-        ::view-transition-old(root) {
-          z-index: 999;
-        }
-  
-        ::view-transition-new(root) {
-          z-index: 1;
-        }
-      `;
-
-    document.head.appendChild(styleElement);
-  }
+  appendAnimationCss();
+  toggleClass(isDark.value);
+  matchMedia.addEventListener('change', (ev) => toggleClass(ev.matches));
 
   return { isDark, toggleDark };
+}
+
+/**
+ * @description: 切换主题class
+ * @param {boolean} [darkMode] 是否深色模式
+ */
+const toggleClass = (darkMode: boolean) => {
+  document.documentElement.classList[darkMode ? 'add' : 'remove']('dark');
+};
+
+/**
+ * @description: 添加动画样式
+ */
+function appendAnimationCss() {
+  const styleElement = document.createElement('style');
+
+  styleElement.textContent = `
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+      mix-blend-mode: normal;
+    }
+
+    .dark::view-transition-old(root) {
+      z-index: 1;
+    }
+
+    .dark::view-transition-new(root) {
+      z-index: 999;
+    }
+
+    ::view-transition-old(root) {
+      z-index: 999;
+    }
+
+    ::view-transition-new(root) {
+      z-index: 1;
+    }
+  `;
+
+  document.head.appendChild(styleElement);
 }
