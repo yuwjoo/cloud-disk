@@ -1,6 +1,7 @@
 import { RESPONSE_CODE } from '@/types/request';
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { useRouter } from '../vue-router';
+import { useUserStore } from '@/store/user';
 
 /**
  * @description: 请求拦截
@@ -8,7 +9,7 @@ import { useRouter } from '../vue-router';
 export function requestInterceptor(
   config: InternalAxiosRequestConfig
 ): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> {
-  config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+  config.headers['Authorization'] = 'Bearer ' + useUserStore().token;
   return config;
 }
 

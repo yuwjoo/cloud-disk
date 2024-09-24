@@ -1,10 +1,10 @@
 <!--
  * @FileName: 布局-侧边栏
- * @FilePath: \cloud-disk\src\layouts\control\components\LayoutAside.vue
+ * @FilePath: \cloud-disk\src\layout\components\LayoutAside.vue
  * @Author: YH
  * @Date: 2024-07-15 13:42:19
  * @LastEditors: YH
- * @LastEditTime: 2024-07-15 13:53:28
+ * @LastEditTime: 2024-09-24 11:38:34
  * @Description: 
 -->
 <template>
@@ -37,7 +37,7 @@ import { useLayoutStore } from '@/store/layout';
 
 const layoutStore = useLayoutStore(); // 布局仓库
 const menuItems = [
-  { label: '总览', icon: IEpReading, name: 'overview' },
+  { label: '存储', icon: IEpReading, name: 'storage' },
   { label: '图片', icon: IEpPicture, name: 'picture' },
   { label: '视频', icon: IEpVideoCamera, name: 'video' },
   { label: '任务中心', icon: IEpCpu, name: 'download' }

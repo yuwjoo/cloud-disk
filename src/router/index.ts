@@ -8,7 +8,7 @@ const routes = [
       {
         path: 'storage',
         name: 'storage',
-        component: () => import('@/views/storage/storage-view.vue'),
+        component: () => import('@/views/storage/StorageView.vue'),
         meta: {
           title: '存储'
         }
