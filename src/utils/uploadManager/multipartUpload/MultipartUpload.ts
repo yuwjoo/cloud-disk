@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-29 13:36:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-24 11:36:02
+ * @LastEditTime: 2024-09-25 17:31:35
  * @Description:
  */
 import { useRequest } from '@/library/axios';
@@ -59,10 +59,10 @@ export class MultipartUpload {
    * @description: 开始
    * @return {Promise<any>} promise
    */
-  async start(): Promise<any> {
+  async start(data: any): Promise<any> {
     this.paused = false;
     try {
-      await this.initMultipart();
+      this.uploadId = data.value;
       if (this.paused) return;
       await this.uploadMultipart();
       if (this.paused) return;
@@ -126,13 +126,13 @@ export class MultipartUpload {
     const axiosWrapper = new AxiosWrapper({
       axios: useRequest as any,
       configs: {
-        url: '/oss/getMultiparts',
+        url: '/api/upload/getMultiparts',
         method: 'post',
         data: {
+          name: this.fileAttribute.name,
+          hash: this.fileAttribute.hash,
           uploadId: this.uploadId,
-          object: this.object,
-          partNumbers: parts.map((part) => part.number),
-          mimeType: this.fileAttribute.type
+          partNumbers: parts.map((part) => part.number)
         }
       },
       options: {
@@ -190,7 +190,7 @@ export class MultipartUpload {
         method: 'put',
         data: part.blob,
         headers: {
-          'Content-Type': this.fileAttribute.type
+          'Content-Type': 'application/octet-stream'
         }
       },
       options: {
@@ -230,13 +230,13 @@ export class MultipartUpload {
     const axiosWrapper = new AxiosWrapper({
       axios: useRequest,
       configs: {
-        url: 'oss/completeMultipart',
+        url: '/api/upload/mergeMultipart',
         method: 'post',
         data: {
+          name: this.fileAttribute.name,
+          hash: this.fileAttribute.hash,
           uploadId: this.uploadId,
-          object: this.object,
-          fileHash: this.fileAttribute.hash,
-          partList: this.partList.map(({ number, etag }) => ({ number, etag }))
+          parts: this.partList.map(({ number, etag }) => ({ number, etag }))
         }
       },
       options: {

@@ -1,4 +1,3 @@
-import { useRequest } from '@/library/axios';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import type { FileAttribute } from '../fileAttribute/FileAttribute';
 import axios, { type AxiosProgressEvent } from 'axios';
@@ -37,10 +36,11 @@ export class SimpleUpload {
    * @description: 开始
    * @return {Promise<any>} promise
    */
-  async start(): Promise<any> {
+  async start(data: any): Promise<any> {
     this.paused = false;
     try {
-      await this.getUploadUrl();
+      this.uploadUrl = data.value;
+      this.expire = data.expire;
       if (this.paused) return;
       await this.uploadFile();
       if (this.paused) return;
@@ -58,41 +58,6 @@ export class SimpleUpload {
   pause() {
     this.paused = true;
     this.taskExecutorPool.clear();
-  }
-
-  /**
-   * @description: 获取上传url
-   * @return {Promise<any>} promise
-   */
-  getUploadUrl(): Promise<any> {
-    if (this.uploadUrl && (!this.expire || Date.now() < this.expire)) return Promise.resolve();
-    const axiosWrapper = new AxiosWrapper({
-      axios: useRequest as any,
-      configs: {
-        url: 'oss/getUploadUrl',
-        method: 'get',
-        params: {
-          fileHash: this.fileAttribute.hash,
-          fileName: this.fileAttribute.name,
-          mimeType: this.fileAttribute.type
-        }
-      },
-      options: {
-        maxRetryCount: 3
-      }
-    });
-    const taskExecutor = new TaskExecutor({
-      onExecutor: async () => {
-        const res = await axiosWrapper.send();
-        this.uploadUrl = res.data.uploadUrl;
-        this.expire = res.data.expire;
-      },
-      onCancel: () => {
-        axiosWrapper.cancel();
-      }
-    });
-    this.taskExecutorPool.add(taskExecutor);
-    return this.taskExecutorPool.all();
   }
 
   /**

@@ -1,7 +1,9 @@
 import { useRequest } from '@/library/axios';
 import type {
+  ApiBatchDeleteFile,
   ApiCreateFile,
   ApiDeleteFile,
+  ApiDownloadFile,
   ApiGetFileList,
   ApiMoveFile,
   ApiRenameFile
@@ -59,5 +61,29 @@ export function deleteFile(data: ApiDeleteFile.Request): Promise<ApiDeleteFile.R
     url: '/api/storage/delete',
     method: 'post',
     data
+  });
+}
+
+/**
+ * @description: 批量删除文件/目录
+ */
+export function batchDeleteFile(
+  data: ApiBatchDeleteFile.Request
+): Promise<ApiBatchDeleteFile.Response> {
+  return useRequest({
+    url: '/api/storage/batchDelete',
+    method: 'post',
+    data
+  });
+}
+
+/**
+ * @description: 下载文件
+ */
+export function downloadFile(params: ApiDownloadFile.Request): Promise<ApiDownloadFile.Response> {
+  return useRequest({
+    url: '/api/storage/downloadFile',
+    method: 'get',
+    params
   });
 }

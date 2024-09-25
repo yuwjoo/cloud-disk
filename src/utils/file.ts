@@ -3,6 +3,7 @@ import compressedFile from '@/assets/images/fileSystem/small/compressedFile.png'
 import docmentFile from '@/assets/images/fileSystem/small/docmentFile.png';
 import executionFile from '@/assets/images/fileSystem/small/executionFile.png';
 import pdfFile from '@/assets/images/fileSystem/small/pdfFile.png';
+import { useUserStore } from '@/store/user';
 
 /**
  * @description: 获取文件封面
@@ -18,7 +19,7 @@ export function getFileCover(path: string, isDirectory: boolean): string {
     case 'jpg':
     case 'jpeg':
     case 'png':
-      return `${import.meta.env.VITE_APP_SERVERURL}/storage/getFileCover?path=${path}`;
+      return `${import.meta.env.VITE_APP_SERVERURL}/api/storage/getFileCover?token=${useUserStore().token}&path=${path}`;
     case 'zip':
     case '7z':
     case 'rar':

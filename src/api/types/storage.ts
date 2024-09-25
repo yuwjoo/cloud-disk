@@ -92,3 +92,33 @@ export namespace ApiDeleteFile {
    */
   export interface Response extends CommonResponse {}
 }
+
+export namespace ApiBatchDeleteFile {
+  /**
+   * @description: 批量删除文件/目录-请求参数
+   */
+  export interface Request {
+    paths: string[]; // 路径列表
+  }
+
+  /**
+   * @description: 批量删除文件/目录-响应数据
+   */
+  export interface Response extends CommonResponse {}
+}
+
+export namespace ApiDownloadFile {
+  /**
+   * @description: 下载文件-请求参数
+   */
+  export interface Request {
+    path: string; // 路径
+  }
+
+  /**
+   * @description: 下载文件-响应数据
+   */
+  export interface Response extends CommonResponse {
+    data: string; // 下载url
+  }
+}

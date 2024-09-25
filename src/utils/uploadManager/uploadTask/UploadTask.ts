@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-24 11:33:37
+ * @LastEditTime: 2024-09-25 17:38:18
  * @Description:
  */
 import { useRequest } from '@/library/axios';
@@ -104,8 +104,14 @@ export class UploadTask {
         onExecutor: async () => {
           this.status = 'uploading';
           this.onUpload?.();
-          const resourceToken = (await this.verifyFile()) || (await this.uploadFile());
-          return await this.createFile(resourceToken);
+          const data = await this.verifyFile();
+          let ossFileId;
+          if (data.mode === 'second') {
+            ossFileId = data.value;
+          } else {
+            ossFileId = await this.uploadFile(data);
+          }
+          return await this.createFile(ossFileId);
         },
         onCancel: () => {
           this.taskExecutorPool.clear();
@@ -180,16 +186,20 @@ export class UploadTask {
 
   /**
    * @description: 校验文件
-   * @return {Promise<string>} promise
+   * @return {Promise<any>} promise
    */
-  verifyFile(): Promise<string> {
+  verifyFile(): Promise<any> {
     const axiosWrapper = new AxiosWrapper({
       axios: useRequest as any,
       configs: {
-        url: '/fileSystem/getResourceToken',
+        url: '/api/upload/preCheckFile',
         method: 'get',
         params: {
-          fileHash: this.fileAttribute.hash
+          name: this.fileAttribute.name,
+          hash: this.fileAttribute.hash,
+          size: this.fileAttribute.size,
+          mimeType: this.fileAttribute.type,
+          multipart: this.fileAttribute.size > MIN_MULTIPART_SIZE
         }
       },
       options: {
@@ -212,17 +222,17 @@ export class UploadTask {
    * @description: 上传文件
    * @return {Promise<string>} promise
    */
-  uploadFile(): Promise<string> {
+  uploadFile(data: any): Promise<string> {
     const taskExecutor = new TaskExecutor({
       onExecutor: () => {
-        if (this.fileAttribute.size > MIN_MULTIPART_SIZE) {
-          return this.multipartUpload.start();
+        if (data.mode === 'multipart') {
+          return this.multipartUpload.start(data);
         } else {
-          return this.simpleUpload.start();
+          return this.simpleUpload.start(data);
         }
       },
       onCancel: () => {
-        if (this.fileAttribute.size > MIN_MULTIPART_SIZE) {
+        if (data.mode === 'multipart') {
           this.multipartUpload.pause();
         } else {
           this.simpleUpload.pause();
@@ -242,12 +252,13 @@ export class UploadTask {
     const axiosWrapper = new AxiosWrapper({
       axios: useRequest as any,
       configs: {
-        url: '/fileSystem/createFile',
+        url: '/api/storage/create',
         method: 'post',
         data: {
-          folderPath: this.fileAttribute.uploadPath,
-          fileName: this.fileAttribute.name,
-          resourceToken
+          parent: this.fileAttribute.uploadPath, // 父级路径
+          name: this.fileAttribute.name, // 名称
+          isDirectory: false, // 是否目录
+          ossFileId: resourceToken // OSS文件ID
         }
       },
       options: {

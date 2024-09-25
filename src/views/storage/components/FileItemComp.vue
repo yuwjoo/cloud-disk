@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-04 17:05:10
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 14:36:07
+ * @LastEditTime: 2024-09-25 17:02:00
  * @Description: 
 -->
 <template>
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { deleteFile, renameFile } from '@/api/storage';
+import { deleteFile, downloadFile, renameFile } from '@/api/storage';
 import type { FileInfo } from '@/api/types/storage';
 import { getFileCover, getFileSize } from '@/utils/file';
 import { dayjs } from 'element-plus';
@@ -89,14 +89,14 @@ function handleCommand(command: string) {
  * @description: 处理下载
  */
 function handleDownload() {
-  // downloadFile({ filePath: props.item.fullPath }).then((res) => {
-  //   const a = document.createElement('a');
-  //   a.href = res.data;
-  //   a.download = 'download';
-  //   document.body.appendChild(a);
-  //   a.click();
-  //   document.body.removeChild(a);
-  // });
+  downloadFile({ path: props.item.path }).then((res) => {
+    const a = document.createElement('a');
+    a.href = res.data;
+    a.download = 'download';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
 }
 
 /**

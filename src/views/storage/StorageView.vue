@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 13:53:56
+ * @LastEditTime: 2024-09-25 16:29:25
  * @Description: 
 -->
 <template>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { createFile } from '@/api/storage';
+import { batchDeleteFile, createFile } from '@/api/storage';
 import { useFetchList, useSearch } from './hooks/storage-view';
 import BreadcrumbComp from './components/BreadcrumbComp.vue';
 import UploadButtonComp from './components/UploadButtonComp.vue';
@@ -95,21 +95,21 @@ function handleBatchDelete() {
         close();
         return;
       }
-      // ctx.confirmButtonLoading = true;
-      // try {
-      //   await deleteFile({
-      //     path: props.checkedList
-      //   });
-      //   ElMessage({
-      //     type: 'success',
-      //     message: '删除成功'
-      //   });
-      //   close();
-      //   refreshList();
-      // } catch (err) {
-      //   /* empty */
-      // }
-      // ctx.confirmButtonLoading = false;
+      ctx.confirmButtonLoading = true;
+      try {
+        await batchDeleteFile({
+          paths: checkedList.value
+        });
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        });
+        close();
+        refreshList();
+      } catch (err) {
+        /* empty */
+      }
+      ctx.confirmButtonLoading = false;
     }
   }).catch(() => {});
 }
