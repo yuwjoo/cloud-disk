@@ -5,33 +5,42 @@ import executionFile from '@/assets/images/fileSystem/small/executionFile.png';
 import pdfFile from '@/assets/images/fileSystem/small/pdfFile.png';
 
 /**
- * @description: 获取封面
- * @param {string} cover 封面地址
- * @return {string} 封面
+ * @description: 获取文件封面
+ * @param {string} path 文件路径
+ * @param {boolean} isDirectory 是否目录
+ * @return {string} 文件封面
  */
-export function getCover(cover: string): string {
-  switch (cover) {
-    case 'localhost://folder.png':
-      return folder;
-    case 'localhost://compressedFile.png':
+export function getFileCover(path: string, isDirectory: boolean): string {
+  if (isDirectory) return folder;
+  const suffix = path.match(/\.([^.]*)$/)?.[1].toLocaleLowerCase();
+
+  switch (suffix) {
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+      return `${import.meta.env.VITE_APP_SERVERURL}/storage/getFileCover?path=${path}`;
+    case 'zip':
+    case '7z':
+    case 'rar':
       return compressedFile;
-    case 'localhost://executionFile.png':
+    case 'exe':
       return executionFile;
-    case 'localhost://pdfFile.png':
+    case 'pdf':
       return pdfFile;
-    case 'localhost://docmentFile.png':
+    case 'txt':
+    case 'html':
       return docmentFile;
     default:
-      return cover;
+      return docmentFile;
   }
 }
 
 /**
- * @description: 获取大小字符
+ * @description: 获取文件大小
  * @param {number} size 大小（字节）
- * @return {string} 大小字符
+ * @return {string} 文件大小
  */
-export function getSizeStr(size: number): string {
+export function getFileSize(size: number): string {
   if (size < 1024) {
     return `${size}B`;
   } else if (size < 1024 * 1024) {

@@ -9,7 +9,7 @@ import { useUserStore } from '@/store/user';
 export function requestInterceptor(
   config: InternalAxiosRequestConfig
 ): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> {
-  config.headers['Authorization'] = 'Bearer ' + useUserStore().token;
+  config.headers['Authorization'] = `Bearer  ${useUserStore().token}`;
   return config;
 }
 

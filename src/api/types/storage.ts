@@ -7,6 +7,7 @@ export interface FileInfo {
   path: string; // 路径
   parent: string; // 父级路径
   level: number; // 层级
+  size: number; // 大小
   name: string; // 名称
   isDirectory: boolean; // 是否目录
   createdTime: number; // 创建时间戳
@@ -37,7 +38,7 @@ export namespace ApiCreateFile {
     parent: string; // 父级路径
     name: string; // 名称
     isDirectory: boolean; // 是否目录
-    ossFileId: string; // OSS文件ID
+    ossFileId?: string; // OSS文件ID
   }
 
   /**

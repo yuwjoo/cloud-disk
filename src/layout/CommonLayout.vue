@@ -10,7 +10,7 @@
 <template>
   <LayoutHeader />
   <div class="control-layout__content">
-    <LayoutAside class="control-layout__aside" />
+    <LayoutAside v-if="$route.meta.aside" class="control-layout__aside" />
     <main class="control-layout__main">
       <router-view v-slot="{ Component }">
         <keep-alive>

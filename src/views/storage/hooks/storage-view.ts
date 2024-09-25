@@ -27,7 +27,10 @@ export function useFetchList(search: Search) {
   const list = ref<FileInfo[]>([]); // 文件列表
   const loading = ref<boolean>(false); // 加载中
 
-  watchEffect(async () => {
+  /**
+   * @description: 刷新列表
+   */
+  async function refreshList() {
     loading.value = true;
     try {
       const res = await getFileList({ parent: search.parent });
@@ -36,7 +39,9 @@ export function useFetchList(search: Search) {
       /* empty */
     }
     loading.value = false;
-  });
+  }
 
-  return { list, loading };
+  watchEffect(refreshList);
+
+  return { list, loading, refreshList };
 }

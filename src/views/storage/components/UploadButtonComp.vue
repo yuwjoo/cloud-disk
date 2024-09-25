@@ -1,10 +1,15 @@
+<!--
+ * @FileName: 上传按钮
+ * @FilePath: \cloud-disk\src\views\storage\components\UploadButtonComp.vue
+ * @Author: YH
+ * @Date: 2024-09-24 15:45:14
+ * @LastEditors: YH
+ * @LastEditTime: 2024-09-25 10:29:37
+ * @Description: 
+-->
 <template>
   <el-dropdown ref="dropdownRef" @command="handleUploadCommand">
-    <el-button
-      class="overview-header__dropdown-btn"
-      type="primary"
-      @click="handleUploadCommand('uploadFile')"
-    >
+    <el-button class="upload-btn" type="primary" @click="handleUploadCommand('uploadFile')">
       <el-icon class="el-icon--left"><i-ep-upload /></el-icon>
       <span>上传</span>
     </el-button>
@@ -68,3 +73,13 @@ function handleSelectFile() {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.upload-btn {
+  outline-style: none;
+}
+
+.select-file {
+  display: none;
+}
+</style>

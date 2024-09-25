@@ -1,85 +1,71 @@
 <!--
- * @FileName: 页面-总览-文件项
- * @FilePath: \cloud-disk\src\views\overview\components\overviewFileItem.vue
+ * @FileName: 文件项
+ * @FilePath: \cloud-disk\src\views\storage\components\FileItemComp.vue
  * @Author: YH
  * @Date: 2024-09-04 17:05:10
  * @LastEditors: YH
- * @LastEditTime: 2024-09-05 10:19:45
+ * @LastEditTime: 2024-09-25 14:36:07
  * @Description: 
 -->
 <template>
-  <div class="overview-file-item" @click="$emit('enter')">
-    <!-- 顶部操作按钮 start -->
-    <el-checkbox class="overview-file-item__checkbox" :value="item.fullPath" @click.stop />
+  <div class="file-item" @click="$emit('open', item)">
+    <el-checkbox class="file-item__checkbox" :value="item.path" @click.stop />
     <el-dropdown
-      class="overview-file-item__dropdown"
+      class="file-item__dropdown"
       :teleported="false"
       :show-timeout="0"
       @command="handleCommand"
     >
       <template #default>
-        <i-ep-more-filled class="overview-file-item__dropdown-more" />
+        <i-ep-more-filled class="file-item__dropdown-more" />
       </template>
       <template #dropdown>
         <el-dropdown-menu @click.stop>
-          <el-dropdown-item v-if="item.type === 'file'" command="download">下载</el-dropdown-item>
-          <el-dropdown-item command="rename">重命名</el-dropdown-item>
-          <el-dropdown-item command="delete">
+          <el-dropdown-item v-if="!item.isDirectory" command="download">下载</el-dropdown-item>
+          <el-dropdown-item v-if="item.writable" command="rename">重命名</el-dropdown-item>
+          <el-dropdown-item v-if="item.writable" command="delete">
             <el-text type="danger">删除</el-text>
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <!-- 顶部操作按钮 end -->
 
-    <!-- 文件信息 start -->
-    <img class="overview-file-item__cover" :src="cover" alt="" @dragstart.prevent />
+    <img class="file-item__cover" :src="cover" alt="" @dragstart.prevent />
     <el-tooltip effect="dark" placement="bottom">
       <template #default>
-        <div class="overview-file-item__name">{{ item.name }}</div>
+        <div class="file-item__name">{{ item.name }}</div>
       </template>
       <template #content>
         <div>名称：{{ item.name }}</div>
         <div>大小：{{ size }}</div>
-        <div>最近修改：{{ item.modifiedDate }}</div>
+        <div>最近修改：{{ updatedData }}</div>
       </template>
     </el-tooltip>
-    <div class="overview-file-item__describe">
-      {{ item.type === 'file' ? size : item.modifiedDate }}
+    <div class="file-item__describe">
+      {{ item.isDirectory ? updatedData : size }}
     </div>
-    <!-- 文件信息 end -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { downloadFile, deleteFiles, rename } from '@/api/overview';
-import { getCover, getSizeStr } from '@/utils/handleFile';
+import { deleteFile, renameFile } from '@/api/storage';
+import type { FileInfo } from '@/api/types/storage';
+import { getFileCover, getFileSize } from '@/utils/file';
+import { dayjs } from 'element-plus';
 
-type Item = {
-  fullPath: string; // 完整路径
-  name: string; // 名称
-  size: number; // 大小
-  type: 'file' | 'folder'; // 类型
-  cover: string; // 封面
-  createDate: string; // 创建日期
-  modifiedDate: string; // 修改日期
-};
-
-type Emits = {
-  enter: []; // 进入
-  delete: []; // 删除
-  modify: [item: Item]; // 修改
-};
-
-const emits = defineEmits<Emits>();
+const emits = defineEmits<{
+  open: [item: FileInfo]; // 打开
+  change: []; // 改变
+}>();
 const props = defineProps({
   item: {
-    type: Object as PropType<Item>,
+    type: Object as PropType<FileInfo>,
     required: true
   } // 数据项
 });
-const cover = computed(() => getCover(props.item.cover)); // 封面
-const size = computed(() => getSizeStr(props.item.size)); // 大小
+const cover = computed(() => getFileCover(props.item.path, props.item.isDirectory)); // 封面
+const size = computed(() => getFileSize(props.item.size)); // 大小
+const updatedData = computed(() => dayjs(props.item.updatedTime).format('YYYY/MM/DD HH:mm:ss')); // 修改日期
 
 /**
  * @description: 处理下拉框指令
@@ -103,14 +89,14 @@ function handleCommand(command: string) {
  * @description: 处理下载
  */
 function handleDownload() {
-  downloadFile({ filePath: props.item.fullPath }).then((res) => {
-    const a = document.createElement('a');
-    a.href = res.data;
-    a.download = 'download';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
+  // downloadFile({ filePath: props.item.fullPath }).then((res) => {
+  //   const a = document.createElement('a');
+  //   a.href = res.data;
+  //   a.download = 'download';
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  // });
 }
 
 /**
@@ -122,28 +108,28 @@ function handleRename() {
     cancelButtonText: '取消',
     inputPattern: /^[^"*<>?\\|/:]+$/,
     inputErrorMessage: '名称不合法',
-    beforeClose: (action, ctx, close) => {
+    beforeClose: async (action, ctx, close) => {
       if (action !== 'confirm') {
         close();
         return;
       }
       ctx.confirmButtonLoading = true;
-      rename({ filePath: props.item.fullPath, newName: ctx.inputValue })
-        .then(() => {
-          ElMessage({
-            type: 'success',
-            message: '修改成功'
-          });
-          emits('modify', {
-            ...props.item,
-            name: ctx.inputValue,
-            fullPath: props.item.fullPath.slice(0, -props.item.name.length) + ctx.inputValue
-          });
-          close();
-        })
-        .finally(() => {
-          ctx.confirmButtonLoading = false;
+      try {
+        await renameFile({
+          parent: props.item.parent,
+          oldName: props.item.name,
+          newName: ctx.inputValue
         });
+        ElMessage({
+          type: 'success',
+          message: '修改成功'
+        });
+        close();
+        emits('change');
+      } catch (err) {
+        /* empty */
+      }
+      ctx.confirmButtonLoading = false;
     }
   }).catch(() => {});
 }
@@ -156,28 +142,33 @@ function handleDelete() {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
-    beforeClose(action, ctx, close) {
+    beforeClose: async (action, ctx, close) => {
       if (action !== 'confirm') {
         close();
         return;
       }
       ctx.confirmButtonLoading = true;
-      deleteFiles({ filePaths: [props.item.fullPath] })
-        .then(() => {
-          ElMessage({ type: 'success', message: '删除成功' });
-          emits('delete');
-          close();
-        })
-        .finally(() => {
-          ctx.confirmButtonLoading = false;
+      try {
+        await deleteFile({
+          path: props.item.path
         });
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        });
+        close();
+        emits('change');
+      } catch (err) {
+        /* empty */
+      }
+      ctx.confirmButtonLoading = false;
     }
   }).catch(() => {});
 }
 </script>
 
 <style lang="scss" scoped>
-.overview-file-item {
+.file-item {
   position: relative;
   cursor: pointer;
   text-align: center;
@@ -190,13 +181,13 @@ function handleDelete() {
   &:hover {
     background-color: var(--fill-color);
 
-    .overview-file-item__checkbox,
-    .overview-file-item__dropdown {
+    .file-item__checkbox,
+    .file-item__dropdown {
       display: block;
     }
   }
 
-  .overview-file-item__checkbox {
+  .file-item__checkbox {
     position: absolute;
     top: 0;
     left: 0;
@@ -208,25 +199,25 @@ function handleDelete() {
     }
   }
 
-  .overview-file-item__dropdown {
+  .file-item__dropdown {
     position: absolute;
     top: 0;
     right: 0;
     display: none;
 
-    .overview-file-item__dropdown-more {
+    .file-item__dropdown-more {
       padding: var(--spacing-small);
       outline-style: none;
     }
   }
 
-  .overview-file-item__cover {
+  .file-item__cover {
     width: 60px;
     height: 60px;
     object-fit: contain;
   }
 
-  .overview-file-item__name {
+  .file-item__name {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -240,7 +231,7 @@ function handleDelete() {
     }
   }
 
-  .overview-file-item__describe {
+  .file-item__describe {
     margin-top: 2px;
     color: var(--text-color-secondary);
     font-size: var(--text-size-extra-small);

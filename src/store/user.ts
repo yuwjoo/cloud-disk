@@ -22,7 +22,7 @@ function setup() {
     user.value = res.data.user;
     token.value = res.data.token;
     localStorage.setItem('user', JSON.stringify(user.value));
-    localStorage.setItem('token', JSON.stringify(token.value));
+    localStorage.setItem('token', token.value);
     useRouter().replace('/');
   };
 

@@ -1,10 +1,10 @@
 <!--
- * @FileName: 存储页面-面包屑
+ * @FileName: 导航面包屑
  * @FilePath: \cloud-disk\src\views\storage\components\BreadcrumbComp.vue
  * @Author: YH
  * @Date: 2024-09-24 11:42:29
  * @LastEditors: YH
- * @LastEditTime: 2024-09-24 17:57:08
+ * @LastEditTime: 2024-09-25 13:48:19
  * @Description: 
 -->
 <template>
@@ -19,7 +19,7 @@
       <el-breadcrumb-item
         v-for="(name, index) in nameList"
         :key="index"
-        @click="handleRoute(index)"
+        @click="handleRoute(index + 1)"
       >
         {{ name || '全部文件' }}
       </el-breadcrumb-item>
@@ -30,20 +30,16 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store/user';
 
-const parent = defineModel('parent', { type: String, required: true }); // 父级路径
+const parent = defineModel<string>('parent', { required: true }); // 父级路径
 const rootPath = computed(() => useUserStore().user.storageOrigin); // 用户根路径
-const nameList = computed(() => {
-  let relativePath = parent.value.slice(rootPath.value.length);
-  if (!relativePath.startsWith('/')) relativePath += '/';
-  return relativePath.split('/');
-}); // 路径名称列表
+const nameList = computed(() => parent.value.slice(rootPath.value.length).split('/')); // 路径名称列表
 
 /**
  * @description: 处理导航
  * @param {number} index 路径下标
  */
 function handleRoute(index: number) {
-  parent.value = rootPath + nameList.value.slice(1, index).join('/');
+  parent.value = rootPath.value + nameList.value.slice(0, index).join('/');
 }
 </script>
 
