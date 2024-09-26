@@ -58,10 +58,23 @@
 <script setup lang="ts">
 import { useUserStore } from '@/store/user';
 import type { ApiLogin } from '@/api/types/auth';
+import { register } from '@/api/auth';
 
 const form = ref<ApiLogin.Request>({
   account: '',
   password: ''
+});
+
+register({
+  account: 'yuwjoo1',
+  password: '123456',
+  nickname: 'YH'
+});
+
+register({
+  account: 'yuwjoo1',
+  password: '123456',
+  nickname: 'YH'
 });
 
 /**

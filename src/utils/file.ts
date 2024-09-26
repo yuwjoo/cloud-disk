@@ -19,7 +19,8 @@ export function getFileCover(path: string, isDirectory: boolean): string {
     case 'jpg':
     case 'jpeg':
     case 'png':
-      return `${import.meta.env.VITE_APP_SERVERURL}/api/storage/getFileCover?token=${useUserStore().token}&path=${path}`;
+    case 'webp':
+      return `${import.meta.env.VITE_APP_SERVERURL}/api/storage/getFileCover?token=${encodeURIComponent(useUserStore().token)}&path=${encodeURIComponent(path)}`;
     case 'zip':
     case '7z':
     case 'rar':

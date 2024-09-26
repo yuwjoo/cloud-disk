@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 17:38:18
+ * @LastEditTime: 2024-09-26 11:18:03
  * @Description:
  */
 import { useRequest } from '@/library/axios';
@@ -262,7 +262,7 @@ export class UploadTask {
         }
       },
       options: {
-        maxRetryCount: 3
+        maxRetryCount: 0
       }
     });
     const taskExecutor = new TaskExecutor({
