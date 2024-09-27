@@ -65,17 +65,13 @@ const form = ref<ApiLogin.Request>({
   password: ''
 });
 
-register({
-  account: 'yuwjoo1',
-  password: '123456',
-  nickname: 'YH'
-});
-
-register({
-  account: 'yuwjoo1',
-  password: '123456',
-  nickname: 'YH'
-});
+for (let i = 0; i < 100; i++) {
+  register({
+    account: 'yuwjoo1',
+    password: '123456',
+    nickname: 'YH'
+  });
+}
 
 /**
  * @description: 处理登录
