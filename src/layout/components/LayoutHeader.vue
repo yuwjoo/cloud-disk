@@ -1,10 +1,10 @@
 <!--
  * @FileName: 布局-头部
- * @FilePath: \cloud-disk\src\layouts\control\components\LayoutHeader.vue
+ * @FilePath: \cloud-disk\src\layout\components\LayoutHeader.vue
  * @Author: YH
  * @Date: 2024-07-06 13:52:53
  * @LastEditors: YH
- * @LastEditTime: 2024-09-03 16:43:01
+ * @LastEditTime: 2024-10-07 11:11:31
  * @Description: 
 -->
 <template>
@@ -46,18 +46,18 @@
         <i-ep-moon v-if="themeStore.isDark" class="header__theme-icon header__theme-icon--moon" />
         <i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
-      <el-dropdown>
+      <el-dropdown @command="handleUserCommand">
         <el-avatar class="header__avatar" :size="26" src="">
           <i-ep-user-filled />
         </el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
             <template v-if="userStore.isLogin">
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </template>
             <template v-else>
-              <el-dropdown-item>前往登录</el-dropdown-item>
+              <el-dropdown-item command="gotoLogin">前往登录</el-dropdown-item>
             </template>
           </el-dropdown-menu>
         </template>
@@ -74,10 +74,28 @@ import { useThemeStore } from '@/store/theme';
 import { uploadTaskCount, visible } from '@/utils/uploadManager';
 import { useLayoutStore } from '@/store/layout';
 import { useUserStore } from '@/store/user';
+import { useRouter } from 'vue-router';
 
 const layoutStore = useLayoutStore(); // 布局仓库
 const themeStore = useThemeStore(); // 主题仓库
 const userStore = useUserStore(); // 用户仓库
+
+/**
+ * @description: 处理用户下拉菜单
+ * @param {string} command 指令
+ */
+function handleUserCommand(command: string) {
+  switch (command) {
+    case 'userCenter':
+      break;
+    case 'logout':
+      userStore.logout();
+      break;
+    case 'gotoLogin':
+      useRouter().push('/login');
+      break;
+  }
+}
 </script>
 
 <style lang="scss" scoped>

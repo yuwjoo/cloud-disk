@@ -54,9 +54,9 @@ function setup() {
  * @description: 切换主题class
  * @param {boolean} [darkMode] 是否深色模式
  */
-const toggleClass = (darkMode: boolean) => {
+function toggleClass(darkMode: boolean) {
   document.documentElement.classList[darkMode ? 'add' : 'remove']('dark');
-};
+}
 
 /**
  * @description: 添加动画样式

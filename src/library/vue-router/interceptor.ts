@@ -1,3 +1,4 @@
+import { useRouterStore } from '@/store/router';
 import { useUserStore } from '@/store/user';
 import type { NavigationGuardWithThis } from 'vue-router';
 
@@ -7,7 +8,7 @@ import type { NavigationGuardWithThis } from 'vue-router';
 export const beforeEach: NavigationGuardWithThis<unknown> = (to) => {
   if (useUserStore().isLogin) {
     return true;
-  } else if (to.name !== 'login') {
+  } else if (!useRouterStore().whiteList.includes(to.name as string)) {
     return { name: 'login' };
   }
 };

@@ -55,6 +55,14 @@ const routes = [
         }
       },
       {
+        path: 'register',
+        name: 'register',
+        component: () => import('@/views/register/RegisterView.vue'),
+        meta: {
+          title: '注册'
+        }
+      },
+      {
         path: 'share/:id',
         name: 'share',
         component: () => import('@/views/share/ShareView.vue'),

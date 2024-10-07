@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 11:57:29
+ * @LastEditTime: 2024-10-07 11:33:28
  * @Description: 
 -->
 <template>
@@ -19,6 +19,8 @@
 
   <el-checkbox-group class="all-check__list" v-model="checkedList" @change="handleCheckGroupChange">
     <slot v-for="item in list" :key="item.path" :item="item"></slot>
+
+    <el-empty v-show="list.length === 0" class="all-check__list-empty" description="暂无数据" />
   </el-checkbox-group>
 </template>
 
@@ -67,5 +69,9 @@ function handleCheckGroupChange(value: CheckboxValueType[]) {
   gap: var(--spacing-medium);
   overflow-y: auto;
   align-content: flex-start;
+
+  .all-check__list-empty {
+    margin: var(--spacing-large) auto 0;
+  }
 }
 </style>

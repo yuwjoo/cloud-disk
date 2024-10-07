@@ -25,7 +25,7 @@ export function responseInterceptor(
     return res;
   }
 
-  ElMessage({ type: 'error', message: res.msg });
+  handleError(res);
 
   if (res.code === RESPONSE_CODE.UNAUTHORIZED) {
     localStorage.clear();
@@ -33,4 +33,11 @@ export function responseInterceptor(
   }
 
   throw res;
+}
+
+/**
+ * @description: 处理异常
+ */
+export function handleError(error: any) {
+  ElMessage({ type: 'error', message: error.message || error.msg || '网络繁忙！' });
 }

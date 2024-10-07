@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { requestInterceptor, responseInterceptor } from './interceptor';
+import { handleError, requestInterceptor, responseInterceptor } from './interceptor';
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_SERVERURL,
@@ -7,8 +7,8 @@ const request = axios.create({
   withCredentials: false // 表示跨域请求时是否需要使用凭证
 });
 
-request.interceptors.request.use(requestInterceptor);
-request.interceptors.response.use(responseInterceptor);
+request.interceptors.request.use(requestInterceptor, handleError);
+request.interceptors.response.use(responseInterceptor, handleError);
 
 /**
  * @description: 获取request
