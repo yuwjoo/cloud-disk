@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-15 13:40:29
  * @LastEditors: YH
- * @LastEditTime: 2024-09-24 11:04:17
+ * @LastEditTime: 2024-10-08 17:26:19
  * @Description: 
 -->
 <template>
@@ -13,9 +13,7 @@
     <LayoutAside v-if="$route.meta.aside" class="control-layout__aside" />
     <main class="control-layout__main">
       <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
+        <component :is="Component" />
       </router-view>
     </main>
   </div>

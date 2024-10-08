@@ -8,11 +8,11 @@ import { useUserStore } from '@/store/user';
 /**
  * @description: 获取文件封面
  * @param {string} path 文件路径
- * @param {boolean} isDirectory 是否目录
+ * @param {string} type 文件类型
  * @return {string} 文件封面
  */
-export function getFileCover(path: string, isDirectory: boolean): string {
-  if (isDirectory) return folder;
+export function getFileCover(path: string, type: string): string {
+  if (type === 'directory') return folder;
   const suffix = path.match(/\.([^.]*)$/)?.[1].toLocaleLowerCase();
 
   switch (suffix) {

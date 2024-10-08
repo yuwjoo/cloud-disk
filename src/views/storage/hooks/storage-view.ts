@@ -3,14 +3,19 @@ import { useLayoutStore } from '@/store/layout';
 import { useUserStore } from '@/store/user';
 import type { FileInfo } from '@/api/types/storage';
 import type { Search } from '../types/storage-view';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 /**
  * @description: 获取筛选数据
  */
 export function useSearch() {
   const search = reactive<Search>({
-    parent: useUserStore().user.storageOrigin, // 父级路径
+    parent: (useRoute().query.path as string) || useUserStore().user.storageOrigin, // 父级路径
     searchValue: '' // 模糊搜索值
+  });
+
+  onBeforeRouteUpdate((to) => {
+    search.parent = (to.query.path as string) || useUserStore().user.storageOrigin;
   });
 
   watchEffect(() => {

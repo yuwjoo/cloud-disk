@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 16:29:25
+ * @LastEditTime: 2024-10-08 17:27:11
  * @Description: 
 -->
 <template>
@@ -42,7 +42,10 @@ import UploadButtonComp from './components/UploadButtonComp.vue';
 import AllCheckFileListComp from './components/AllCheckFileListComp.vue';
 import FileItemComp from './components/FileItemComp.vue';
 import type { FileInfo } from '@/api/types/storage';
+import { useRouter } from '@/library/vue-router';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const { search } = useSearch(); // 筛选数据
 const { list, loading, refreshList } = useFetchList(search); // 列表数据
 const checkedList = ref<string[]>([]); // 选中列表
@@ -119,8 +122,13 @@ function handleBatchDelete() {
  * @param {FileInfo} item 文件项
  */
 function handleOpen(item: FileInfo) {
-  if (item.isDirectory) {
-    search.parent = item.path;
+  if (item.type === 'directory') {
+    useRouter().push({
+      name: route.name as string,
+      query: {
+        path: item.path
+      }
+    });
   } else {
     // TODO: 浏览文件
   }

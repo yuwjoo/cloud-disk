@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-04 17:05:10
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 17:02:00
+ * @LastEditTime: 2024-10-08 16:21:16
  * @Description: 
 -->
 <template>
@@ -21,7 +21,7 @@
       </template>
       <template #dropdown>
         <el-dropdown-menu @click.stop>
-          <el-dropdown-item v-if="!item.isDirectory" command="download">下载</el-dropdown-item>
+          <el-dropdown-item v-if="item.type === 'file'" command="download">下载</el-dropdown-item>
           <el-dropdown-item v-if="item.writable" command="rename">重命名</el-dropdown-item>
           <el-dropdown-item v-if="item.writable" command="delete">
             <el-text type="danger">删除</el-text>
@@ -42,7 +42,7 @@
       </template>
     </el-tooltip>
     <div class="file-item__describe">
-      {{ item.isDirectory ? updatedData : size }}
+      {{ item.type === 'file' ? size : updatedData }}
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ const props = defineProps({
     required: true
   } // 数据项
 });
-const cover = computed(() => getFileCover(props.item.path, props.item.isDirectory)); // 封面
+const cover = computed(() => getFileCover(props.item.path, props.item.type)); // 封面
 const size = computed(() => getFileSize(props.item.size)); // 大小
 const updatedData = computed(() => dayjs(props.item.updatedTime).format('YYYY/MM/DD HH:mm:ss')); // 修改日期
 

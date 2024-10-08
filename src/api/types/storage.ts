@@ -6,10 +6,10 @@ import type { CommonResponse, PageResponse } from '@/types/request';
 export interface FileInfo {
   path: string; // 路径
   parent: string; // 父级路径
-  level: number; // 层级
+  depth: number; // 深度
   size: number; // 大小
   name: string; // 名称
-  isDirectory: boolean; // 是否目录
+  type: string; // 类型
   createdTime: number; // 创建时间戳
   updatedTime: number; // 更新时间戳
   readable: boolean; // 可读
