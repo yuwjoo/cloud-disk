@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-08-30 14:17:34
  * @LastEditors: YH
- * @LastEditTime: 2024-09-26 11:18:03
+ * @LastEditTime: 2024-10-09 16:15:29
  * @Description:
  */
 import { useRequest } from '@/library/axios';
@@ -14,6 +14,7 @@ import { SimpleUpload } from '../simpleUpload/SimpleUpload';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import { TaskExecutorPool } from '../taskExecutorPool/TaskExecutorPool';
 import { TaskExecutor } from '../taskExecutorPool/TaskExecutor';
+import FileHashWorker from '../workers/fileHashWorker.ts?worker';
 
 export type UploadTaskOptions = {
   file: File;
@@ -171,8 +172,7 @@ export class UploadTask {
   getFileHash(): Promise<void> {
     if (this.fileAttribute.hash) return Promise.resolve();
     return new Promise((resolve, reject) => {
-      const workerPath = new URL('../workers/fileHashWorker.ts', import.meta.url);
-      const worker = new Worker(workerPath, { type: 'module' });
+      const worker = new FileHashWorker();
       worker.postMessage({ targetFile: this.fileAttribute.file });
       worker.onmessage = (event) => {
         this.fileAttribute.hash = event.data;
