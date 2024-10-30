@@ -11,6 +11,7 @@ import IconsResolver from 'unplugin-icons/resolver';
 import Icons from 'unplugin-icons/vite';
 import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 // import postcssPxtorem from 'postcss-pxtorem';
+import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 
 /**
  * @description: 获取文件路径
@@ -33,6 +34,7 @@ export default defineConfig({
     }),
     vueJsx(),
     VueDevTools(),
+    VueSetupExtend(),
     AutoImport({
       imports: ['vue'],
       resolvers: [

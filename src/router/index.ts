@@ -49,7 +49,7 @@ const routes = [
       {
         path: 'login',
         name: 'login',
-        component: () => import('@/views/login/LoginView.vue'),
+        component: () => import('@/views/login/Login.vue'),
         meta: {
           title: '登录'
         }

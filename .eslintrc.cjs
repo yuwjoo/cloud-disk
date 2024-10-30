@@ -13,6 +13,7 @@ module.exports = {
     ecmaVersion: 'latest'
   },
   rules: {
-    'no-async-promise-executor': 'off'
+    'no-async-promise-executor': 'off',
+    'vue/multi-word-component-names': 'off'
   }
 };
