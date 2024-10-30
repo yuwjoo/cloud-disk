@@ -1,18 +1,25 @@
 import { useRequest } from '@/library/axios';
 import type {
-  ApiBatchDeleteFile,
-  ApiCreateFile,
-  ApiDeleteFile,
-  ApiDownloadFile,
-  ApiGetFileList,
-  ApiMoveFile,
-  ApiRenameFile
-} from './types/storage';
+  ApiGetFileListRequest,
+  ApiGetFileListResponse,
+  ApiCreateFileRequest,
+  ApiCreateFileResponse,
+  ApiRenameFileRequest,
+  ApiRenameFileResponse,
+  ApiMoveFileRequest,
+  ApiMoveFileResponse,
+  ApiDeleteFileRequest,
+  ApiDeleteFileResponse,
+  ApiBatchDeleteFileRequest,
+  ApiBatchDeleteFileResponse,
+  ApiDownloadFileRequest,
+  ApiDownloadFileResponse
+} from '@/types/api/common/storage';
 
 /**
  * @description: 获取文件列表
  */
-export function getFileList(params: ApiGetFileList.Request): Promise<ApiGetFileList.Response> {
+export function getFileList(params: ApiGetFileListRequest): Promise<ApiGetFileListResponse> {
   return useRequest({
     url: '/api/storage/list',
     method: 'get',
@@ -23,7 +30,7 @@ export function getFileList(params: ApiGetFileList.Request): Promise<ApiGetFileL
 /**
  * @description: 创建文件/目录
  */
-export function createFile(data: ApiCreateFile.Request): Promise<ApiCreateFile.Response> {
+export function createFile(data: ApiCreateFileRequest): Promise<ApiCreateFileResponse> {
   return useRequest({
     url: '/api/storage/create',
     method: 'post',
@@ -34,7 +41,7 @@ export function createFile(data: ApiCreateFile.Request): Promise<ApiCreateFile.R
 /**
  * @description: 重命名文件/目录
  */
-export function renameFile(data: ApiRenameFile.Request): Promise<ApiRenameFile.Response> {
+export function renameFile(data: ApiRenameFileRequest): Promise<ApiRenameFileResponse> {
   return useRequest({
     url: '/api/storage/rename',
     method: 'post',
@@ -45,7 +52,7 @@ export function renameFile(data: ApiRenameFile.Request): Promise<ApiRenameFile.R
 /**
  * @description: 移动文件/目录
  */
-export function moveFile(data: ApiMoveFile.Request): Promise<ApiMoveFile.Response> {
+export function moveFile(data: ApiMoveFileRequest): Promise<ApiMoveFileResponse> {
   return useRequest({
     url: '/api/storage/move',
     method: 'post',
@@ -56,7 +63,7 @@ export function moveFile(data: ApiMoveFile.Request): Promise<ApiMoveFile.Respons
 /**
  * @description: 删除文件/目录
  */
-export function deleteFile(data: ApiDeleteFile.Request): Promise<ApiDeleteFile.Response> {
+export function deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse> {
   return useRequest({
     url: '/api/storage/delete',
     method: 'post',
@@ -68,8 +75,8 @@ export function deleteFile(data: ApiDeleteFile.Request): Promise<ApiDeleteFile.R
  * @description: 批量删除文件/目录
  */
 export function batchDeleteFile(
-  data: ApiBatchDeleteFile.Request
-): Promise<ApiBatchDeleteFile.Response> {
+  data: ApiBatchDeleteFileRequest
+): Promise<ApiBatchDeleteFileResponse> {
   return useRequest({
     url: '/api/storage/batchDelete',
     method: 'post',
@@ -80,7 +87,7 @@ export function batchDeleteFile(
 /**
  * @description: 下载文件
  */
-export function downloadFile(params: ApiDownloadFile.Request): Promise<ApiDownloadFile.Response> {
+export function downloadFile(params: ApiDownloadFileRequest): Promise<ApiDownloadFileResponse> {
   return useRequest({
     url: '/api/storage/downloadFile',
     method: 'get',

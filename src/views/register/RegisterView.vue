@@ -66,11 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ApiRegister } from '@/api/types/auth';
-import { register } from '@/api/auth';
+import { register } from '@/api/common/auth';
 import { useRouter } from '@/library/vue-router';
+import type { ApiRegisterRequest } from '@/types/api/common/auth';
 
-const form = ref<ApiRegister.Request>({
+const form = ref<ApiRegisterRequest>({
   account: '',
   password: '',
   nickname: ''

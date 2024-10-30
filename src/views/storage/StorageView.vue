@@ -35,15 +35,15 @@
 </template>
 
 <script setup lang="ts">
-import { batchDeleteFile, createFile } from '@/api/storage';
+import { batchDeleteFile, createFile } from '@/api/common/storage';
 import { useFetchList, useSearch } from './hooks/storage-view';
 import BreadcrumbComp from './components/BreadcrumbComp.vue';
 import UploadButtonComp from './components/UploadButtonComp.vue';
 import AllCheckFileListComp from './components/AllCheckFileListComp.vue';
 import FileItemComp from './components/FileItemComp.vue';
-import type { FileInfo } from '@/api/types/storage';
 import { useRouter } from '@/library/vue-router';
 import { useRoute } from 'vue-router';
+import type { FileInfo } from '@/types/file';
 
 const route = useRoute();
 const { search } = useSearch(); // 筛选数据

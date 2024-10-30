@@ -1,9 +1,9 @@
-import { getFileList } from '@/api/storage';
+import { getFileList } from '@/api/common/storage';
 import { useLayoutStore } from '@/store/layout';
 import { useUserStore } from '@/store/user';
-import type { FileInfo } from '@/api/types/storage';
-import type { Search } from '../types/storage-view';
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import type { Search } from '../types/storage-view';
+import type { FileInfo } from '@/types/file';
 
 /**
  * @description: 获取筛选数据

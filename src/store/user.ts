@@ -1,7 +1,8 @@
-import type { ApiLogin } from '@/api/types/auth';
 import { defineStore } from 'pinia';
-import { login as apiLogin, logout as apiLogout } from '@/api/auth';
+import { login as apiLogin, logout as apiLogout } from '@/api/common/auth';
 import { useRouter } from '@/library/vue-router';
+import type { UserInfo } from '@/types/user';
+import type { ApiLoginRequest } from '@/types/api/common/auth';
 
 /**
  * @description: 用户-仓库
@@ -9,15 +10,15 @@ import { useRouter } from '@/library/vue-router';
 export const useUserStore = defineStore('user', setup);
 
 function setup() {
-  const user = ref<ApiLogin.User>(JSON.parse(localStorage.getItem('user') || '{}')); // 用户信息
+  const user = ref<UserInfo>(JSON.parse(localStorage.getItem('user') || '{}')); // 用户信息
   const token = ref<string>(localStorage.getItem('token') || ''); // token
   const isLogin = computed<boolean>(() => !!token.value); // 是否已经登录
 
   /**
    * @description: 登录
-   * @param {ApiLogin.Request} data 登录参数
+   * @param {ApiLoginRequest} data 登录参数
    */
-  const login = async (data: ApiLogin.Request) => {
+  const login = async (data: ApiLoginRequest) => {
     const res = await apiLogin(data);
     user.value = res.data.user;
     token.value = res.data.token;

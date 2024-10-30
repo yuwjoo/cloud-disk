@@ -61,9 +61,9 @@
 
 <script setup lang="ts">
 import { useUserStore } from '@/store/user';
-import type { ApiLogin } from '@/api/types/auth';
+import type { ApiLoginRequest } from '@/types/api/common/auth';
 
-const form = ref<ApiLogin.Request>({
+const form = ref<ApiLoginRequest>({
   account: '',
   password: ''
 });

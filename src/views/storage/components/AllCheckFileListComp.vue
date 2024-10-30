@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FileInfo } from '@/api/types/storage';
+import type { FileInfo } from '@/types/file';
 import type { CheckboxValueType } from 'element-plus';
 
 const props = defineProps({

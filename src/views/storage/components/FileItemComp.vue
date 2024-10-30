@@ -48,10 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import { deleteFile, downloadFile, renameFile } from '@/api/storage';
-import type { FileInfo } from '@/api/types/storage';
+import { deleteFile, downloadFile, renameFile } from '@/api/common/storage';
 import { getFileCover, getFileSize } from '@/utils/file';
 import { dayjs } from 'element-plus';
+import type { FileInfo } from '@/types/file';
 
 const emits = defineEmits<{
   open: [item: FileInfo]; // 打开
