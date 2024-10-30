@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-06 13:52:53
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 17:10:41
+ * @LastEditTime: 2024-10-30 17:34:54
  * @Description: 
 -->
 <template>
@@ -34,7 +34,7 @@
 
     <div class="header__content header__content--right">
       <el-badge
-        v-if="userStore.isLogin"
+        v-if="$route.meta.fuzzyQuery"
         class="header__task-badge"
         :value="uploadTaskCount"
         :max="99"
@@ -50,7 +50,7 @@
       </div>
 
       <el-dropdown @command="handleUserCommand">
-        <el-avatar class="header__avatar" :size="26" :src="userStore.user.avatar">
+        <el-avatar class="header__avatar" :size="26" :src="userStore.user?.avatar">
           <i-ep-user-filled />
         </el-avatar>
         <template #dropdown>
@@ -77,11 +77,13 @@ import { useThemeStore } from '@/store/theme';
 import { uploadTaskCount, visible } from '@/utils/uploadManager';
 import { useLayoutStore } from '@/store/layout';
 import { useUserStore } from '@/store/user';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const layoutStore = useLayoutStore(); // 布局仓库
 const themeStore = useThemeStore(); // 主题仓库
 const userStore = useUserStore(); // 用户仓库
+const route = useRoute();
+const router = useRouter();
 
 /**
  * @description: 处理用户下拉菜单
@@ -95,7 +97,7 @@ const handleUserCommand = (command: string) => {
       userStore.logout();
       break;
     case 'gotoLogin':
-      useRouter().push('/login');
+      if (route.name !== 'login') router.push('/login');
       break;
   }
 };

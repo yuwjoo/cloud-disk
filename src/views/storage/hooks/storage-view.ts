@@ -10,12 +10,12 @@ import type { FileInfo } from '@/types/file';
  */
 export function useSearch() {
   const search = reactive<Search>({
-    parent: (useRoute().query.path as string) || useUserStore().user.storageOrigin, // 父级路径
+    parent: (useRoute().query.path as string) || useUserStore().user?.storageOrigin || '', // 父级路径
     searchValue: '' // 模糊搜索值
   });
 
   onBeforeRouteUpdate((to) => {
-    search.parent = (to.query.path as string) || useUserStore().user.storageOrigin;
+    search.parent = (to.query.path as string) || useUserStore().user?.storageOrigin || '';
   });
 
   watchEffect(() => {

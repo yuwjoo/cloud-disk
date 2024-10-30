@@ -10,7 +10,8 @@ const routes = [
         component: () => import('@/views/storage/StorageView.vue'),
         meta: {
           title: '存储',
-          aside: true
+          aside: true,
+          fuzzyQuery: true
         }
       },
       {
@@ -63,9 +64,10 @@ const routes = [
       },
       {
         path: ':pathMatch(.*)*',
+        name: 'notFound',
         component: () => import('@/views/notFound/NotFoundView.vue'),
         meta: {
-          title: '404'
+          title: 'notFound'
         }
       }
     ]

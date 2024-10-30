@@ -10,7 +10,7 @@ import type { ApiLoginRequest } from '@/types/api/common/auth';
 export const useUserStore = defineStore('user', setup);
 
 function setup() {
-  const user = ref<UserInfo>(JSON.parse(localStorage.getItem('user') || '{}')); // 用户信息
+  const user = ref<UserInfo | null>(JSON.parse(localStorage.getItem('user') || 'null')); // 用户信息
   const token = ref<string>(localStorage.getItem('token') || ''); // token
   const isLogin = computed<boolean>(() => !!token.value); // 是否已经登录
 
@@ -32,6 +32,8 @@ function setup() {
    */
   const logout = async () => {
     apiLogout();
+    user.value = null;
+    token.value = '';
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     useRouter().replace('/login');

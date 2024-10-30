@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:42:29
  * @LastEditors: YH
- * @LastEditTime: 2024-10-08 17:31:59
+ * @LastEditTime: 2024-10-30 17:38:07
  * @Description: 
 -->
 <template>
@@ -34,7 +34,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const parent = defineModel<string>('parent', { required: true }); // 父级路径
-const rootPath = computed(() => useUserStore().user.storageOrigin); // 用户根路径
+const rootPath = computed(() => useUserStore().user?.storageOrigin || ''); // 用户根路径
 const nameList = computed(() => {
   const path = parent.value.slice(rootPath.value.length - 1);
   return path === '/' ? [''] : path.split('/');
