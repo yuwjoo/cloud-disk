@@ -41,7 +41,7 @@ import BreadcrumbComp from './components/BreadcrumbComp.vue';
 import UploadButtonComp from './components/UploadButtonComp.vue';
 import AllCheckFileListComp from './components/AllCheckFileListComp.vue';
 import FileItemComp from './components/FileItemComp.vue';
-import { useRouter } from '@/library/vue-router';
+import { useRouter } from '@/hooks/vue-router';
 import { useRoute } from 'vue-router';
 import type { FileInfo } from '@/types/file';
 

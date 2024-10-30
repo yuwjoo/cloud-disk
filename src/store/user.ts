@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { login as apiLogin, logout as apiLogout } from '@/api/common/auth';
-import { useRouter } from '@/library/vue-router';
+import { useRouter } from '@/hooks/vue-router';
 import type { UserInfo } from '@/types/user';
 import type { ApiLoginRequest } from '@/types/api/common/auth';
 

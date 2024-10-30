@@ -1,4 +1,4 @@
-import { useRequest } from '@/library/axios';
+import { useRequest } from '@/hooks/axios';
 import type {
   ApiPreCheckFileRequest,
   ApiPreCheckFileResponse,

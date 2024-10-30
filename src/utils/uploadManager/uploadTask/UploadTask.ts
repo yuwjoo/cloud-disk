@@ -7,7 +7,7 @@
  * @LastEditTime: 2024-10-09 16:15:29
  * @Description:
  */
-import { useRequest } from '@/library/axios';
+import { useRequest } from '@/hooks/axios';
 import { FileAttribute } from '../fileAttribute/FileAttribute';
 import { MultipartUpload } from '../multipartUpload/MultipartUpload';
 import { SimpleUpload } from '../simpleUpload/SimpleUpload';

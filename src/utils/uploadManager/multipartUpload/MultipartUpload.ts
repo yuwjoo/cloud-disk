@@ -7,7 +7,7 @@
  * @LastEditTime: 2024-09-25 17:31:35
  * @Description:
  */
-import { useRequest } from '@/library/axios';
+import { useRequest } from '@/hooks/axios';
 import { AxiosWrapper } from '../axiosWrapper/AxiosWrapper';
 import { Part } from './Part';
 import type { FileAttribute } from '../fileAttribute/FileAttribute';

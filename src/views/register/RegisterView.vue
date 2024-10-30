@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { register } from '@/api/common/auth';
-import { useRouter } from '@/library/vue-router';
+import { useRouter } from '@/hooks/vue-router';
 import type { ApiRegisterRequest } from '@/types/api/common/auth';
 
 const form = ref<ApiRegisterRequest>({

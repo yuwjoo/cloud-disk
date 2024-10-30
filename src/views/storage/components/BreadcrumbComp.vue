@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from '@/library/vue-router';
+import { useRouter } from '@/hooks/vue-router';
 import { useUserStore } from '@/store/user';
 import { useRoute } from 'vue-router';
 
