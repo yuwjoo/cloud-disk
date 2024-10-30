@@ -1,16 +1,16 @@
 <!--
- * @FileName: 基本布局
- * @FilePath: \cloud-disk\src\layout\CommonLayout.vue
+ * @FileName: 布局
+ * @FilePath: \cloud-disk\src\layout\Layout.vue
  * @Author: YH
  * @Date: 2024-07-15 13:40:29
  * @LastEditors: YH
- * @LastEditTime: 2024-10-08 17:26:19
+ * @LastEditTime: 2024-10-30 16:55:27
  * @Description: 
 -->
 <template>
-  <LayoutHeader />
+  <layout-header />
   <div class="control-layout__content">
-    <LayoutAside v-if="$route.meta.aside" class="control-layout__aside" />
+    <layout-aside v-if="$route.meta.aside" class="control-layout__aside" />
     <main class="control-layout__main">
       <router-view v-slot="{ Component }">
         <component :is="Component" />
@@ -18,13 +18,16 @@
     </main>
   </div>
 
-  <LayoutTaskDrawer />
+  <task-drawer v-if="userStore.isLogin" />
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="LayoutView">
 import LayoutHeader from './components/LayoutHeader.vue';
 import LayoutAside from './components/LayoutAside.vue';
-import LayoutTaskDrawer from './components/LayoutTaskDrawer.vue';
+import TaskDrawer from './components/TaskDrawer.vue';
+import { useUserStore } from '@/store/user';
+
+const userStore = useUserStore(); // 用户仓库
 </script>
 
 <style lang="scss" scoped>

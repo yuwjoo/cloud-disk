@@ -48,7 +48,7 @@
   </div>
 </template>
 
-<script setup lang="ts" name="LoginPanelComponent">
+<script setup lang="ts" name="LoginPanel">
 import { useUserStore } from '@/store/user';
 import type { ApiLoginRequest } from '@/types/api/common/auth';
 import type { FormInstance, FormRules, InputInstance } from 'element-plus';

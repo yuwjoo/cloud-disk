@@ -1,8 +1,7 @@
 const routes = [
   {
     path: '/',
-    name: 'commonLayout',
-    component: () => import('@/layout/CommonLayout.vue'),
+    component: () => import('@/layout/Layout.vue'),
     redirect: { name: 'storage' },
     children: [
       {
@@ -52,14 +51,6 @@ const routes = [
         component: () => import('@/views/login/Login.vue'),
         meta: {
           title: '登录'
-        }
-      },
-      {
-        path: 'register',
-        name: 'register',
-        component: () => import('@/views/register/RegisterView.vue'),
-        meta: {
-          title: '注册'
         }
       },
       {

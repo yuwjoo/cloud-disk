@@ -21,7 +21,7 @@ import LoginPanel from './components/LoginPanel.vue';
 import RegisterPanel from './components/RegisterPanel.vue';
 import type { CurrentPanel } from './types/login';
 
-const currentPanel = ref<CurrentPanel>('login'); // 展示面板
+const currentPanel = ref<CurrentPanel>('login'); // 展示的面板名称
 </script>
 
 <style lang="scss" scoped>

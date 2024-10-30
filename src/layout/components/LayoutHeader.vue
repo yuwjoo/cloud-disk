@@ -4,13 +4,14 @@
  * @Author: YH
  * @Date: 2024-07-06 13:52:53
  * @LastEditors: YH
- * @LastEditTime: 2024-10-07 11:11:31
+ * @LastEditTime: 2024-10-30 17:10:41
  * @Description: 
 -->
 <template>
   <header class="header">
     <div class="header__content header__content--left">
       <component
+        v-if="$route.meta.aside"
         :is="layoutStore.isCollapsed ? IEpExpand : IEpFold"
         class="header__collapse"
         @click="layoutStore.toggleAside()"
@@ -42,12 +43,14 @@
       >
         <i-ep-sort class="header__task-icon" />
       </el-badge>
+
       <div class="header__theme-toggle" title="切换主题" @click="themeStore.toggleDark($event)">
         <i-ep-moon v-if="themeStore.isDark" class="header__theme-icon header__theme-icon--moon" />
         <i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
+
       <el-dropdown @command="handleUserCommand">
-        <el-avatar class="header__avatar" :size="26" src="">
+        <el-avatar class="header__avatar" :size="26" :src="userStore.user.avatar">
           <i-ep-user-filled />
         </el-avatar>
         <template #dropdown>
@@ -66,7 +69,7 @@
   </header>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="LayoutHeader">
 import IESearch from '~icons/ep/search';
 import IEpExpand from '~icons/ep/expand';
 import IEpFold from '~icons/ep/fold';
@@ -84,7 +87,7 @@ const userStore = useUserStore(); // 用户仓库
  * @description: 处理用户下拉菜单
  * @param {string} command 指令
  */
-function handleUserCommand(command: string) {
+const handleUserCommand = (command: string) => {
   switch (command) {
     case 'userCenter':
       break;
@@ -95,7 +98,7 @@ function handleUserCommand(command: string) {
       useRouter().push('/login');
       break;
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

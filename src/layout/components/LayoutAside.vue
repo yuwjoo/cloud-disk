@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-15 13:42:19
  * @LastEditors: YH
- * @LastEditTime: 2024-09-25 14:52:24
+ * @LastEditTime: 2024-10-30 17:07:22
  * @Description: 
 -->
 <template>
@@ -28,7 +28,7 @@
   </aside>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="LayoutAside">
 import IEpFolder from '~icons/ep/folder';
 import { useLayoutStore } from '@/store/layout';
 

@@ -76,7 +76,7 @@
   </el-drawer>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="TaskDrawer">
 import IEpDelete from '~icons/ep/delete';
 import IEpPause from '~icons/icons/pause';
 import ICaretRight from '~icons/ep/caretRight';
