@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-10-31 11:11:12
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 13:24:18
+ * @LastEditTime: 2024-10-31 17:25:08
  * @Description: 
 -->
 <template>
@@ -23,7 +23,7 @@
         <span>新建文件夹</span>
       </el-button>
 
-      <el-button type="danger" :disabled="!checkedList.length" @click="handleBatchDelete">
+      <el-button v-if="checkedList.length" type="danger" @click="handleBatchDelete">
         <el-icon class="el-icon--left"><i-ep-delete /></el-icon>
         <span>批量删除</span>
       </el-button>
