@@ -1,20 +1,21 @@
 <!--
- * @FileName: 文件项
- * @FilePath: \cloud-disk\src\views\storage\components\FileItemComp.vue
+ * @FileName: 存储页-列表-文件项
+ * @FilePath: \cloud-disk\src\views\storage\components\storageList\FileItem.vue
  * @Author: YH
  * @Date: 2024-09-04 17:05:10
  * @LastEditors: YH
- * @LastEditTime: 2024-10-08 16:21:16
+ * @LastEditTime: 2024-10-31 14:14:32
  * @Description: 
 -->
 <template>
-  <div class="file-item" @click="$emit('open', item)">
+  <div class="file-item" @click="handleClickFile()">
     <el-checkbox class="file-item__checkbox" :value="item.path" @click.stop />
+
     <el-dropdown
       class="file-item__dropdown"
       :teleported="false"
       :show-timeout="0"
-      @command="handleCommand"
+      @command="handleMenuCommand"
     >
       <template #default>
         <i-ep-more-filled class="file-item__dropdown-more" />
@@ -47,31 +48,56 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="FileItem">
 import { deleteFile, downloadFile, renameFile } from '@/api/common/storage';
 import { getFileCover, getFileSize } from '@/utils/file';
 import { dayjs } from 'element-plus';
+import { useRoute, useRouter } from 'vue-router';
 import type { FileInfo } from '@/types/file';
 
-const emits = defineEmits<{
-  open: [item: FileInfo]; // 打开
-  change: []; // 改变
+const emit = defineEmits<{
+  change: []; // 文件改变
 }>();
+
 const props = defineProps({
   item: {
     type: Object as PropType<FileInfo>,
     required: true
   } // 数据项
 });
+
+const route = useRoute();
+
+const router = useRouter();
+
 const cover = computed(() => getFileCover(props.item.path, props.item.type)); // 封面
+
 const size = computed(() => getFileSize(props.item.size)); // 大小
+
 const updatedData = computed(() => dayjs(props.item.updatedTime).format('YYYY/MM/DD HH:mm:ss')); // 修改日期
 
 /**
- * @description: 处理下拉框指令
+ * @description: 处理点击文件
+ */
+const handleClickFile = () => {
+  if (props.item.type === 'directory') {
+    // 进入文件夹
+    router.push({
+      name: route.name as string,
+      query: {
+        path: props.item.path
+      }
+    });
+  } else {
+    // 浏览文件
+  }
+};
+
+/**
+ * @description: 处理菜单指令
  * @param {string} command 指令
  */
-function handleCommand(command: string) {
+const handleMenuCommand = (command: string) => {
   switch (command) {
     case 'download':
       handleDownload();
@@ -83,12 +109,12 @@ function handleCommand(command: string) {
       handleDelete();
       break;
   }
-}
+};
 
 /**
  * @description: 处理下载
  */
-function handleDownload() {
+const handleDownload = () => {
   downloadFile({ path: props.item.path }).then((res) => {
     const a = document.createElement('a');
     a.href = res.data;
@@ -97,12 +123,12 @@ function handleDownload() {
     a.click();
     document.body.removeChild(a);
   });
-}
+};
 
 /**
  * @description: 处理重命名
  */
-function handleRename() {
+const handleRename = () => {
   ElMessageBox.prompt(`将“${props.item.name}”修改为：`, '重命名', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -125,19 +151,19 @@ function handleRename() {
           message: '修改成功'
         });
         close();
-        emits('change');
+        emit('change');
       } catch (err) {
         /* empty */
       }
       ctx.confirmButtonLoading = false;
     }
   }).catch(() => {});
-}
+};
 
 /**
  * @description: 处理删除
  */
-function handleDelete() {
+const handleDelete = () => {
   ElMessageBox.confirm(`即将删除“${props.item.name}”，是否继续?`, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -157,14 +183,14 @@ function handleDelete() {
           message: '删除成功'
         });
         close();
-        emits('change');
+        emit('change');
       } catch (err) {
         /* empty */
       }
       ctx.confirmButtonLoading = false;
     }
   }).catch(() => {});
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -223,6 +249,7 @@ function handleDelete() {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     font-size: var(--text-size-small);
     word-wrap: break-word;
 

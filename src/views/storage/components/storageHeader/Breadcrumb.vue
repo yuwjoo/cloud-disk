@@ -1,15 +1,15 @@
 <!--
- * @FileName: 导航面包屑
- * @FilePath: \cloud-disk\src\views\storage\components\BreadcrumbComp.vue
+ * @FileName: 存储页-头部-导航面包屑
+ * @FilePath: \cloud-disk\src\views\storage\components\storageHeader\Breadcrumb.vue
  * @Author: YH
  * @Date: 2024-09-24 11:42:29
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 17:38:07
+ * @LastEditTime: 2024-10-31 11:36:29
  * @Description: 
 -->
 <template>
   <div class="breadcrumb">
-    <template v-if="nameList.length > 1">
+    <template v-if="dirList.length > 1">
       <el-icon class="breadcrumb__back" @click="handleBack()">
         <i-ep-back />
       </el-icon>
@@ -17,48 +17,54 @@
     </template>
     <el-breadcrumb class="breadcrumb__breadcrumb" separator="/">
       <el-breadcrumb-item
-        v-for="(name, index) in nameList"
+        v-for="(dir, index) in dirList"
         :key="index"
-        :to="{ name: $route.name as string, query: { path: getPath(index + 1) } }"
+        :to="{ name: route.name as string, query: { path: getPath(index + 1) } }"
       >
-        {{ name || '全部文件' }}
+        {{ dir || '全部文件' }}
       </el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
 
-<script setup lang="ts">
-import { useRouter } from '@/hooks/vue-router';
+<script setup lang="ts" name="Breadcrumb">
 import { useUserStore } from '@/store/user';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+
+const props = defineProps({
+  path: {
+    type: String,
+    required: true
+  } // 目录路径
+});
 
 const route = useRoute();
-const parent = defineModel<string>('parent', { required: true }); // 父级路径
-const rootPath = computed(() => useUserStore().user?.storageOrigin || ''); // 用户根路径
-const nameList = computed(() => {
-  const path = parent.value.slice(rootPath.value.length - 1);
+
+const router = useRouter();
+
+const userStore = useUserStore();
+
+const rootPath = computed(() => userStore.user?.storageOrigin || ''); // 用户根路径
+
+const dirList = computed(() => {
+  const path = props.path.slice(rootPath.value.length - 1);
   return path === '/' ? [''] : path.split('/');
-}); // 路径名称列表
+}); // 目录列表
 
 /**
  * @description: 处理后退
  */
-function handleBack() {
-  useRouter().push({
-    name: route.name as string,
-    query: {
-      path: getPath(-1)
-    }
-  });
-}
+const handleBack = () => {
+  router.push({ name: route.name as string, query: { path: getPath(-1) } });
+};
 
 /**
  * @description: 获取访问路径
  * @param {number} pos 位置
  */
-function getPath(pos: number) {
-  return rootPath.value + nameList.value.slice(0, pos).filter(Boolean).join('/');
-}
+const getPath = (pos: number) => {
+  return rootPath.value + dirList.value.slice(0, pos).filter(Boolean).join('/');
+};
 </script>
 
 <style lang="scss" scoped>
