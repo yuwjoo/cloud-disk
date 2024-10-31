@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-10-31 13:25:53
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 14:28:23
+ * @LastEditTime: 2024-10-31 14:49:31
  * @Description: 
 -->
 <template>
@@ -36,25 +36,4 @@ defineProps({
 const checkedList = defineModel<string[]>('checkedList', { required: true }); // 选中列表
 </script>
 
-<style lang="scss" scoped>
-.storage {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  .storage__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .create-file-btn {
-      margin-left: 12px;
-    }
-  }
-
-  :deep(.all-check__list) {
-    height: 0;
-    flex-grow: 1;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 14:44:54
+ * @LastEditTime: 2024-10-31 14:51:17
  * @Description: 
 -->
 <template>
@@ -69,7 +69,7 @@ const handleCheckAllChange = (val: CheckboxValueType) => {
  */
 const handleCheckGroupChange = (value: CheckboxValueType[]) => {
   const checkedCount = value.length;
-  checkAll.value = checkedCount === props.list.length;
+  checkAll.value = checkedCount > 0 && checkedCount === props.list.length;
   isIndeterminate.value = checkedCount > 0 && checkedCount < props.list.length;
 };
 

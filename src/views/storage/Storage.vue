@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 14:39:58
+ * @LastEditTime: 2024-10-31 14:50:24
  * @Description: 
 -->
 <template>
@@ -15,7 +15,12 @@
       :checked-list="checkedList"
       @change="refreshList()"
     />
-    <storage-list v-model:checked-list="checkedList" :list="list" @change="refreshList()" />
+    <storage-list
+      class="storage__list"
+      v-model:checked-list="checkedList"
+      :list="list"
+      @change="refreshList()"
+    />
   </div>
 </template>
 
@@ -78,16 +83,6 @@ refreshList();
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  .storage__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .create-file-btn {
-      margin-left: 12px;
-    }
-  }
 
   :deep(.all-check__list) {
     height: 0;
