@@ -12,6 +12,8 @@
   </div>
 </template>
 
+<script setup lang="ts" name="NotFoundView"></script>
+
 <style lang="scss" scoped>
 .not-found {
   display: flex;
