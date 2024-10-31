@@ -8,13 +8,11 @@
  * @Description: 
 -->
 <template>
-  <div class="storage-list">
-    <all-check-list v-model:checked-list="checkedList" :list="list" id="path">
-      <template #default="{ item }">
-        <file-item :item="item" @change="emit('change')" />
-      </template>
-    </all-check-list>
-  </div>
+  <all-check-list v-model:checked-list="checkedList" :list="list" id="path">
+    <template #default="{ item }">
+      <file-item :item="item" @change="emit('change')" />
+    </template>
+  </all-check-list>
 </template>
 
 <script setup lang="ts" name="StorageList">

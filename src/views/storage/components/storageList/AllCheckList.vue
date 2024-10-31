@@ -4,32 +4,31 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 14:51:17
+ * @LastEditTime: 2024-10-31 17:03:07
  * @Description: 
 -->
 <template>
-  <el-checkbox
-    class="all-check-list__checked"
-    v-model="checkAll"
-    :indeterminate="isIndeterminate"
-    @change="handleCheckAllChange"
-  >
-    全选
-  </el-checkbox>
+  <div class="all-check-list">
+    <el-checkbox
+      class="all-check-list__checked"
+      v-model="checkAll"
+      :indeterminate="isIndeterminate"
+      @change="handleCheckAllChange"
+    >
+      全选
+    </el-checkbox>
 
-  <el-checkbox-group
-    class="all-check-list__list"
-    v-model="checkedList"
-    @change="handleCheckGroupChange"
-  >
-    <slot v-for="item in list" :key="item[id]" :item="item"></slot>
+    <el-checkbox-group
+      v-if="list.length > 0"
+      class="all-check-list__list"
+      v-model="checkedList"
+      @change="handleCheckGroupChange"
+    >
+      <slot v-for="item in list" :key="item[id]" :item="item"></slot>
+    </el-checkbox-group>
 
-    <el-empty
-      v-show="list.length === 0"
-      class="all-check-list__list-empty"
-      description="暂无数据"
-    />
-  </el-checkbox-group>
+    <el-empty v-else class="all-check-list__empty" description="暂无数据" />
+  </div>
 </template>
 
 <script setup lang="ts" name="AllCheckList">
@@ -79,18 +78,26 @@ watchEffect(() => {
 </script>
 
 <style lang="scss" scoped>
-.all-check-list__checked {
-  margin-bottom: var(--spacing-small);
-}
-
-.all-check-list__list {
+.all-check-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-medium);
-  overflow-y: auto;
-  align-content: flex-start;
+  flex-direction: column;
+  height: 100%;
 
-  .all-check-list__list-empty {
+  .all-check-list__checked {
+    margin-bottom: var(--spacing-small);
+  }
+
+  .all-check-list__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-medium);
+    overflow-y: auto;
+    align-content: flex-start;
+    height: 0;
+    flex-grow: 1;
+  }
+
+  .all-check-list__empty {
     margin: var(--spacing-large) auto 0;
   }
 }

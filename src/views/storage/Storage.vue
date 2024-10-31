@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 14:50:24
+ * @LastEditTime: 2024-10-31 17:06:33
  * @Description: 
 -->
 <template>
@@ -83,10 +83,5 @@ refreshList();
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  :deep(.all-check__list) {
-    height: 0;
-    flex-grow: 1;
-  }
 }
 </style>
