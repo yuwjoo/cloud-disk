@@ -46,7 +46,7 @@ export default defineConfig({
       dts: getFilePath('./types/auto-imports.d.ts')
     }),
     Components({
-      dirs: [getFilePath('./src/components')],
+      dirs: [getFilePath('./src/renderer/components')],
       extensions: ['vue', 'tsx'],
       resolvers: [
         ElementPlusResolver(),
@@ -60,7 +60,7 @@ export default defineConfig({
     }),
     Icons({
       customCollections: {
-        icons: FileSystemIconLoader('./src/assets/icons', (svg) =>
+        icons: FileSystemIconLoader('./src/renderer/assets/icons', (svg) =>
           svg.replace(/^<svg /, '<svg fill="currentColor" width="1em" height="1em" ')
         )
       },
@@ -89,7 +89,8 @@ export default defineConfig({
   // },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      src: fileURLToPath(new URL('./src', import.meta.url)),
+      '@': fileURLToPath(new URL('./src/renderer', import.meta.url))
     }
   },
   define: {

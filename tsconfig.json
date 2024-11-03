@@ -5,7 +5,13 @@
       "path": "./tsconfig.node.json"
     },
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.main.json"
+    },
+    {
+      "path": "./tsconfig.preload.json"
+    },
+    {
+      "path": "./tsconfig.renderer.json"
     }
   ]
 }
