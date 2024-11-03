@@ -31,7 +31,11 @@ function setup() {
    * @description: 登出
    */
   const logout = async () => {
-    apiLogout();
+    try {
+      await apiLogout();
+    } catch {
+      /* empty */
+    }
     user.value = null;
     token.value = '';
     localStorage.removeItem('user');

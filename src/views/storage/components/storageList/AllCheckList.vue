@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 17:30:13
+ * @LastEditTime: 2024-11-02 22:48:18
  * @Description: 
 -->
 <template>
@@ -82,6 +82,10 @@ watchEffect(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  .all-check-list__checked {
+    align-self: flex-start;
+  }
 
   .all-check-list__list {
     display: flex;

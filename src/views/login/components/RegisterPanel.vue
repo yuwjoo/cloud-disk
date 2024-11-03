@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-10-30 14:02:08
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 16:23:11
+ * @LastEditTime: 2024-11-02 15:38:04
  * @Description: 
 -->
 <template>
@@ -143,11 +143,11 @@ const handleRegister = async () => {
     await formRef.value!.validate();
     registerLoading.value = true;
     await register(formData.value);
-    registerLoading.value = false;
     emit('toggle');
   } catch {
     /* empty */
   }
+  registerLoading.value = false;
 };
 </script>
 

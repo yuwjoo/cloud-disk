@@ -1,6 +1,8 @@
 import type {
   ApiCreateDirRequest,
   ApiCreateDirResponse,
+  ApiDeleteFileRequest,
+  ApiDeleteFileResponse,
   ApiGetDownloadUrlRequest,
   ApiGetDownloadUrlResponse,
   ApiGetListRequest,
@@ -106,6 +108,33 @@ export function renameFile(data: ApiRenameFileRequest): Promise<ApiRenameFileRes
       async: 2,
       onnest: 'fail',
       opera: 'rename', // 操作-重命名
+      clienttype: 0,
+      web: 1, // web端
+      access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+    },
+    data: {
+      filelist: data.filelist // 文件信息列表
+    }
+  });
+}
+
+/**
+ * @description: 删除文件
+ */
+export function deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse> {
+  return axios({
+    baseURL: 'https://pan.baidu.com',
+    url: '/api/filemanager',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'pan.baidu.com'
+    },
+    params: {
+      async: 2,
+      onnest: 'fail',
+      opera: 'delete', // 操作-删除
+      newVerify: 1,
       clienttype: 0,
       web: 1, // web端
       access_token: localStorage.getItem('baiduyun_access_token') // accessToken

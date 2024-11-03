@@ -146,6 +146,23 @@ export type ApiRenameFileResponse = {
 };
 
 /**
+ * @description: 删除文件-请求参数
+ */
+export type ApiDeleteFileRequest = {
+  filelist: string[]; // 文件路径列表
+};
+
+/**
+ * @description: 删除文件-响应数据
+ */
+export type ApiDeleteFileResponse = {
+  errno: number; // 状态码。0：成功
+  info: [];
+  request_id: number; // 请求id
+  taskid: number;
+};
+
+/**
  * @description: 获取下载地址-请求参数
  */
 export type ApiGetDownloadUrlRequest = {

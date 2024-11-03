@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-10-30 13:59:31
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 15:13:33
+ * @LastEditTime: 2024-11-02 22:46:56
  * @Description: 
 -->
 <template>
@@ -83,10 +83,10 @@ const handleLogin = async () => {
     await formRef.value!.validate();
     loginLoading.value = true;
     await userStore.login(formData.value);
-    loginLoading.value = false;
   } catch {
     /* empty */
   }
+  loginLoading.value = false;
 };
 </script>
 

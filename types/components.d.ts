@@ -7,9 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    BaseCheckbox: typeof import('./../src/components/base/BaseCheckbox.tsx')['default']
-    BaseIcon: typeof import('./../src/components/base/BaseIcon.tsx')['default']
-    BaseText: typeof import('./../src/components/base/BaseText.tsx')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -31,17 +28,8 @@ declare module 'vue' {
     ElLink: typeof import('element-plus/es')['ElLink']
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElProgress: typeof import('element-plus/es')['ElProgress']
-    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
-    ElTabPane: typeof import('element-plus/es')['ElTabPane']
-    ElTabs: typeof import('element-plus/es')['ElTabs']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
-    FeatureBreadcrumb: typeof import('./../src/components/feature/FeatureBreadcrumb.vue')['default']
-    FeatureBreadcrumbItem: typeof import('./../src/components/feature/FeatureBreadcrumbItem.vue')['default']
-    FeatureCheckbox: typeof import('./../src/components/feature/FeatureCheckbox.vue')['default']
-    FeatureCheckboxGroup: typeof import('./../src/components/feature/FeatureCheckboxGroup.vue')['default']
-    FeatureFloatingButton: typeof import('./../src/components/feature/FeatureFloatingButton.vue')['default']
-    FeatureInput: typeof import('./../src/components/feature/FeatureInput.vue')['default']
     IEpBack: typeof import('~icons/ep/back')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
