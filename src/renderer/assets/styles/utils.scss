@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use 'sass:math';
+@use 'sass:meta';
 
 // 获取css变量
 @function getCssVar($args...) {
@@ -31,7 +32,8 @@
 
 // 获取颜色RGB
 @function getColorRGB($color) {
-  @return color.red($color) + ', ' + color.green($color) + ', ' + color.blue($color);
+  @return color.channel($color, 'red', $space: rgb) + ', ' +
+    color.channel($color, 'green', $space: rgb) + ', ' + color.channel($color, 'blue', $space: rgb);
 }
 
 // 获取混合后的颜色
@@ -41,7 +43,7 @@
 
 // 递归设置css变量
 @mixin deep-set-css-vars($parent: '', $key, $value) {
-  @if type-of($value) == 'map' {
+  @if meta.type-of($value) == 'map' {
     @each $k, $v in $value {
       @include deep-set-css-vars(joinName($parent, $key), $k, $v);
     }
