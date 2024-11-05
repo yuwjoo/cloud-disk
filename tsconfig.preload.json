@@ -1,9 +1,10 @@
 {
   "include": [
-    "env.d.ts",
-    "src/preload/**/*"
+    "./src/preload/**/*",
+    "./env.d.ts"
   ],
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "module": "ESNext",
     "allowJs": true,
@@ -12,16 +13,23 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "noEmit": true,
+    "outDir": "./node_modules/.tmp",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.preload.tsbuildinfo",
     "paths": {
-      "src/*": [
-        "./src/*"
+      "common/*": [
+        "./src/common/*"
       ],
       "@/*": [
         "./src/preload/*"
       ]
     },
-  }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.common.json"
+    }
+  ]
 }

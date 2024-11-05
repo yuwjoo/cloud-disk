@@ -1,8 +1,6 @@
 {
   "include": [
-    "./src/main/**/*",
-    "./env.d.ts",
-    "./forge.env.d.ts"
+    "./src/common/**/*"
   ],
   "compilerOptions": {
     "composite": true,
@@ -14,23 +12,13 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "noEmit": true,
     "outDir": "./node_modules/.tmp",
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.main.tsbuildinfo",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "paths": {
       "common/*": [
         "./src/common/*"
       ],
-      "@/*": [
-        "./src/main/*"
-      ]
     },
-  },
-  "references": [
-    {
-      "path": "./tsconfig.common.json"
-    }
-  ]
+  }
 }
