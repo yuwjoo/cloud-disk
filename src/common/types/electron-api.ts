@@ -19,6 +19,13 @@ import {
 export type ElectronApi = {
   desktop: boolean; // 是否桌面端
   version: string; // electron版本
+  window: {
+    maximize(): void; // 最大化
+    minimize(): void; // 最小化
+    restore(): void; // 还原
+    close(): void; // 关闭
+    toggleFullScreen(isFull?: boolean): void; // 切换全屏状态
+  }; // 窗口api
   baiduyun: {
     searchFile(data: ApiSearchFileRequest): Promise<ApiSearchFileResponse>; // 模糊查询文件
     getList(data: ApiGetListRequest): Promise<ApiGetListResponse>; // 获取列表数据

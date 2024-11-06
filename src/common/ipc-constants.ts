@@ -1,3 +1,9 @@
+export const WINDOW_MAXIMIZE = 'window-maximize'; // 窗口-最大化
+export const WINDOW_MINIMIZE = 'window-minimize'; // 窗口-最小化
+export const WINDOW_RESTORE = 'window-restore'; // 窗口-还原
+export const WINDOW_CLOSE = 'window-close'; // 窗口-还原
+export const WINDOW_TOGGLE_FULL_SCREEN = 'window-toggle-full-screen'; // 窗口-切换全屏状态
+
 export const BAIDUYUN_SEARCH_FILE = 'baiduyun-search-file'; // 百度云-搜索文件
 export const BAIDUYUN_GET_LIST = 'baiduyun-get-list'; // 百度云-获取列表数据
 export const BAIDUYUN_CREATE_DIR = 'baiduyun-create-dir'; // 百度云-创建文件夹

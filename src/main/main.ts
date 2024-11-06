@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import started from 'electron-squirrel-startup';
-import './ipc/baiduyun';
+import.meta.glob('./ipc/*.ts', { eager: true }); // 导入所有ipc模块
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
