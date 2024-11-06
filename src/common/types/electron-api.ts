@@ -12,13 +12,17 @@ import {
   ApiSearchFileRequest,
   ApiSearchFileResponse
 } from './api/baiduyun';
+import { AddListener, RemoveAllListener, RemoveListener } from './electron-listener';
 
 /**
  * @description: electron api
  */
-export type ElectronApi = {
+export interface ElectronApi {
   desktop: boolean; // 是否桌面端
   version: string; // electron版本
+  addListener: AddListener; // 监听事件
+  removeListener: RemoveListener; // 移除事件
+  removeAllListener: RemoveAllListener; // 移除所有事件
   window: {
     maximize(): void; // 最大化
     minimize(): void; // 最小化
@@ -34,4 +38,4 @@ export type ElectronApi = {
     deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse>; // 删除文件
     getDownloadUrl(data: ApiGetDownloadUrlRequest): Promise<ApiGetDownloadUrlResponse>; // 获取下载地址
   }; // 百度云api
-};
+}
