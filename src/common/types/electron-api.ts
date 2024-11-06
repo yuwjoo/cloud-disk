@@ -23,19 +23,29 @@ export interface ElectronApi {
   addListener: AddListener; // 监听事件
   removeListener: RemoveListener; // 移除事件
   removeAllListener: RemoveAllListener; // 移除所有事件
-  window: {
-    maximize(): void; // 最大化
-    minimize(): void; // 最小化
-    restore(): void; // 还原
-    close(): void; // 关闭
-    toggleFullScreen(isFull?: boolean): void; // 切换全屏状态
-  }; // 窗口api
-  baiduyun: {
-    searchFile(data: ApiSearchFileRequest): Promise<ApiSearchFileResponse>; // 模糊查询文件
-    getList(data: ApiGetListRequest): Promise<ApiGetListResponse>; // 获取列表数据
-    createDir(data: ApiCreateDirRequest): Promise<ApiCreateDirResponse>; // 创建文件夹
-    renameFile(data: ApiRenameFileRequest): Promise<ApiRenameFileResponse>; // 重命名文件
-    deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse>; // 删除文件
-    getDownloadUrl(data: ApiGetDownloadUrlRequest): Promise<ApiGetDownloadUrlResponse>; // 获取下载地址
-  }; // 百度云api
+  window: WindowApi; // 窗口api
+  baiduyun: BaiduyunApi; // 百度云api
+}
+
+/**
+ * @description: 窗口api
+ */
+export interface WindowApi {
+  maximize(): void; // 最大化
+  minimize(): void; // 最小化
+  restore(): void; // 还原
+  close(): void; // 关闭
+  toggleFullScreen(isFull?: boolean): void; // 切换全屏状态
+}
+
+/**
+ * @description: 百度云api
+ */
+export interface BaiduyunApi {
+  searchFile(data: ApiSearchFileRequest): Promise<ApiSearchFileResponse>; // 模糊查询文件
+  getList(data: ApiGetListRequest): Promise<ApiGetListResponse>; // 获取列表数据
+  createDir(data: ApiCreateDirRequest): Promise<ApiCreateDirResponse>; // 创建文件夹
+  renameFile(data: ApiRenameFileRequest): Promise<ApiRenameFileResponse>; // 重命名文件
+  deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse>; // 删除文件
+  getDownloadUrl(data: ApiGetDownloadUrlRequest): Promise<ApiGetDownloadUrlResponse>; // 获取下载地址
 }

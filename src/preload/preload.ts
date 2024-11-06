@@ -1,8 +1,8 @@
 import { contextBridge } from 'electron';
-import * as window from '@/ipc/window';
-import * as baiduyun from '@/ipc/baiduyun';
-import type { ElectronApi } from 'common/types/electron-api';
 import { addListener, removeAllListener, removeListener } from './ipc/listener';
+import { window } from '@/ipc/window';
+import { baiduyun } from '@/ipc/baiduyun';
+import type { ElectronApi } from 'common/types/electron-api';
 
 const electronApi: ElectronApi = {
   desktop: true,
