@@ -11,7 +11,7 @@ import type {
   ApiRenameFileResponse,
   ApiSearchFileRequest,
   ApiSearchFileResponse
-} from 'common/types/baiduyun';
+} from 'common/types/api/baiduyun';
 import axios from 'axios';
 
 // access_token
