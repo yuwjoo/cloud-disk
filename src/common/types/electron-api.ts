@@ -1,3 +1,4 @@
+import { IpcRendererEvent } from 'electron';
 import {
   ApiCreateDirRequest,
   ApiCreateDirResponse,
@@ -12,7 +13,7 @@ import {
   ApiSearchFileRequest,
   ApiSearchFileResponse
 } from './api/baiduyun';
-import { AddListener, RemoveAllListener, RemoveListener } from './electron-listener';
+import { IpcEventMap } from './ipc';
 
 /**
  * @description: electron api
@@ -25,6 +26,41 @@ export interface ElectronApi {
   removeAllListener: RemoveAllListener; // 移除所有事件
   window: WindowApi; // 窗口api
   baiduyun: BaiduyunApi; // 百度云api
+}
+
+/**
+ * @description: 监听器配置项
+ */
+export interface ListenerOptions {
+  once?: boolean; // 一次性监听器
+}
+
+/**
+ * @description: 添加事件函数
+ */
+export interface AddListener {
+  <K extends keyof IpcEventMap>(
+    name: K,
+    callback: (event: IpcRendererEvent, ...args: IpcEventMap[K]) => void,
+    options?: ListenerOptions
+  ): void;
+}
+
+/**
+ * @description: 移除事件函数
+ */
+export interface RemoveListener {
+  <K extends keyof IpcEventMap>(
+    name: K,
+    callback: (event: IpcRendererEvent, ...args: IpcEventMap[K]) => void
+  ): void;
+}
+
+/**
+ * @description: 移除所有事件函数
+ */
+export interface RemoveAllListener {
+  <K extends keyof IpcEventMap>(name: K): void;
 }
 
 /**
