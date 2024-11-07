@@ -35,5 +35,19 @@ export const window: WindowApi = {
    */
   toggleFullScreen(isFull) {
     send('window-toggle-full-screen', isFull);
+  },
+
+  /**
+   * @description: 窗口-是否最大化
+   */
+  isMaximize() {
+    return send('window-is-maximize');
+  },
+
+  /**
+   * @description: 窗口-是否全屏
+   */
+  isFullScreen: function () {
+    return send('window-is-full-screen');
   }
 };

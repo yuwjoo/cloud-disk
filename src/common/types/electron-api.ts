@@ -62,6 +62,8 @@ export interface WindowApi {
   restore: IpcRequestFun<'window-restore'>; // 还原
   close: IpcRequestFun<'window-close'>; // 关闭
   toggleFullScreen: IpcRequestFun<'window-toggle-full-screen'>; // 切换全屏状态
+  isMaximize: IpcRequestFun<'window-is-maximize'>; // 是否最大化
+  isFullScreen: IpcRequestFun<'window-is-full-screen'>; // 是否全屏
 }
 
 /**

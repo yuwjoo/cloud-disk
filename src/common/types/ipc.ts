@@ -35,6 +35,8 @@ export interface IpcChannelMap {
   'window-restore': IpcC; // 窗口-还原
   'window-close': IpcC; // 窗口-还原
   'window-toggle-full-screen': IpcC<[isFull?: boolean]>; // 窗口-切换全屏状态
+  'window-is-maximize': IpcC<[], boolean>; // 窗口-是否最大化
+  'window-is-full-screen': IpcC<[], boolean>; // 窗口-是否全屏
 
   'baiduyun-search-file': IpcC<[data: ApiSearchFileRequest], Promise<ApiSearchFileResponse>>; // 百度云-搜索文件
   'baiduyun-get-list': IpcC<[data: ApiGetListRequest], Promise<ApiGetListResponse>>; // 百度云-获取列表数据

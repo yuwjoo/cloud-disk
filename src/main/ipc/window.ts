@@ -38,3 +38,17 @@ on('window-toggle-full-screen', (event, isFull) => {
   if (!win) return;
   win.setFullScreen(isFull ?? !win.isFullScreen());
 });
+
+/**
+ * @description: 窗口-是否最大化
+ */
+on('window-is-maximize', (event) => {
+  return BrowserWindow.fromWebContents(event.sender)?.isMaximized() || false;
+});
+
+/**
+ * @description: 窗口-是否全屏
+ */
+on('window-is-full-screen', (event) => {
+  return BrowserWindow.fromWebContents(event.sender)?.isFullScreen() || false;
+});

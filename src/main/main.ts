@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import started from 'electron-squirrel-startup';
+import { send } from './utils/ipcMain';
 import.meta.glob('./ipc/*.ts', { eager: true }); // 导入所有ipc模块
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -17,6 +18,20 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
+  });
+
+  mainWindow.on('maximize', () => {
+    send(mainWindow.webContents, 'window-change-maximize', true);
+  });
+  mainWindow.on('unmaximize', () => {
+    send(mainWindow.webContents, 'window-change-maximize', false);
+  });
+
+  mainWindow.on('enter-full-screen', () => {
+    send(mainWindow.webContents, 'window-change-full-screen', true);
+  });
+  mainWindow.on('leave-full-screen', () => {
+    send(mainWindow.webContents, 'window-change-full-screen', false);
   });
 
   // and load the index.html of the app.

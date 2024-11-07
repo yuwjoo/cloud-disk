@@ -1,5 +1,5 @@
-import { IpcC, IpcChannelMap } from 'common/types/ipc';
-import { ipcMain, IpcMainInvokeEvent } from 'electron';
+import { IpcC, IpcChannelMap, IpcEventMap } from 'common/types/ipc';
+import { ipcMain, IpcMainInvokeEvent, WebContents } from 'electron';
 
 type CallbackFun<T extends any[], K = unknown> = (event: IpcMainInvokeEvent, ...args: T) => K;
 type IpcMainCallback<K> = K extends IpcC<infer P, infer R> ? CallbackFun<P, R> : never;
@@ -22,4 +22,15 @@ export function handle<K extends keyof IpcChannelMap>(
   callback: IpcMainCallback<IpcChannelMap[K]>
 ) {
   ipcMain.handle(channel, callback);
+}
+
+/**
+ * @description: 带类型检查的 ipcMain send函数
+ */
+export function send<K extends keyof IpcEventMap>(
+  sender: WebContents,
+  channel: K,
+  ...args: IpcEventMap[K]
+) {
+  sender.send(channel, ...args);
 }
