@@ -61,9 +61,17 @@ export function getList(params: ApiGetListRequest): Promise<ApiGetListResponse> 
       dir: params.dir, // 目录路径
       num: params.num, // 每页条数
       page: params.page, // 当前页
-      access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+      access_token:
+        '123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw' // accessToken
     }
-  });
+  })
+    .then((res) => {
+      console.log('成功', res);
+      return res.data;
+    })
+    .catch((err) => {
+      console.log('失败', err);
+    });
 }
 
 /**
