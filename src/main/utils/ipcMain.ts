@@ -25,7 +25,7 @@ export function handle<K extends keyof IpcChannelMap>(
 }
 
 /**
- * @description: 带类型检查的 ipcMain send函数
+ * @description: 带类型检查的 WebContents send函数
  */
 export function send<K extends keyof IpcEventMap>(
   sender: WebContents,
