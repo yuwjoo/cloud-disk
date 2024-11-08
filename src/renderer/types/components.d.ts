@@ -41,7 +41,11 @@ declare module 'vue' {
     IEpSunny: typeof import('~icons/ep/sunny')['default']
     IEpUpload: typeof import('~icons/ep/upload')['default']
     IEpUserFilled: typeof import('~icons/ep/user-filled')['default']
+    IIconsClose: typeof import('~icons/icons/close')['default']
     IIconsLogo: typeof import('~icons/icons/logo')['default']
+    IIconsMaximize: typeof import('~icons/icons/maximize')['default']
+    IIconsMinimize: typeof import('~icons/icons/minimize')['default']
+    IIconsRestore: typeof import('~icons/icons/restore')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -1,10 +1,10 @@
 <!--
  * @FileName: 布局-头部
- * @FilePath: \cloud-disk\src\layout\components\LayoutHeader.vue
+ * @FilePath: \cloud-disk\src\renderer\layout\components\LayoutHeader.vue
  * @Author: YH
  * @Date: 2024-07-06 13:52:53
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 17:34:54
+ * @LastEditTime: 2024-11-08 17:20:27
  * @Description: 
 -->
 <template>
@@ -13,7 +13,7 @@
       <component
         v-if="$route.meta.aside"
         :is="layoutStore.isCollapsed ? IEpExpand : IEpFold"
-        class="header__collapse"
+        class="header__collapse is-clickable"
         @click="layoutStore.toggleAside()"
       />
 
@@ -24,7 +24,7 @@
 
       <el-input
         v-if="userStore.isLogin"
-        class="header__search"
+        class="header__search is-clickable"
         v-model="layoutStore.searchValue"
         :prefix-icon="IESearch"
         placeholder="模糊搜索"
@@ -35,7 +35,7 @@
     <div class="header__content header__content--right">
       <el-badge
         v-if="$route.meta.fuzzyQuery"
-        class="header__task-badge"
+        class="header__task-badge is-clickable"
         :value="uploadTaskCount"
         :max="99"
         :show-zero="false"
@@ -44,13 +44,17 @@
         <i-ep-sort class="header__task-icon" />
       </el-badge>
 
-      <div class="header__theme-toggle" title="切换主题" @click="themeStore.toggleDark($event)">
+      <div
+        class="header__theme-toggle is-clickable"
+        title="切换主题"
+        @click="themeStore.toggleDark($event)"
+      >
         <i-ep-moon v-if="themeStore.isDark" class="header__theme-icon header__theme-icon--moon" />
         <i-ep-sunny v-else class="header__theme-icon header__theme-icon--sunny" />
       </div>
 
       <el-dropdown @command="handleUserCommand">
-        <el-avatar class="header__avatar" :size="26" :src="userStore.user?.avatar">
+        <el-avatar class="header__avatar is-clickable" :size="26" :src="userStore.user?.avatar">
           <i-ep-user-filled />
         </el-avatar>
         <template #dropdown>
@@ -104,6 +108,9 @@ const handleUserCommand = (command: string) => {
 </script>
 
 <style lang="scss" scoped>
+.is-clickable {
+  -webkit-app-region: no-drag;
+}
 .header {
   display: flex;
   justify-content: space-between;
@@ -112,6 +119,7 @@ const handleUserCommand = (command: string) => {
   height: 64px;
   background-color: var(--bg-color-header);
   color: var(--color-white);
+  -webkit-app-region: drag;
 
   .header__content {
     display: flex;

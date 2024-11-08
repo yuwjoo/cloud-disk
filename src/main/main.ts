@@ -16,7 +16,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 900,
-    // frame: false,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false // 允许跨域

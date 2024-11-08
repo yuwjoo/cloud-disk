@@ -1,13 +1,14 @@
 <!--
  * @FileName: 布局
- * @FilePath: \cloud-disk\src\layout\Layout.vue
+ * @FilePath: \cloud-disk\src\renderer\layout\Layout.vue
  * @Author: YH
  * @Date: 2024-07-15 13:40:29
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 16:55:27
+ * @LastEditTime: 2024-11-08 17:09:56
  * @Description: 
 -->
 <template>
+  <layout-desktop-header v-if="isDesktop" />
   <layout-header />
   <div class="control-layout__content">
     <layout-aside v-if="$route.meta.aside" class="control-layout__aside" />
@@ -22,10 +23,12 @@
 </template>
 
 <script setup lang="ts" name="LayoutView">
+import LayoutDesktopHeader from './components/LayoutDesktopHeader.vue';
 import LayoutHeader from './components/LayoutHeader.vue';
 import LayoutAside from './components/LayoutAside.vue';
 import TaskDrawer from './components/TaskDrawer.vue';
 import { useUserStore } from '@/store/user';
+import { isDesktop } from '@/hooks/electron';
 
 const userStore = useUserStore(); // 用户仓库
 </script>
@@ -33,7 +36,7 @@ const userStore = useUserStore(); // 用户仓库
 <style lang="scss" scoped>
 .control-layout__content {
   display: flex;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 94px);
 }
 
 .control-layout__aside {
