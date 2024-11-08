@@ -4,19 +4,21 @@
  * @Author: YH
  * @Date: 2024-07-15 13:40:29
  * @LastEditors: YH
- * @LastEditTime: 2024-11-08 17:09:56
+ * @LastEditTime: 2024-11-08 17:30:40
  * @Description: 
 -->
 <template>
-  <layout-desktop-header v-if="isDesktop" />
-  <layout-header />
-  <div class="control-layout__content">
-    <layout-aside v-if="$route.meta.aside" class="control-layout__aside" />
-    <main class="control-layout__main">
-      <router-view v-slot="{ Component }">
-        <component :is="Component" />
-      </router-view>
-    </main>
+  <div class="layout">
+    <layout-desktop-header v-if="isDesktop" />
+    <layout-header />
+    <div class="layout__content">
+      <layout-aside v-if="$route.meta.aside" class="layout__aside" />
+      <main class="layout__main">
+        <router-view v-slot="{ Component }">
+          <component :is="Component" />
+        </router-view>
+      </main>
+    </div>
   </div>
 
   <task-drawer v-if="userStore.isLogin" />
@@ -34,19 +36,26 @@ const userStore = useUserStore(); // 用户仓库
 </script>
 
 <style lang="scss" scoped>
-.control-layout__content {
+.layout {
   display: flex;
-  height: calc(100vh - 94px);
-}
+  flex-direction: column;
+  height: 100vh;
 
-.control-layout__aside {
-  flex-shrink: 0;
-}
+  .layout__content {
+    display: flex;
+    height: 0;
+    flex-grow: 1;
 
-.control-layout__main {
-  flex-grow: 1;
-  box-sizing: border-box;
-  padding: var(--spacing-medium);
-  background-color: var(--bg-color);
+    .layout__aside {
+      flex-shrink: 0;
+    }
+
+    .layout__main {
+      flex-grow: 1;
+      box-sizing: border-box;
+      padding: var(--spacing-medium);
+      background-color: var(--bg-color);
+    }
+  }
 }
 </style>

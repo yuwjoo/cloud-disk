@@ -1,10 +1,10 @@
 <!--
  * @FileName: 登录页-登录面板
- * @FilePath: \cloud-disk\src\views\login\components\LoginPanel.vue
+ * @FilePath: \cloud-disk\src\renderer\views\login\components\LoginPanel.vue
  * @Author: YH
  * @Date: 2024-10-30 13:59:31
  * @LastEditors: YH
- * @LastEditTime: 2024-11-02 22:46:56
+ * @LastEditTime: 2024-11-08 17:32:52
  * @Description: 
 -->
 <template>
@@ -93,9 +93,9 @@ const handleLogin = async () => {
 <style lang="scss" scoped>
 .login-panel {
   width: 400px;
-  text-align: center;
 
   .login-panel__title {
+    text-align: center;
     font-weight: bold;
     color: var(--text-color-primary);
     font-size: var(--text-size-extra-large);

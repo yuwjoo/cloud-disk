@@ -1,10 +1,10 @@
 <!--
  * @FileName: 登录页-注册面板
- * @FilePath: \cloud-disk\src\views\login\components\RegisterPanel.vue
+ * @FilePath: \cloud-disk\src\renderer\views\login\components\RegisterPanel.vue
  * @Author: YH
  * @Date: 2024-10-30 14:02:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-02 15:38:04
+ * @LastEditTime: 2024-11-08 17:33:48
  * @Description: 
 -->
 <template>
@@ -154,9 +154,9 @@ const handleRegister = async () => {
 <style lang="scss" scoped>
 .register-panel {
   width: 400px;
-  text-align: center;
 
   .register-panel__title {
+    text-align: center;
     font-weight: bold;
     color: var(--text-color-primary);
     font-size: var(--text-size-extra-large);
