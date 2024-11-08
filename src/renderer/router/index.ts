@@ -15,6 +15,16 @@ const routes = [
         }
       },
       {
+        path: 'baiduyun',
+        name: 'baiduyun',
+        component: () => import('@/views/baiduyun/Storage.vue'),
+        meta: {
+          title: '百度云',
+          aside: true,
+          fuzzyQuery: true
+        }
+      },
+      {
         path: 'picture',
         name: 'picture',
         component: () => import('@/views/picture/PictureView.vue'),

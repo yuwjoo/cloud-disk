@@ -37,13 +37,13 @@ useAddListener('window-change-maximize', (_event, is) => {
   justify-content: flex-end;
   height: 30px;
   background-color: var(--bg-color-nav);
+  position: relative;
+  z-index: 9999;
 
   .layout-desktop-header__control {
     -webkit-app-region: no-drag;
     height: 100%;
     padding: 0 var(--spacing-medium);
-    position: relative;
-    z-index: 9999;
 
     &:hover {
       background-color: var(--color-info-light-7);

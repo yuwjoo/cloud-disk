@@ -7,7 +7,7 @@ export const baiduyunRequest = axios.create({
 }); // 百度云请求函数
 
 baiduyunRequest.interceptors.request.use((config) => {
-  config.data = { ...config.data, access_token: localStorage.getItem('baiduyun_access_token') };
+  config.params = { ...config.params, access_token: localStorage.getItem('baiduyun_access_token') };
   return config;
 });
 

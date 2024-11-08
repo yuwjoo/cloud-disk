@@ -1,10 +1,10 @@
 <!--
  * @FileName: 布局-侧边栏
- * @FilePath: \cloud-disk\src\layout\components\LayoutAside.vue
+ * @FilePath: \cloud-disk\src\renderer\layout\components\LayoutAside.vue
  * @Author: YH
  * @Date: 2024-07-15 13:42:19
  * @LastEditors: YH
- * @LastEditTime: 2024-10-30 17:07:22
+ * @LastEditTime: 2024-11-09 00:58:20
  * @Description: 
 -->
 <template>
@@ -33,7 +33,10 @@ import IEpFolder from '~icons/ep/folder';
 import { useLayoutStore } from '@/store/layout';
 
 const layoutStore = useLayoutStore(); // 布局仓库
-const menuItems = [{ label: '存储', icon: IEpFolder, name: 'storage' }];
+const menuItems = [
+  { label: '存储', icon: IEpFolder, name: 'storage' },
+  { label: '百度云', icon: IEpFolder, name: 'baiduyun' }
+];
 </script>
 
 <style lang="scss" scoped>

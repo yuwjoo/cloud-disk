@@ -1,10 +1,10 @@
 <!--
- * @FileName: 存储页
+ * @FileName: 百度云存储页
  * @FilePath: \cloud-disk\src\renderer\views\storage\Storage.vue
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-09 00:52:23
+ * @LastEditTime: 2024-11-09 00:45:26
  * @Description: 
 -->
 <template>
@@ -28,20 +28,17 @@
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import StorageHeader from './components/storageHeader/StorageHeader.vue';
 import StorageList from './components/storageList/StorageList.vue';
-import { useUserStore } from '@/store/user';
 import type { Search } from './types/storage';
 import { useLayoutStore } from '@/store/layout';
 import type { FileInfo } from '@/types/file';
-import { getFileList } from '@/api/common/storage';
+import { getBaiduyunFileList } from '@/api/baiduyun';
 
 const route = useRoute();
-
-const userStore = useUserStore();
 
 const layoutStore = useLayoutStore();
 
 const search = reactive<Search>({
-  parent: (route.query.path as string) || userStore.user?.storageOrigin || '', // 父级路径
+  parent: (route.query.path as string) || '/', // 父级路径
   searchValue: '' // 模糊搜索值
 });
 
@@ -57,7 +54,7 @@ const checkedList = ref<string[]>([]); // 选中列表
 const refreshList = async () => {
   loading.value = true;
   try {
-    const res = await getFileList({ parent: search.parent });
+    const res = await getBaiduyunFileList({ parent: search.parent });
     list.value = res.data.records || [];
     checkedList.value = [];
   } catch (err) {
@@ -67,7 +64,7 @@ const refreshList = async () => {
 };
 
 onBeforeRouteUpdate((to) => {
-  search.parent = (to.query.path as string) || userStore.user?.storageOrigin || '';
+  search.parent = (to.query.path as string) || '/';
   refreshList();
 });
 
