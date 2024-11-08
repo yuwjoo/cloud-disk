@@ -4,6 +4,8 @@ import started from 'electron-squirrel-startup';
 import { send } from './utils/ipcMain';
 import.meta.glob('./ipc/*.ts', { eager: true }); // 导入所有ipc模块
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'; // 屏蔽安全策略警告
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
@@ -16,7 +18,8 @@ const createWindow = () => {
     height: 900,
     // frame: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false // 允许跨域
     }
   });
 

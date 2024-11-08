@@ -19,7 +19,7 @@ export function send<K extends keyof IpcChannelMap>(
 export function invoke<K extends keyof IpcChannelMap>(
   channel: K,
   ...args: IpcChannelMap[K]['params']
-): IpcChannelMap[K]['result'] {
+): Promise<IpcChannelMap[K]['result']> {
   return ipcRenderer.invoke(channel, ...args);
 }
 
