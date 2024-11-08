@@ -1,5 +1,4 @@
 import { BaiduyunApi } from 'common/types/electron-api';
-import axios from 'axios';
 import {
   ApiSearchFileRequest,
   ApiSearchFileResponse,
@@ -14,6 +13,7 @@ import {
   ApiGetDownloadUrlRequest,
   ApiGetDownloadUrlResponse
 } from 'common/types/api/baiduyun';
+import { baiduyunRequest } from '@/utils/request';
 
 // access_token
 // 123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw
@@ -23,8 +23,7 @@ export const baiduyun: BaiduyunApi = {
    * @description: 百度云-搜索文件
    */
   searchFile(params: ApiSearchFileRequest): Promise<ApiSearchFileResponse> {
-    return axios({
-      baseURL: 'https://pan.baidu.com',
+    return baiduyunRequest({
       url: '/api/search',
       method: 'get',
       headers: {
@@ -38,8 +37,7 @@ export const baiduyun: BaiduyunApi = {
         num: params.num, // 每页条数
         page: params.page, // 当前页
         recursion: 1,
-        key: params.key, // 模糊搜索值
-        access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+        key: params.key // 模糊搜索值
       }
     });
   },
@@ -48,8 +46,7 @@ export const baiduyun: BaiduyunApi = {
    * @description: 百度云-获取列表数据
    */
   getList(params: ApiGetListRequest): Promise<ApiGetListResponse> {
-    return axios({
-      baseURL: 'https://pan.baidu.com',
+    return baiduyunRequest({
       url: '/api/list',
       method: 'get',
       headers: {
@@ -62,8 +59,7 @@ export const baiduyun: BaiduyunApi = {
         desc: 1, // 返回详细信息
         dir: params.dir, // 目录路径
         num: params.num, // 每页条数
-        page: params.page, // 当前页
-        access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+        page: params.page // 当前页
       }
     });
   },
@@ -72,8 +68,7 @@ export const baiduyun: BaiduyunApi = {
    * @description: 百度云-创建文件夹
    */
   createDir(data: ApiCreateDirRequest): Promise<ApiCreateDirResponse> {
-    return axios({
-      baseURL: 'https://pan.baidu.com',
+    return baiduyunRequest({
       url: '/api/create',
       method: 'post',
       headers: {
@@ -83,8 +78,7 @@ export const baiduyun: BaiduyunApi = {
       params: {
         a: 'commit',
         clienttype: 0,
-        web: 1, // web端
-        access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+        web: 1 // web端
       },
       data: {
         path: data.path, // 文件夹路径
@@ -98,8 +92,7 @@ export const baiduyun: BaiduyunApi = {
    * @description: 百度云-重命名文件
    */
   renameFile(data: ApiRenameFileRequest): Promise<ApiRenameFileResponse> {
-    return axios({
-      baseURL: 'https://pan.baidu.com',
+    return baiduyunRequest({
       url: '/api/filemanager',
       method: 'post',
       headers: {
@@ -111,8 +104,7 @@ export const baiduyun: BaiduyunApi = {
         onnest: 'fail',
         opera: 'rename', // 操作-重命名
         clienttype: 0,
-        web: 1, // web端
-        access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+        web: 1 // web端
       },
       data: {
         filelist: data.filelist // 文件信息列表
@@ -124,8 +116,7 @@ export const baiduyun: BaiduyunApi = {
    * @description: 百度云-删除文件
    */
   deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse> {
-    return axios({
-      baseURL: 'https://pan.baidu.com',
+    return baiduyunRequest({
       url: '/api/filemanager',
       method: 'post',
       headers: {
@@ -138,8 +129,7 @@ export const baiduyun: BaiduyunApi = {
         opera: 'delete', // 操作-删除
         newVerify: 1,
         clienttype: 0,
-        web: 1, // web端
-        access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+        web: 1 // web端
       },
       data: {
         filelist: data.filelist // 文件信息列表
@@ -151,8 +141,7 @@ export const baiduyun: BaiduyunApi = {
    * @description: 百度云-获取下载地址
    */
   getDownloadUrl(params: ApiGetDownloadUrlRequest): Promise<ApiGetDownloadUrlResponse> {
-    return axios({
-      baseURL: 'https://pan.baidu.com',
+    return baiduyunRequest({
       url: '/rest/2.0/xpan/multimedia',
       method: 'get',
       headers: {
@@ -161,8 +150,7 @@ export const baiduyun: BaiduyunApi = {
       params: {
         method: 'filemetas',
         dlink: 1,
-        fsids: encodeURIComponent(JSON.stringify(params.fsids)), // 文件id集合
-        access_token: localStorage.getItem('baiduyun_access_token') // accessToken
+        fsids: encodeURIComponent(JSON.stringify(params.fsids)) // 文件id集合
       }
     });
   }

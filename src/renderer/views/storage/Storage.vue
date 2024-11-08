@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-08 16:39:42
+ * @LastEditTime: 2024-11-08 17:50:39
  * @Description: 
 -->
 <template>
@@ -33,7 +33,7 @@ import type { Search } from './types/storage';
 import { useLayoutStore } from '@/store/layout';
 import type { FileInfo } from '@/types/file';
 import { getFileList } from '@/api/common/storage';
-import { useElectronApi } from '@/hooks/electron';
+import { getBaiduyunFileList } from '@/api/baiduyun';
 
 const route = useRoute();
 
@@ -78,11 +78,7 @@ watchEffect(() => {
 
 refreshList();
 
-useElectronApi().baiduyun.getList({
-  dir: '/',
-  num: 100,
-  page: 1
-});
+getBaiduyunFileList({ parent: '/' });
 </script>
 
 <style lang="scss" scoped>
