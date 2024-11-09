@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-15 13:42:19
  * @LastEditors: YH
- * @LastEditTime: 2024-11-09 00:58:20
+ * @LastEditTime: 2024-11-09 20:42:17
  * @Description: 
 -->
 <template>
@@ -29,13 +29,14 @@
 </template>
 
 <script setup lang="ts" name="LayoutAside">
-import IEpFolder from '~icons/ep/folder';
+import IPrivateCloud from '~icons/icons/privateCloud';
+import IBaiduyunLogo from '~icons/icons/baiduyunLogo';
 import { useLayoutStore } from '@/store/layout';
 
 const layoutStore = useLayoutStore(); // 布局仓库
 const menuItems = [
-  { label: '存储', icon: IEpFolder, name: 'storage' },
-  { label: '百度云', icon: IEpFolder, name: 'baiduyun' }
+  { label: '私有云', icon: IPrivateCloud, name: 'storage' },
+  { label: '百度云', icon: IBaiduyunLogo, name: 'baiduyun' }
 ];
 </script>
 

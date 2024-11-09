@@ -1,3 +1,12 @@
+<!--
+ * @FileName: 布局-桌面端头部
+ * @FilePath: \cloud-disk\src\renderer\layout\components\LayoutDesktopHeader.vue
+ * @Author: YH
+ * @Date: 2024-11-09 00:09:59
+ * @LastEditors: YH
+ * @LastEditTime: 2024-11-09 20:20:20
+ * @Description: 
+-->
 <template>
   <div class="layout-desktop-header">
     <i-icons-minimize

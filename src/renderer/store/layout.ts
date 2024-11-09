@@ -6,7 +6,7 @@ import { defineStore } from 'pinia';
 export const useLayoutStore = defineStore('layout', setup);
 
 function setup() {
-  const isCollapsed = ref<boolean>(true); // 折叠侧边栏
+  const isCollapsed = ref<boolean>(false); // 折叠侧边栏
   const searchValue = ref<string>(''); // 模糊搜索值
 
   /**
