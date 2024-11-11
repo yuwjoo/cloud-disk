@@ -1,10 +1,10 @@
 <!--
- * @FileName: 存储页-头部-上传按钮
- * @FilePath: \cloud-disk\src\views\storage\components\storageHeader\UploadButton.vue
+ * @FileName: 上传按钮
+ * @FilePath: \cloud-disk\src\renderer\components\UploadButton.vue
  * @Author: YH
- * @Date: 2024-09-24 15:45:14
+ * @Date: 2024-11-11 14:01:57
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 11:49:00
+ * @LastEditTime: 2024-11-11 14:02:09
  * @Description: 
 -->
 <template>

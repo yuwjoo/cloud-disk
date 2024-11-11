@@ -17,7 +17,7 @@ const routes = [
       {
         path: 'baiduyun',
         name: 'baiduyun',
-        component: () => import('@/views/baiduyun/Storage.vue'),
+        component: () => import('@/views/baiduyun/Baiduyun.vue'),
         meta: {
           title: '百度云',
           aside: true,

@@ -1,27 +1,28 @@
 import { useElectronApi } from '@/hooks/electron';
-import type { ApiGetFileListRequest, ApiGetFileListResponse } from '@/types/api/common/storage';
-import type { ApiGetListResponse } from 'common/types/api/baiduyun';
-
-const electronApi = useElectronApi();
+import type {
+  ApiGetBaiduyunFileListRequest,
+  ApiGetBaiduyunFileListResponse
+} from '@/types/api/baiduyun';
+import { RESPONSE_CODE } from '@/types/request';
 
 /**
- * @description: 获取文件列表
+ * @description: 获取百度云文件列表
  */
 export async function getBaiduyunFileList(
-  params: ApiGetFileListRequest
-): Promise<ApiGetFileListResponse> {
-  const res = await electronApi.baiduyun.getList({
-    dir: params.parent,
-    num: 100,
-    page: 1
+  params: ApiGetBaiduyunFileListRequest
+): Promise<ApiGetBaiduyunFileListResponse> {
+  const res = await useElectronApi().baiduyun.getList({
+    dir: params.dir,
+    num: params.size,
+    page: params.current
   });
   return {
-    code: 200,
+    code: RESPONSE_CODE.OK,
     data: {
       current: 1,
       size: 100,
       total: 0,
-      records: res.list.map((item: ApiGetListResponse['list'][0]) => {
+      records: res.list.map((item) => {
         return {
           path: item.path, // 路径
           parent: item.path.slice(0, item.path.lastIndexOf('/')), // 父级路径

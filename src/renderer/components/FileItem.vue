@@ -1,10 +1,10 @@
 <!--
- * @FileName: 存储页-列表-文件项
- * @FilePath: \cloud-disk\src\views\storage\components\storageList\FileItem.vue
+ * @FileName: 文件项
+ * @FilePath: \cloud-disk\src\renderer\components\FileItem.vue
  * @Author: YH
  * @Date: 2024-09-04 17:05:10
  * @LastEditors: YH
- * @LastEditTime: 2024-10-31 16:53:59
+ * @LastEditTime: 2024-11-11 15:47:17
  * @Description: 
 -->
 <template>
@@ -15,7 +15,7 @@
       class="file-item__dropdown"
       :teleported="false"
       :show-timeout="0"
-      @command="handleMenuCommand"
+      @command="emit($event)"
     >
       <template #default>
         <i-ep-more-filled class="file-item__dropdown-more" />
@@ -49,14 +49,16 @@
 </template>
 
 <script setup lang="ts" name="FileItem">
-import { deleteFile, downloadFile, renameFile } from '@/api/common/storage';
 import { getFileCover, getFileSize } from '@/utils/file';
 import { dayjs } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import type { FileInfo } from '@/types/file';
 
 const emit = defineEmits<{
-  change: []; // 文件改变
+  download: []; // 下载
+  rename: []; // 重命名
+  delete: []; // 删除
+  preview: []; // 浏览
 }>();
 
 const props = defineProps({
@@ -83,113 +85,15 @@ const handleClickFile = () => {
   if (props.item.type === 'directory') {
     // 进入文件夹
     router.push({
-      name: route.name as string,
+      name: route.name,
       query: {
         path: props.item.path
       }
     });
   } else {
     // 浏览文件
+    emit('preview');
   }
-};
-
-/**
- * @description: 处理菜单指令
- * @param {string} command 指令
- */
-const handleMenuCommand = (command: string) => {
-  switch (command) {
-    case 'download':
-      handleDownload();
-      break;
-    case 'rename':
-      handleRename();
-      break;
-    case 'delete':
-      handleDelete();
-      break;
-  }
-};
-
-/**
- * @description: 处理下载
- */
-const handleDownload = () => {
-  downloadFile({ path: props.item.path }).then((res) => {
-    const a = document.createElement('a');
-    a.href = res.data;
-    a.download = 'download';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-};
-
-/**
- * @description: 处理重命名
- */
-const handleRename = () => {
-  ElMessageBox.prompt(`将“${props.item.name}”修改为：`, '重命名', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputPattern: /^[^"*<>?\\|/:]+$/,
-    inputErrorMessage: '名称不合法',
-    beforeClose: async (action, ctx, close) => {
-      if (action !== 'confirm') {
-        close();
-        return;
-      }
-      ctx.confirmButtonLoading = true;
-      try {
-        await renameFile({
-          parent: props.item.parent,
-          oldName: props.item.name,
-          newName: ctx.inputValue
-        });
-        ElMessage({
-          type: 'success',
-          message: '修改成功'
-        });
-        close();
-        emit('change');
-      } catch (err) {
-        /* empty */
-      }
-      ctx.confirmButtonLoading = false;
-    }
-  }).catch(() => {});
-};
-
-/**
- * @description: 处理删除
- */
-const handleDelete = () => {
-  ElMessageBox.confirm(`即将删除“${props.item.name}”，是否继续?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-    beforeClose: async (action, ctx, close) => {
-      if (action !== 'confirm') {
-        close();
-        return;
-      }
-      ctx.confirmButtonLoading = true;
-      try {
-        await deleteFile({
-          path: props.item.path
-        });
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        });
-        close();
-        emit('change');
-      } catch (err) {
-        /* empty */
-      }
-      ctx.confirmButtonLoading = false;
-    }
-  }).catch(() => {});
 };
 </script>
 

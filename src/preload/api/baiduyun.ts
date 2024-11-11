@@ -18,6 +18,11 @@ import { baiduyunRequest } from '@/utils/request';
 // access_token
 // 123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw
 
+// localStorage.setItem(
+//   'baiduyun_access_token',
+//   '123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw'
+// );
+
 export const baiduyun: BaiduyunApi = {
   /**
    * @description: 百度云-搜索文件

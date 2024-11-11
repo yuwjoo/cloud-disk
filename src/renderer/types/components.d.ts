@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    DirBreadcrumb: typeof import('./../components/DirBreadcrumb.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBadge: typeof import('element-plus/es')['ElBadge']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
@@ -30,6 +31,8 @@ declare module 'vue' {
     ElProgress: typeof import('element-plus/es')['ElProgress']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    FileItem: typeof import('./../components/FileItem.vue')['default']
+    FileList: typeof import('./../components/FileList.vue')['default']
     IEpBack: typeof import('~icons/ep/back')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
@@ -48,6 +51,7 @@ declare module 'vue' {
     IIconsRestore: typeof import('~icons/icons/restore')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UploadButton: typeof import('./../components/UploadButton.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
