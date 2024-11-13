@@ -8,7 +8,7 @@
  * @Description: 
 -->
 <template>
-  <div class="baiduyun" v-loading="loading">
+  <div v-if="false" class="baiduyun" v-loading="loading">
     <div class="baiduyun-header">
       <dir-breadcrumb class="baiduyun-header__left" :path="search.dir" />
 
@@ -42,6 +42,7 @@
       </template>
     </file-list>
   </div>
+  <login v-else />
 </template>
 
 <script setup lang="ts" name="BaiduyunView">
@@ -58,6 +59,7 @@ import type { Search } from './types/baiduyun';
 import type { FileInfo } from '@/types/file';
 import type FileList from '@/components/FileList.vue';
 import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
+import Login from './components/Login.vue';
 
 const route = useRoute();
 
