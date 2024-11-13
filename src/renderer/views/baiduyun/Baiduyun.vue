@@ -4,13 +4,13 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-11 17:12:56
+ * @LastEditTime: 2024-11-13 14:10:56
  * @Description: 
 -->
 <template>
   <div class="baiduyun" v-loading="loading">
     <div class="baiduyun-header">
-      <dir-breadcrumb class="baiduyun-header__left" :path="search.parent" />
+      <dir-breadcrumb class="baiduyun-header__left" :path="search.dir" />
 
       <div class="baiduyun-header__right">
         <upload-button @select="handleUploadFile" />
@@ -35,8 +35,8 @@
       <template #default="{ item }">
         <file-item
           :item="item"
-          @download="handleDownload(item)"
-          @rename="handleRename(item)"
+          @download="handleDownload(item as BaidunyunFileInfo)"
+          @rename="handleRename(item as BaidunyunFileInfo)"
           @delete="handleDelete(item)"
         />
       </template>
@@ -46,24 +46,23 @@
 
 <script setup lang="ts" name="BaiduyunView">
 import { onBeforeRouteUpdate, useRoute } from 'vue-router';
-import { getBaiduyunFileList } from '@/api/baiduyun';
-import { addUploadTask } from '@/utils/uploadManager';
 import {
-  batchDeleteFile,
-  createFile,
-  deleteFile,
-  downloadFile,
-  renameFile
-} from '@/api/common/storage';
+  createBaiduyunDir,
+  deleteBaiduyunFile,
+  downloadBaiduyunFile,
+  getBaiduyunFileList,
+  renameBaiduyunFile
+} from '@/api/baiduyun';
+import { addUploadTask } from '@/utils/uploadManager';
 import type { Search } from './types/baiduyun';
 import type { FileInfo } from '@/types/file';
 import type FileList from '@/components/FileList.vue';
+import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
 
 const route = useRoute();
 
 const search = reactive<Search>({
-  parent: (route.query.path as string) || '/', // 父级路径
-  searchValue: '' // 模糊搜索值
+  dir: (route.query.path as string) || '/' // 目录路径
 });
 
 const list = ref<FileInfo[]>([]); // 文件列表
@@ -80,7 +79,7 @@ const fileListRef = ref<InstanceType<typeof FileList>>(); // 文件列表ref
 const refreshList = async () => {
   loading.value = true;
   try {
-    const res = await getBaiduyunFileList({ dir: search.parent, current: 1, size: 1000 });
+    const res = await getBaiduyunFileList({ dir: search.dir, current: 1, size: 1000 });
     list.value = res.data.records || [];
     fileListRef.value?.resetChecked();
   } catch (err) {
@@ -98,7 +97,7 @@ const handleUploadFile = (files: File[]) => {
     addUploadTask({
       file,
       uploadName: file.name,
-      uploadPath: search.parent,
+      uploadPath: search.dir,
       onSuccess: () => {
         refreshList();
       }
@@ -122,10 +121,8 @@ const handleCreateFolder = () => {
       }
       ctx.confirmButtonLoading = true;
       try {
-        await createFile({
-          parent: search.parent,
-          name: ctx.inputValue,
-          isDirectory: true
+        await createBaiduyunDir({
+          path: search.dir + '/' + ctx.inputValue
         });
         ElMessage({
           type: 'success',
@@ -156,8 +153,8 @@ const handleBatchDelete = () => {
       }
       ctx.confirmButtonLoading = true;
       try {
-        await batchDeleteFile({
-          paths: checkedPathList.value
+        await deleteBaiduyunFile({
+          filelist: checkedPathList.value
         });
         ElMessage({
           type: 'success',
@@ -176,10 +173,10 @@ const handleBatchDelete = () => {
 /**
  * @description: 处理下载
  */
-const handleDownload = (item: FileInfo) => {
-  downloadFile({ path: item.path }).then((res) => {
+const handleDownload = (item: BaidunyunFileInfo) => {
+  downloadBaiduyunFile({ id: item.id }).then((res) => {
     const a = document.createElement('a');
-    a.href = res.data;
+    a.href = res.link;
     a.download = 'download';
     document.body.appendChild(a);
     a.click();
@@ -190,7 +187,7 @@ const handleDownload = (item: FileInfo) => {
 /**
  * @description: 处理重命名
  */
-const handleRename = (item: FileInfo) => {
+const handleRename = (item: BaidunyunFileInfo) => {
   ElMessageBox.prompt(`将“${item.name}”修改为：`, '重命名', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -203,10 +200,10 @@ const handleRename = (item: FileInfo) => {
       }
       ctx.confirmButtonLoading = true;
       try {
-        await renameFile({
-          parent: item.parent,
-          oldName: item.name,
-          newName: ctx.inputValue
+        await renameBaiduyunFile({
+          id: item.id,
+          path: item.path,
+          newname: ctx.inputValue
         });
         ElMessage({
           type: 'success',
@@ -237,8 +234,8 @@ const handleDelete = (item: FileInfo) => {
       }
       ctx.confirmButtonLoading = true;
       try {
-        await deleteFile({
-          path: item.path
+        await deleteBaiduyunFile({
+          filelist: [item.path]
         });
         ElMessage({
           type: 'success',
@@ -255,7 +252,7 @@ const handleDelete = (item: FileInfo) => {
 };
 
 onBeforeRouteUpdate((to) => {
-  search.parent = (to.query.path as string) || '/';
+  search.dir = (to.query.path as string) || '/';
   refreshList();
 });
 
