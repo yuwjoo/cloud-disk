@@ -4,11 +4,11 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-13 14:10:56
+ * @LastEditTime: 2024-11-14 17:53:52
  * @Description: 
 -->
 <template>
-  <div v-if="false" class="baiduyun" v-loading="loading">
+  <div v-if="true" class="baiduyun" v-loading="loading">
     <div class="baiduyun-header">
       <dir-breadcrumb class="baiduyun-header__left" :path="search.dir" />
 
@@ -24,29 +24,26 @@
           <span>新建文件夹</span>
         </el-button>
 
-        <el-button v-if="checkedPathList.length" type="danger" @click="handleBatchDelete">
+        <el-button v-if="checkedList.length" type="danger" @click="handleBatchDelete">
           <el-icon class="el-icon--left"><i-ep-delete /></el-icon>
           <span>批量删除</span>
         </el-button>
       </div>
     </div>
 
-    <file-list ref="fileListRef" :list="list" @checked="checkedPathList = $event">
-      <template #default="{ item }">
-        <file-item
-          :item="item"
-          @download="handleDownload(item as BaidunyunFileInfo)"
-          @rename="handleRename(item as BaidunyunFileInfo)"
-          @delete="handleDelete(item)"
-        />
-      </template>
-    </file-list>
+    <FileList
+      v-model:checked-list="checkedList"
+      :list="fileList"
+      @click-item="handleClickItem"
+      @operate-item="handleOperateItem"
+    />
   </div>
-  <login v-else />
+
+  <baiduyun-login v-else />
 </template>
 
 <script setup lang="ts" name="BaiduyunView">
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import {
   createBaiduyunDir,
   deleteBaiduyunFile,
@@ -56,24 +53,76 @@ import {
 } from '@/api/baiduyun';
 import { addUploadTask } from '@/utils/uploadManager';
 import type { Search } from './types/baiduyun';
-import type { FileInfo } from '@/types/file';
-import type FileList from '@/components/FileList.vue';
 import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
-import Login from './components/Login.vue';
+import BaiduyunLogin from './components/Login.vue';
+import type { FileItem } from '@/components/fileList/types/fileList';
 
 const route = useRoute();
+
+const router = useRouter();
 
 const search = reactive<Search>({
   dir: (route.query.path as string) || '/' // 目录路径
 });
 
-const list = ref<FileInfo[]>([]); // 文件列表
+const list = ref<BaidunyunFileInfo[]>([]); // 文件列表
+
+const fileList = computed(() =>
+  list.value.map<FileItem<BaidunyunFileInfo>>((item) => {
+    return {
+      name: item.name,
+      size: item.size,
+      type: item.type === 'file' ? 'file' : 'dir',
+      cover: '',
+      path: item.path,
+      updatedTime: item.updatedTime,
+      operate: {
+        download: item.type === 'file',
+        rename: true,
+        delete: true
+      },
+      raw: item
+    };
+  })
+);
 
 const loading = ref<boolean>(false); // 加载中
 
-const checkedPathList = ref<string[]>([]); // 选中路径列表
+const checkedList = ref<BaidunyunFileInfo[]>([]); // 选中数据列表
 
-const fileListRef = ref<InstanceType<typeof FileList>>(); // 文件列表ref
+/**
+ * @description: 处理点击文件
+ */
+const handleClickItem = (item: BaidunyunFileInfo) => {
+  if (item.type === 'directory') {
+    // 进入文件夹
+    router.push({
+      name: route.name,
+      query: {
+        path: item.path
+      }
+    });
+  } else {
+    // 浏览文件
+  }
+};
+
+/**
+ * @description: 处理操作文件
+ */
+const handleOperateItem = (command: string, item: BaidunyunFileInfo) => {
+  switch (command) {
+    case 'download':
+      handleDownload(item);
+      break;
+    case 'rename':
+      handleRename(item);
+      break;
+    case 'delete':
+      handleDelete(item);
+      break;
+  }
+};
 
 /**
  * @description: 刷新列表
@@ -83,7 +132,6 @@ const refreshList = async () => {
   try {
     const res = await getBaiduyunFileList({ dir: search.dir, current: 1, size: 1000 });
     list.value = res.data.records || [];
-    fileListRef.value?.resetChecked();
   } catch (err) {
     /* empty */
   }
@@ -156,7 +204,7 @@ const handleBatchDelete = () => {
       ctx.confirmButtonLoading = true;
       try {
         await deleteBaiduyunFile({
-          filelist: checkedPathList.value
+          filelist: checkedList.value.map((item) => item.path)
         });
         ElMessage({
           type: 'success',
@@ -224,7 +272,7 @@ const handleRename = (item: BaidunyunFileInfo) => {
 /**
  * @description: 处理删除
  */
-const handleDelete = (item: FileInfo) => {
+const handleDelete = (item: BaidunyunFileInfo) => {
   ElMessageBox.confirm(`即将删除“${item.name}”，是否继续?`, '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',

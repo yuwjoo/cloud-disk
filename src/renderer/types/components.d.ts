@@ -32,7 +32,7 @@ declare module 'vue' {
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     FileItem: typeof import('./../components/FileItem.vue')['default']
-    FileList: typeof import('./../components/FileList.vue')['default']
+    FileList: typeof import('./../components/fileList/FileList.vue')['default']
     IEpBack: typeof import('~icons/ep/back')['default']
     IEpClose: typeof import('~icons/ep/close')['default']
     IEpDelete: typeof import('~icons/ep/delete')['default']
