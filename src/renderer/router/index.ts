@@ -9,9 +9,10 @@ const routes = [
         name: 'storage',
         component: () => import('@/views/storage/Storage.vue'),
         meta: {
-          title: '存储',
+          title: '私有云',
           aside: true,
-          fuzzyQuery: true
+          fuzzyQuery: true,
+          KeepAlive: true
         }
       },
       {
@@ -21,31 +22,8 @@ const routes = [
         meta: {
           title: '百度云',
           aside: true,
-          fuzzyQuery: true
-        }
-      },
-      {
-        path: 'picture',
-        name: 'picture',
-        component: () => import('@/views/picture/PictureView.vue'),
-        meta: {
-          title: '图片'
-        }
-      },
-      {
-        path: 'video',
-        name: 'video',
-        component: () => import('@/views/video/VideoView.vue'),
-        meta: {
-          title: '视频'
-        }
-      },
-      {
-        path: 'taskCenter',
-        name: 'taskCenter',
-        component: () => import('@/views/taskCenter/TaskCenterView.vue'),
-        meta: {
-          title: '任务中心'
+          fuzzyQuery: true,
+          KeepAlive: true
         }
       },
       {

@@ -9,19 +9,22 @@
 -->
 <template>
   <div class="layout">
-    <layout-desktop-header v-if="isDesktop" />
-    <layout-header />
+    <LayoutDesktopHeader v-if="isDesktop" />
+    <LayoutHeader />
     <div class="layout__content">
-      <layout-aside v-if="$route.meta.aside" class="layout__aside" />
+      <LayoutAside v-if="$route.meta.aside" class="layout__aside" />
       <main class="layout__main">
-        <router-view v-slot="{ Component }">
-          <component :is="Component" />
-        </router-view>
+        <RouterView v-slot="{ Component }">
+          <KeepAlive v-if="$route.meta.KeepAlive">
+            <Component :is="Component" />
+          </KeepAlive>
+          <Component v-else :is="Component" />
+        </RouterView>
       </main>
     </div>
   </div>
 
-  <task-drawer v-if="userStore.isLogin" />
+  <TaskDrawer v-if="userStore.isLogin" />
 </template>
 
 <script setup lang="ts" name="LayoutView">

@@ -1,5 +1,5 @@
 <template>
-  <el-config-provider :button="{ autoInsertSpace: true }">
+  <ElConfigProvider :button="{ autoInsertSpace: true }">
     <RouterView />
-  </el-config-provider>
+  </ElConfigProvider>
 </template>
