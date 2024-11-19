@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-11-14 16:47:28
+ * @LastEditTime: 2024-11-19 11:06:17
  * @Description: 
 -->
 <template>
@@ -19,19 +19,19 @@
     </el-checkbox>
 
     <el-checkbox-group
-      v-if="list.length > 0"
+      v-if="fileList.length > 0"
       class="file-list__list"
       v-model="bindCheckedList"
       @change="handleChecked"
     >
-      <div v-for="(item, index) in list" :key="index" class="file-list__item">
+      <div v-for="(item, index) in fileList" :key="index" class="file-list__item">
         <el-checkbox class="file-list__item-checkbox" :value="item" />
 
         <el-dropdown
           class="file-list__item-dropdown"
           :teleported="false"
           :show-timeout="0"
-          @command="emit('operateItem', $event, item)"
+          @command="emit('operateItem', $event, item.raw)"
         >
           <template #default>
             <i-ep-more-filled class="file-list__item-more-icon" />
@@ -51,7 +51,7 @@
           </template>
         </el-dropdown>
 
-        <div class="file-list__item-content" @click="emit('clickItem', item)">
+        <div class="file-list__item-content" @click="emit('clickItem', item.raw)">
           <img class="file-list__item-content-cover" :src="item.cover" alt="" @dragstart.prevent />
           <el-tooltip effect="dark" placement="bottom">
             <template #default>
@@ -81,49 +81,34 @@
 
 <script setup lang="ts" name="FileList" generic="ItemType extends Record<string, any>">
 import dayjs from 'dayjs';
+import { useCheckbox } from './hooks/checkbox';
 import { getFileSize } from '@/utils/file';
-import type { CheckboxValueType } from 'element-plus';
-import type { FileItem } from './types/fileList';
+import { useFileData, type FileItem } from './hooks/fileData';
 
-type PropsType<ItemType> = {
+export type FileItemCommand = 'download' | 'rename' | 'delete';
+
+export type PropsType<ItemType> = {
   list: ItemType[]; // 列表数据
+  parseItem: (item: ItemType) => FileItem; // 解析数据
 };
 
-type EmitType<ItemType> = {
-  operateItem: [command: string, item: ItemType]; // 触发数据项操作
+export type EmitType<ItemType> = {
+  operateItem: [command: FileItemCommand, item: ItemType]; // 触发数据项操作
   clickItem: [item: ItemType]; // 点击数据项
 };
 
-const { list } = defineProps<PropsType<ItemType>>();
+const { list, parseItem } = defineProps<PropsType<ItemType>>();
 
 const emit = defineEmits<EmitType<ItemType>>();
 
-const checkAll = ref(false); // 是否全选
-
-const isIndeterminate = ref(false); // 是否中间状态
-
 const checkedList = defineModel<ItemType[]>('checkedList', { required: true }); // 选中数据
-
 const bindCheckedList = checkedList as any[];
+const { checkAll, isIndeterminate, handleCheckAll, handleChecked } = useCheckbox<ItemType>(
+  checkedList,
+  () => list
+);
 
-/**
- * @description: 处理全选
- * @param {CheckboxValueType} isChecked 选中状态
- */
-const handleCheckAll = (isChecked: CheckboxValueType) => {
-  checkedList.value = isChecked ? [...list] : [];
-  isIndeterminate.value = false;
-};
-
-/**
- * @description: 处理选中复选框
- * @param {CheckboxValueType[]} value 选中数据列表
- */
-const handleChecked = (value: CheckboxValueType[]) => {
-  const checkedCount = value.length;
-  checkAll.value = checkedCount > 0 && checkedCount === list.length;
-  isIndeterminate.value = checkedCount > 0 && checkedCount < list.length;
-};
+const { fileList } = useFileData<ItemType>(() => list, parseItem);
 </script>
 
 <style lang="scss" scoped>

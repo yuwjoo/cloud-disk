@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-14 17:53:52
+ * @LastEditTime: 2024-11-19 11:08:00
  * @Description: 
 -->
 <template>
@@ -33,7 +33,8 @@
 
     <FileList
       v-model:checked-list="checkedList"
-      :list="fileList"
+      :list="list"
+      :parse-item="handleParseItem"
       @click-item="handleClickItem"
       @operate-item="handleOperateItem"
     />
@@ -43,52 +44,45 @@
 </template>
 
 <script setup lang="ts" name="BaiduyunView">
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-import {
-  createBaiduyunDir,
-  deleteBaiduyunFile,
-  downloadBaiduyunFile,
-  getBaiduyunFileList,
-  renameBaiduyunFile
-} from '@/api/baiduyun';
-import { addUploadTask } from '@/utils/uploadManager';
-import type { Search } from './types/baiduyun';
-import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
+import { useRoute, useRouter } from 'vue-router';
 import BaiduyunLogin from './components/Login.vue';
-import type { FileItem } from '@/components/fileList/types/fileList';
+import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
+import type { FileItem } from '@/components/fileList/hooks/fileData';
+import type { FileItemCommand } from '@/components/fileList/FileList.vue';
+import { useList } from './hooks/list';
+import { useFileOperate } from './hooks/fileOperate';
 
 const route = useRoute();
-
 const router = useRouter();
 
-const search = reactive<Search>({
-  dir: (route.query.path as string) || '/' // 目录路径
-});
+const { search, list, checkedList, loading, refreshList } = useList(route);
 
-const list = ref<BaidunyunFileInfo[]>([]); // 文件列表
+const {
+  handleUploadFile,
+  handleCreateFolder,
+  handleBatchDelete,
+  handleDownload,
+  handleRename,
+  handleDelete
+} = useFileOperate(search, checkedList, refreshList);
 
-const fileList = computed(() =>
-  list.value.map<FileItem<BaidunyunFileInfo>>((item) => {
-    return {
-      name: item.name,
-      size: item.size,
-      type: item.type === 'file' ? 'file' : 'dir',
-      cover: '',
-      path: item.path,
-      updatedTime: item.updatedTime,
-      operate: {
-        download: item.type === 'file',
-        rename: true,
-        delete: true
-      },
-      raw: item
-    };
-  })
-);
-
-const loading = ref<boolean>(false); // 加载中
-
-const checkedList = ref<BaidunyunFileInfo[]>([]); // 选中数据列表
+/**
+ * @description: 处理解析文件数据项
+ */
+const handleParseItem = (item: BaidunyunFileInfo): FileItem<any> => {
+  return {
+    name: item.name,
+    size: item.size,
+    type: item.type === 'file' ? 'file' : 'dir',
+    cover: '',
+    updatedTime: item.updatedTime,
+    operate: {
+      download: item.type === 'file',
+      rename: true,
+      delete: true
+    }
+  };
+};
 
 /**
  * @description: 处理点击文件
@@ -110,7 +104,7 @@ const handleClickItem = (item: BaidunyunFileInfo) => {
 /**
  * @description: 处理操作文件
  */
-const handleOperateItem = (command: string, item: BaidunyunFileInfo) => {
+const handleOperateItem = (command: FileItemCommand, item: BaidunyunFileInfo) => {
   switch (command) {
     case 'download':
       handleDownload(item);
@@ -123,190 +117,6 @@ const handleOperateItem = (command: string, item: BaidunyunFileInfo) => {
       break;
   }
 };
-
-/**
- * @description: 刷新列表
- */
-const refreshList = async () => {
-  loading.value = true;
-  try {
-    const res = await getBaiduyunFileList({ dir: search.dir, current: 1, size: 1000 });
-    list.value = res.data.records || [];
-  } catch (err) {
-    /* empty */
-  }
-  loading.value = false;
-};
-
-/**
- * @description: 处理文件上传
- * @param {File[]} files 选择的文件
- */
-const handleUploadFile = (files: File[]) => {
-  for (const file of files) {
-    addUploadTask({
-      file,
-      uploadName: file.name,
-      uploadPath: search.dir,
-      onSuccess: () => {
-        refreshList();
-      }
-    });
-  }
-};
-
-/**
- * @description: 处理创建文件夹
- */
-const handleCreateFolder = () => {
-  ElMessageBox.prompt('请输入文件夹名称', '创建文件夹', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputPattern: /^[^"*<>?\\|/:]+$/,
-    inputErrorMessage: '名称不合法',
-    beforeClose: async (action, ctx, close) => {
-      if (action !== 'confirm') {
-        close();
-        return;
-      }
-      ctx.confirmButtonLoading = true;
-      try {
-        await createBaiduyunDir({
-          path: search.dir + '/' + ctx.inputValue
-        });
-        ElMessage({
-          type: 'success',
-          message: '创建成功'
-        });
-        close();
-        refreshList();
-      } catch (err) {
-        /* empty */
-      }
-      ctx.confirmButtonLoading = false;
-    }
-  }).catch(() => {});
-};
-
-/**
- * @description: 处理批量删除
- */
-const handleBatchDelete = () => {
-  ElMessageBox.confirm('即将删除选中文件，是否继续?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-    beforeClose: async (action, ctx, close) => {
-      if (action !== 'confirm') {
-        close();
-        return;
-      }
-      ctx.confirmButtonLoading = true;
-      try {
-        await deleteBaiduyunFile({
-          filelist: checkedList.value.map((item) => item.path)
-        });
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        });
-        close();
-        refreshList();
-      } catch (err) {
-        /* empty */
-      }
-      ctx.confirmButtonLoading = false;
-    }
-  }).catch(() => {});
-};
-
-/**
- * @description: 处理下载
- */
-const handleDownload = (item: BaidunyunFileInfo) => {
-  downloadBaiduyunFile({ id: item.id }).then((res) => {
-    const a = document.createElement('a');
-    a.href = res.link;
-    a.download = 'download';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-};
-
-/**
- * @description: 处理重命名
- */
-const handleRename = (item: BaidunyunFileInfo) => {
-  ElMessageBox.prompt(`将“${item.name}”修改为：`, '重命名', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    inputPattern: /^[^"*<>?\\|/:]+$/,
-    inputErrorMessage: '名称不合法',
-    beforeClose: async (action, ctx, close) => {
-      if (action !== 'confirm') {
-        close();
-        return;
-      }
-      ctx.confirmButtonLoading = true;
-      try {
-        await renameBaiduyunFile({
-          id: item.id,
-          path: item.path,
-          newname: ctx.inputValue
-        });
-        ElMessage({
-          type: 'success',
-          message: '修改成功'
-        });
-        close();
-        refreshList();
-      } catch (err) {
-        /* empty */
-      }
-      ctx.confirmButtonLoading = false;
-    }
-  }).catch(() => {});
-};
-
-/**
- * @description: 处理删除
- */
-const handleDelete = (item: BaidunyunFileInfo) => {
-  ElMessageBox.confirm(`即将删除“${item.name}”，是否继续?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-    beforeClose: async (action, ctx, close) => {
-      if (action !== 'confirm') {
-        close();
-        return;
-      }
-      ctx.confirmButtonLoading = true;
-      try {
-        await deleteBaiduyunFile({
-          filelist: [item.path]
-        });
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        });
-        close();
-        refreshList();
-      } catch (err) {
-        /* empty */
-      }
-      ctx.confirmButtonLoading = false;
-    }
-  }).catch(() => {});
-};
-
-onBeforeRouteUpdate((to) => {
-  search.dir = (to.query.path as string) || '/';
-  refreshList();
-});
-
-refreshList();
 </script>
 
 <style lang="scss" scoped>
