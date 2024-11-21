@@ -3,7 +3,7 @@ import type { ElectronApi } from 'common/types/electron-api';
 export const isDesktop = window.electronApi?.desktop ?? false; // 是否桌面端
 
 /**
- * @description: electron api hook
+ * @description: 使用electron api
  */
 export const useElectronApi = (): ElectronApi => {
   if (!window.electronApi) throw 'not electron env';
@@ -11,7 +11,7 @@ export const useElectronApi = (): ElectronApi => {
 };
 
 /**
- * @description: 监听事件 hook
+ * @description: 添加electron事件监听
  */
 export const useAddListener: ElectronApi['addListener'] = (name, callback, options) => {
   const electronApi = useElectronApi();

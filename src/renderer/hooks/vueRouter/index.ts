@@ -7,7 +7,7 @@ const router = createVueRouter({ history: createWebHashHistory(import.meta.env.B
 router.beforeEach(beforeEach);
 
 /**
- * @description: 获取router
+ * @description: 使用router实例
  * @return {Router} router
  */
 export function useRouter(): Router {

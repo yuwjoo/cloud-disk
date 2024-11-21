@@ -1,11 +1,12 @@
 import { createPinia, type Pinia } from 'pinia';
 
-const pinia = createPinia();
+let pinia: Pinia | null = null;
 
 /**
- * @description: 获取pinia
+ * @description: 使用pinia实例
  * @return {Pinia} pinia
  */
 export function usePinia(): Pinia {
+  if (!pinia) pinia = createPinia();
   return pinia;
 }
