@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-19 11:08:00
+ * @LastEditTime: 2024-11-19 14:27:23
  * @Description: 
 -->
 <template>
@@ -40,7 +40,7 @@
     />
   </div>
 
-  <baiduyun-login v-else />
+  <BaiduyunLogin v-else />
 </template>
 
 <script setup lang="ts" name="BaiduyunView">
