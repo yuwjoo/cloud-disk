@@ -6,7 +6,7 @@ import '@/assets/styles/base.scss';
 import App from '@/App.vue';
 import { createApp } from 'vue';
 import { usePinia } from './hooks/pinia';
-import { useRouter } from './hooks/vue-router';
+import { useRouter } from './hooks/vueRouter';
 
 const app = createApp(App);
 

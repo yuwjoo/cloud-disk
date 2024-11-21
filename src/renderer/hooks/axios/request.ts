@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { RESPONSE_CODE } from '@/types/request';
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { useRouter } from '../vue-router';
+import { useRouter } from '../vueRouter';
 import { useUserStore } from '@/store/user';
 
 export const request = axios.create({
