@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts" name="RegisterPanel">
-import { register } from '@/api/common/auth';
+import { register } from '@/api/auth';
 import type { FormInstance, FormRules } from 'element-plus';
 import type { RegisterFormData } from '../types/register-panel';
 

@@ -50,7 +50,7 @@
 
 <script setup lang="ts" name="LoginPanel">
 import { useUserStore } from '@/store/user';
-import type { ApiLoginRequest } from '@/types/api/common/auth';
+import type { ApiLoginRequest } from '@/types/api/auth';
 import type { FormInstance, FormRules, InputInstance } from 'element-plus';
 
 const emit = defineEmits<{

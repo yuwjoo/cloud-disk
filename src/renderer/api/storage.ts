@@ -14,7 +14,7 @@ import type {
   ApiBatchDeleteFileResponse,
   ApiDownloadFileRequest,
   ApiDownloadFileResponse
-} from '@/types/api/common/storage';
+} from '@/types/api/storage';
 
 /**
  * @description: 获取文件列表

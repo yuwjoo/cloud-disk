@@ -1,8 +1,7 @@
 import { contextBridge } from 'electron';
 import { addListener, removeAllListener, removeListener } from './api/listener';
 import { window } from '@/api/window';
-import { baiduyun } from '@/api/baiduyun';
-import type { ElectronApi } from 'common/types/electron-api';
+import type { ElectronApi } from 'common/types/electronApi';
 
 const electronApi: ElectronApi = {
   desktop: true,
@@ -10,8 +9,7 @@ const electronApi: ElectronApi = {
   addListener,
   removeListener,
   removeAllListener,
-  window,
-  baiduyun
+  window
 };
 
 contextBridge.exposeInMainWorld('electronApi', electronApi);

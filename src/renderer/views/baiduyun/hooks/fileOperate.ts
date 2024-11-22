@@ -1,12 +1,7 @@
-import {
-  createBaiduyunDir,
-  deleteBaiduyunFile,
-  downloadBaiduyunFile,
-  renameBaiduyunFile
-} from '@/api/baiduyun';
-import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
 import { addUploadTask } from '@/utils/uploadManager';
 import type { useList } from './list';
+import { createDir, deleteFile, getDownloadUrl, renameFile } from '@/api/baiduyun';
+import type { ApiGetListResponse } from '@/types/api/baiduyun';
 
 /**
  * @description: 文件操作相关-hook
@@ -49,7 +44,7 @@ export function useFileOperate(
         }
         ctx.confirmButtonLoading = true;
         try {
-          await createBaiduyunDir({
+          await createDir({
             path: search.dir + '/' + ctx.inputValue
           });
           ElMessage({
@@ -81,7 +76,7 @@ export function useFileOperate(
         }
         ctx.confirmButtonLoading = true;
         try {
-          await deleteBaiduyunFile({
+          await deleteFile({
             filelist: checkedList.value.map((item) => item.path)
           });
           ElMessage({
@@ -101,10 +96,10 @@ export function useFileOperate(
   /**
    * @description: 处理下载
    */
-  const handleDownload = (item: BaidunyunFileInfo) => {
-    downloadBaiduyunFile({ id: item.id }).then((res) => {
+  const handleDownload = (item: ApiGetListResponse['list'][0]) => {
+    getDownloadUrl({ fsids: [item.fs_id] }).then((res) => {
       const a = document.createElement('a');
-      a.href = res.link;
+      a.href = res.list[0].dlink;
       a.download = 'download';
       document.body.appendChild(a);
       a.click();
@@ -115,8 +110,8 @@ export function useFileOperate(
   /**
    * @description: 处理重命名
    */
-  const handleRename = (item: BaidunyunFileInfo) => {
-    ElMessageBox.prompt(`将“${item.name}”修改为：`, '重命名', {
+  const handleRename = (item: ApiGetListResponse['list'][0]) => {
+    ElMessageBox.prompt(`将“${item.server_filename}”修改为：`, '重命名', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       inputPattern: /^[^"*<>?\\|/:]+$/,
@@ -128,10 +123,14 @@ export function useFileOperate(
         }
         ctx.confirmButtonLoading = true;
         try {
-          await renameBaiduyunFile({
-            id: item.id,
-            path: item.path,
-            newname: ctx.inputValue
+          await renameFile({
+            filelist: [
+              {
+                id: item.fs_id,
+                path: item.path,
+                newname: ctx.inputValue
+              }
+            ]
           });
           ElMessage({
             type: 'success',
@@ -150,8 +149,8 @@ export function useFileOperate(
   /**
    * @description: 处理删除
    */
-  const handleDelete = (item: BaidunyunFileInfo) => {
-    ElMessageBox.confirm(`即将删除“${item.name}”，是否继续?`, '提示', {
+  const handleDelete = (item: ApiGetListResponse['list'][0]) => {
+    ElMessageBox.confirm(`即将删除“${item.server_filename}”，是否继续?`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
@@ -162,7 +161,7 @@ export function useFileOperate(
         }
         ctx.confirmButtonLoading = true;
         try {
-          await deleteBaiduyunFile({
+          await deleteFile({
             filelist: [item.path]
           });
           ElMessage({

@@ -32,7 +32,7 @@ import { useUserStore } from '@/store/user';
 import type { Search } from './types/storage';
 import { useLayoutStore } from '@/store/layout';
 import type { FileInfo } from '@/types/file';
-import { getFileList } from '@/api/common/storage';
+import { getFileList } from '@/api/storage';
 
 const route = useRoute();
 

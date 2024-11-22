@@ -46,11 +46,11 @@
 <script setup lang="ts" name="BaiduyunView">
 import { useRoute, useRouter } from 'vue-router';
 import BaiduyunLogin from './components/Login.vue';
-import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
 import type { FileItem } from '@/components/fileList/hooks/fileData';
 import type { FileItemCommand } from '@/components/fileList/FileList.vue';
 import { useList } from './hooks/list';
 import { useFileOperate } from './hooks/fileOperate';
+import type { ApiGetListResponse } from '@/types/api/baiduyun';
 
 const route = useRoute();
 const router = useRouter();
@@ -69,15 +69,15 @@ const {
 /**
  * @description: 处理解析文件数据项
  */
-const handleParseItem = (item: BaidunyunFileInfo): FileItem<any> => {
+const handleParseItem = (item: ApiGetListResponse['list'][0]): FileItem<any> => {
   return {
-    name: item.name,
+    name: item.server_filename,
     size: item.size,
-    type: item.type === 'file' ? 'file' : 'dir',
+    type: item.isdir ? 'dir' : 'file',
     cover: '',
-    updatedTime: item.updatedTime,
+    updatedTime: item.local_mtime * 1000,
     operate: {
-      download: item.type === 'file',
+      download: !item.isdir,
       rename: true,
       delete: true
     }
@@ -87,8 +87,8 @@ const handleParseItem = (item: BaidunyunFileInfo): FileItem<any> => {
 /**
  * @description: 处理点击文件
  */
-const handleClickItem = (item: BaidunyunFileInfo) => {
-  if (item.type === 'directory') {
+const handleClickItem = (item: ApiGetListResponse['list'][0]) => {
+  if (item.isdir) {
     // 进入文件夹
     router.push({
       name: route.name,
@@ -104,7 +104,7 @@ const handleClickItem = (item: BaidunyunFileInfo) => {
 /**
  * @description: 处理操作文件
  */
-const handleOperateItem = (command: FileItemCommand, item: BaidunyunFileInfo) => {
+const handleOperateItem = (command: FileItemCommand, item: ApiGetListResponse['list'][0]) => {
   switch (command) {
     case 'download':
       handleDownload(item);

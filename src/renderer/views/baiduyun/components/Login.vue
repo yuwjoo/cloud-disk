@@ -54,7 +54,7 @@
 
 <script setup lang="ts" name="BaiduyunLogin">
 import { useUserStore } from '@/store/user';
-import type { ApiLoginRequest } from '@/types/api/common/auth';
+import type { ApiLoginRequest } from '@/types/api/auth';
 import type { FormInstance, FormRules, InputInstance } from 'element-plus';
 
 const userStore = useUserStore();

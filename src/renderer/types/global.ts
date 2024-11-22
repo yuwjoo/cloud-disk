@@ -1,4 +1,4 @@
-import type { ElectronApi } from 'common/types/electron-api';
+import type { ElectronApi } from 'common/types/electronApi';
 
 export {};
 

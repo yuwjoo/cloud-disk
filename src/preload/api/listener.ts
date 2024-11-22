@@ -1,4 +1,4 @@
-import { AddListener, RemoveListener, RemoveAllListener } from 'common/types/electron-api';
+import { AddListener, RemoveListener, RemoveAllListener } from 'common/types/electronApi';
 import { ipcRenderer } from 'electron';
 
 /**

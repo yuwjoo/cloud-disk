@@ -1,5 +1,5 @@
 import { send } from '@/utils/ipcRenderer';
-import { WindowApi } from 'common/types/electron-api';
+import { WindowApi } from 'common/types/electronApi';
 
 export const window: WindowApi = {
   /**

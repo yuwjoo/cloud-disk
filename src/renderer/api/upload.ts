@@ -6,7 +6,7 @@ import type {
   ApiGetMultipartsResponse,
   ApiMergeMultipartRequest,
   ApiMergeMultipartResponse
-} from '@/types/api/common/upload';
+} from '@/types/api/upload';
 
 /**
  * @description: 预检查文件

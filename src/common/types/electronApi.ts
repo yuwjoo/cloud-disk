@@ -1,19 +1,5 @@
 import { IpcRendererEvent } from 'electron';
 import { IpcChannelMap, IpcEventMap } from './ipc';
-import {
-  ApiSearchFileRequest,
-  ApiSearchFileResponse,
-  ApiGetListRequest,
-  ApiGetListResponse,
-  ApiCreateDirRequest,
-  ApiCreateDirResponse,
-  ApiRenameFileRequest,
-  ApiRenameFileResponse,
-  ApiDeleteFileRequest,
-  ApiDeleteFileResponse,
-  ApiGetDownloadUrlRequest,
-  ApiGetDownloadUrlResponse
-} from './api/baiduyun';
 
 /**
  * @description: electron api
@@ -25,7 +11,6 @@ export interface ElectronApi {
   removeListener: RemoveListener; // 移除事件
   removeAllListener: RemoveAllListener; // 移除所有事件
   window: WindowApi; // 窗口api
-  baiduyun: BaiduyunApi; // 百度云api
 }
 
 /**
@@ -82,16 +67,4 @@ export interface WindowApi {
   toggleFullScreen: IpcSendFun<'window-toggle-full-screen'>; // 切换全屏状态
   isMaximize: IpcSendFun<'window-is-maximize'>; // 是否最大化
   isFullScreen: IpcSendFun<'window-is-full-screen'>; // 是否全屏
-}
-
-/**
- * @description: 百度云api
- */
-export interface BaiduyunApi {
-  searchFile(params: ApiSearchFileRequest): Promise<ApiSearchFileResponse>; // 模糊查询文件
-  getList(params: ApiGetListRequest): Promise<ApiGetListResponse>; // 获取列表数据
-  createDir(data: ApiCreateDirRequest): Promise<ApiCreateDirResponse>; // 创建文件夹
-  renameFile(data: ApiRenameFileRequest): Promise<ApiRenameFileResponse>; // 重命名文件
-  deleteFile(data: ApiDeleteFileRequest): Promise<ApiDeleteFileResponse>; // 删除文件
-  getDownloadUrl(params: ApiGetDownloadUrlRequest): Promise<ApiGetDownloadUrlResponse>; // 获取下载地址
 }

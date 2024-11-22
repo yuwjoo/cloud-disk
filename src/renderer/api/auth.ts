@@ -6,7 +6,7 @@ import type {
   ApiLogoutResponse,
   ApiRegisterRequest,
   ApiRegisterResponse
-} from '@/types/api/common/auth';
+} from '@/types/api/auth';
 
 /**
  * @description: 注册账号

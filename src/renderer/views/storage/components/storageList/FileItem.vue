@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts" name="FileItem">
-import { deleteFile, downloadFile, renameFile } from '@/api/common/storage';
+import { deleteFile, downloadFile, renameFile } from '@/api/storage';
 import { getFileCover, getFileSize } from '@/utils/file';
 import { dayjs } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';

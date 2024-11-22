@@ -34,7 +34,7 @@
 <script setup lang="ts" name="StorageHeader">
 import Breadcrumb from './Breadcrumb.vue';
 import UploadButton from './UploadButton.vue';
-import { batchDeleteFile, createFile } from '@/api/common/storage';
+import { batchDeleteFile, createFile } from '@/api/storage';
 import { addUploadTask } from '@/utils/uploadManager';
 
 const emit = defineEmits<{

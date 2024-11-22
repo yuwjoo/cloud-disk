@@ -1,5 +1,5 @@
-import { getBaiduyunFileList } from '@/api/baiduyun';
-import type { BaidunyunFileInfo } from '@/types/api/baiduyun';
+import { getList } from '@/api/baiduyun';
+import type { ApiGetListResponse } from '@/types/api/baiduyun';
 import { onBeforeRouteUpdate, type RouteLocationNormalizedLoadedGeneric } from 'vue-router';
 
 /**
@@ -17,9 +17,9 @@ export function useList(route: RouteLocationNormalizedLoadedGeneric) {
     dir: (route.query.path as string) || '/' // 目录路径
   });
 
-  const list = ref<BaidunyunFileInfo[]>([]); // 文件列表
+  const list = ref<ApiGetListResponse['list']>([]); // 文件列表
 
-  const checkedList = ref<BaidunyunFileInfo[]>([]); // 选中数据列表
+  const checkedList = ref<ApiGetListResponse['list']>([]); // 选中数据列表
 
   const loading = ref<boolean>(false); // 加载中
 
@@ -29,8 +29,12 @@ export function useList(route: RouteLocationNormalizedLoadedGeneric) {
   const refreshList = async () => {
     loading.value = true;
     try {
-      const res = await getBaiduyunFileList({ dir: search.dir, current: 1, size: 1000 });
-      list.value = res.data.records || [];
+      const res = await getList({
+        dir: search.dir,
+        page: 1,
+        num: 1000
+      });
+      list.value = res.list || [];
     } catch (err) {
       /* empty */
     }
