@@ -34,7 +34,7 @@ export default defineConfig({
           prefix: 'Icon'
         })
       ],
-      dts: fileURLToPath(new URL('./src/renderer/types/auto-imports.d.ts', import.meta.url))
+      dts: fileURLToPath(new URL('./src/renderer/types/autoImports.d.ts', import.meta.url))
     }),
     Components({
       dirs: [fileURLToPath(new URL('./src/renderer/components', import.meta.url))],
