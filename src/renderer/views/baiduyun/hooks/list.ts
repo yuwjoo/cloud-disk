@@ -1,6 +1,8 @@
 import { getList } from '@/api/baiduyun';
+import { useLoadingFetch } from '@/hooks/common';
+import { useRoute } from '@/hooks/vueRouter';
 import type { ApiGetListResponse } from '@/types/api/baiduyun';
-import { onBeforeRouteUpdate, type RouteLocationNormalizedLoadedGeneric } from 'vue-router';
+import { onBeforeRouteUpdate } from 'vue-router';
 
 /**
  * @description: 筛选条件
@@ -12,22 +14,16 @@ export interface Search {
 /**
  * @description: 列表逻辑-hook
  */
-export function useList(route: RouteLocationNormalizedLoadedGeneric) {
+export function useList() {
+  const route = useRoute();
+
   const search = reactive<Search>({
-    dir: (route.query.path as string) || '/' // 目录路径
+    dir: <string>route.query.path || '/' // 目录路径
   });
 
   const list = ref<ApiGetListResponse['list']>([]); // 文件列表
 
-  const checkedList = ref<ApiGetListResponse['list']>([]); // 选中数据列表
-
-  const loading = ref<boolean>(false); // 加载中
-
-  /**
-   * @description: 刷新列表
-   */
-  const refreshList = async () => {
-    loading.value = true;
+  const [loading, refreshList] = useLoadingFetch(async () => {
     try {
       const res = await getList({
         dir: search.dir,
@@ -35,18 +31,17 @@ export function useList(route: RouteLocationNormalizedLoadedGeneric) {
         num: 1000
       });
       list.value = res.list || [];
-    } catch (err) {
+    } catch {
       /* empty */
     }
-    loading.value = false;
-  };
-
-  onBeforeRouteUpdate((to) => {
-    search.dir = (to.query.path as string) || '/';
-    refreshList();
   });
 
-  refreshList();
+  const checkedList = ref<ApiGetListResponse['list']>([]); // 选中数据列表
+
+  onBeforeRouteUpdate((to) => {
+    search.dir = <string>to.query.path || '/';
+    refreshList();
+  });
 
   return { search, list, checkedList, loading, refreshList };
 }

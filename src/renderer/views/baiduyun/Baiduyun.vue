@@ -55,7 +55,7 @@ import type { ApiGetListResponse } from '@/types/api/baiduyun';
 const route = useRoute();
 const router = useRouter();
 
-const { search, list, checkedList, loading, refreshList } = useList(route);
+const { search, list, checkedList, loading, refreshList } = useList();
 
 const {
   handleUploadFile,
