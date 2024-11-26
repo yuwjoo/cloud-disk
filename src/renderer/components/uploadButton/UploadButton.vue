@@ -27,9 +27,11 @@
 <script setup lang="ts" name="UploadButton">
 import type { ElDropdown } from 'element-plus';
 
-const emit = defineEmits<{
+export type EmitsType = {
   select: [files: File[]]; // 选中文件
-}>();
+};
+
+const emit = defineEmits<EmitsType>();
 
 const dropdownRef = ref<InstanceType<typeof ElDropdown>>(); // 下拉按钮组件ref
 
