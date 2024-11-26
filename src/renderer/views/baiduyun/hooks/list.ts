@@ -1,6 +1,5 @@
 import { deleteFile, getDownloadUrl, getList, renameFile } from '@/api/baiduyun';
-import type { FileItemCommand } from '@/components/fileList/FileList.vue';
-import type { FileItem } from '@/components/fileList/hooks/fileData';
+import type { FileItem, FileItemCommand } from '@/components/fileList/FileList.vue';
 import { useLoadingFetch } from '@/hooks/common';
 import { useRoute } from '@/hooks/vueRouter';
 import type { ApiGetListResponse } from '@/types/api/baiduyun';

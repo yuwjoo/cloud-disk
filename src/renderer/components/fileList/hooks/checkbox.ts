@@ -1,13 +1,13 @@
 import type { CheckboxValueType } from 'element-plus';
 import type { Ref, MaybeRefOrGetter } from 'vue';
-import type { PropsType } from '../FileList.vue';
+import type { ItemType, PropsType } from '../FileList.vue';
 
 /**
  * @description: 多选框逻辑-hook
  */
-export function useCheckbox<ItemType>(
-  checkedList: Ref<ItemType[]>,
-  list: MaybeRefOrGetter<PropsType<ItemType>['list']>
+export function useCheckbox<T extends ItemType>(
+  checkedList: Ref<T[]>,
+  list: MaybeRefOrGetter<PropsType<T>['list']>
 ) {
   const checkAll = ref(false); // 是否全选
 

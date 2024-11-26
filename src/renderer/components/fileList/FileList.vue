@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-11-19 11:06:17
+ * @LastEditTime: 2024-11-26 17:45:20
  * @Description: 
 -->
 <template>
@@ -31,7 +31,7 @@
           class="file-list__item-dropdown"
           :teleported="false"
           :show-timeout="0"
-          @command="emit('operateItem', $event, item.raw)"
+          @command="emits('operateItem', $event, item.raw)"
         >
           <template #default>
             <i-ep-more-filled class="file-list__item-more-icon" />
@@ -51,7 +51,7 @@
           </template>
         </el-dropdown>
 
-        <div class="file-list__item-content" @click="emit('clickItem', item.raw)">
+        <div class="file-list__item-content" @click="emits('clickItem', item.raw)">
           <img class="file-list__item-content-cover" :src="item.cover" alt="" @dragstart.prevent />
           <el-tooltip effect="dark" placement="bottom">
             <template #default>
@@ -79,36 +79,62 @@
   </div>
 </template>
 
-<script setup lang="ts" name="FileList" generic="ItemType extends Record<string, any>">
+<script setup lang="ts" name="FileList" generic="T extends ItemType">
 import dayjs from 'dayjs';
 import { useCheckbox } from './hooks/checkbox';
 import { getFileSize } from '@/utils/file';
-import { useFileData, type FileItem } from './hooks/fileData';
 
+export type PropsType<T extends ItemType> = {
+  list: T[]; // 列表数据
+  parseItem: (item: T) => FileItem; // 解析数据
+};
+
+export type EmitsType<T extends ItemType> = {
+  operateItem: [command: FileItemCommand, item: T]; // 触发数据项操作
+  clickItem: [item: T]; // 点击数据项
+};
+
+/**
+ * @description: 列表数据项类型
+ */
+export type ItemType = Record<string, any>;
+
+/**
+ * @description: 文件数据项-操作指令
+ */
 export type FileItemCommand = 'download' | 'rename' | 'delete';
 
-export type PropsType<ItemType> = {
-  list: ItemType[]; // 列表数据
-  parseItem: (item: ItemType) => FileItem; // 解析数据
-};
+/**
+ * @description: 文件数据项
+ */
+export interface FileItem<T = any> {
+  name: string; // 名称
+  size: number; // 大小
+  type: 'file' | 'dir'; // 类型
+  cover?: string; // 封面
+  updatedTime: number; // 更新时间戳
+  operate?: {
+    download?: boolean; // 下载
+    rename?: boolean; // 重命名
+    delete?: boolean; // 删除
+  }; // 操作
+  raw?: T; // 原始数据
+}
 
-export type EmitType<ItemType> = {
-  operateItem: [command: FileItemCommand, item: ItemType]; // 触发数据项操作
-  clickItem: [item: ItemType]; // 点击数据项
-};
+const { list, parseItem } = defineProps<PropsType<T>>();
+const emits = defineEmits<EmitsType<T>>();
 
-const { list, parseItem } = defineProps<PropsType<ItemType>>();
-
-const emit = defineEmits<EmitType<ItemType>>();
-
-const checkedList = defineModel<ItemType[]>('checkedList', { required: true }); // 选中数据
-const bindCheckedList = checkedList as any[];
-const { checkAll, isIndeterminate, handleCheckAll, handleChecked } = useCheckbox<ItemType>(
+const checkedList = defineModel<T[]>('checkedList', { required: true }); // 选中数据
+const bindCheckedList = checkedList as any[]; // 双向绑定的选中数据（解决ts类型报错）
+const { checkAll, isIndeterminate, handleCheckAll, handleChecked } = useCheckbox(
   checkedList,
   () => list
 );
 
-const { fileList } = useFileData<ItemType>(() => list, parseItem);
+const fileList = ref<FileItem[]>([]); // 文件数据列表
+watchEffect(() => {
+  fileList.value = list.map((item) => ({ ...parseItem(item), raw: item }));
+});
 </script>
 
 <style lang="scss" scoped>
