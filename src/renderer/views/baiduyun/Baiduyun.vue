@@ -47,7 +47,7 @@
 import BaiduyunLogin from './components/login/Login.vue';
 import { useList } from './hooks/list';
 import { useSearch } from './hooks/search';
-import DirBreadcrumb from '@/components/DirBreadcrumb.vue';
+import DirBreadcrumb from '@/components/dirBreadcrumb/DirBreadcrumb.vue';
 import { useAccessToken } from './hooks/accessToken';
 import { useHeader } from './hooks/header';
 

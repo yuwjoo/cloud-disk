@@ -1,10 +1,10 @@
 <!--
  * @FileName: 目录导航面包屑
- * @FilePath: \cloud-disk\src\renderer\components\DirBreadcrumb.vue
+ * @FilePath: \cloud-disk\src\renderer\components\dirBreadcrumb\DirBreadcrumb.vue
  * @Author: YH
  * @Date: 2024-11-11 14:03:50
  * @LastEditors: YH
- * @LastEditTime: 2024-11-11 16:49:33
+ * @LastEditTime: 2024-11-26 17:52:29
  * @Description: 
 -->
 <template>
@@ -24,8 +24,12 @@
 </template>
 
 <script setup lang="ts" name="DirBreadcrumb">
-import type { ItemList } from '@/types/components/dirBreadcrumb';
 import { useRoute, useRouter } from 'vue-router';
+
+export interface ItemList {
+  label: string; // 名称
+  to: Record<string, any>; // 跳转路径
+}
 
 const props = defineProps({
   path: {
