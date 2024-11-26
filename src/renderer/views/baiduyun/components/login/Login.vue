@@ -1,93 +1,78 @@
 <!--
  * @FileName: 百度网盘-登录页
- * @FilePath: \cloud-disk\src\renderer\views\baiduyun\components\Login.vue
+ * @FilePath: \cloud-disk\src\renderer\views\baiduyun\components\login\Login.vue
  * @Author: YH
  * @Date: 2024-11-13 17:10:37
  * @LastEditors: YH
- * @LastEditTime: 2024-11-13 17:22:04
+ * @LastEditTime: 2024-11-26 15:48:16
  * @Description: 
 -->
 <template>
   <div class="login">
     <div class="login-panel">
       <div class="login-panel__title">登录您的百度云</div>
-      <el-form
+      <ElForm
         class="login-panel__form"
-        ref="formRef"
+        ref="form"
         :model="formData"
         label-position="top"
         :rules="rules"
         hide-required-asterisk
         @submit.prevent
       >
-        <el-form-item prop="account" label="账号">
-          <el-input
+        <ElFormItem prop="account" label="账号">
+          <ElInput
             v-model="formData.account"
             placeholder="手机号/用户名/邮箱"
             @keyup.enter="passwordInputRef?.focus()"
           />
-        </el-form-item>
-        <el-form-item prop="password" label="密码">
-          <el-input
-            ref="passwordInputRef"
+        </ElFormItem>
+        <ElFormItem prop="password" label="密码">
+          <ElInput
+            ref="passwordInput"
             v-model="formData.password"
             type="password"
             show-password
             placeholder="密码"
             @keyup.enter="handleLogin"
           />
-        </el-form-item>
-        <el-form-item>
-          <el-button
+        </ElFormItem>
+        <ElFormItem>
+          <ElButton
             class="login-panel__login-btn"
             type="primary"
             :loading="loginLoading"
             @click="handleLogin"
           >
             登录
-          </el-button>
-        </el-form-item>
-      </el-form>
+          </ElButton>
+        </ElFormItem>
+      </ElForm>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" name="BaiduyunLogin">
+import { useLoadingFetch } from '@/hooks/common';
 import { useUserStore } from '@/store/user';
-import type { ApiLoginRequest } from '@/types/api/auth';
-import type { FormInstance, FormRules, InputInstance } from 'element-plus';
+import { useForm } from './hooks/form';
 
-const userStore = useUserStore();
-
-const loginLoading = ref<boolean>(false);
-
-const formRef = ref<FormInstance>();
-
-const passwordInputRef = ref<InputInstance>();
-
-const formData = ref<ApiLoginRequest>({
-  account: '',
-  password: ''
-});
-
-const rules = reactive<FormRules<ApiLoginRequest>>({
-  account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
-});
-
-/**
- * @description: 处理登录
- */
-const handleLogin = async () => {
-  try {
-    await formRef.value!.validate();
-    loginLoading.value = true;
-    await userStore.login(formData.value);
-  } catch {
-    /* empty */
-  }
-  loginLoading.value = false;
+export type EmitsType = {
+  login: [token: string]; // 登录成功
 };
+
+const emits = defineEmits<EmitsType>();
+
+const formRef = useTemplateRef('form');
+const passwordInputRef = useTemplateRef('passwordInput');
+
+const { formData, rules } = useForm();
+
+const [loginLoading, handleLogin] = useLoadingFetch(async () => {
+  await formRef.value!.validate();
+  await useUserStore().login(formData.value);
+  emits('login', '333333333333333');
+});
 </script>
 
 <style lang="scss" scoped>

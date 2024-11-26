@@ -1,47 +1,165 @@
-import { getList } from '@/api/baiduyun';
+import { deleteFile, getDownloadUrl, getList, renameFile } from '@/api/baiduyun';
+import type { FileItemCommand } from '@/components/fileList/FileList.vue';
+import type { FileItem } from '@/components/fileList/hooks/fileData';
 import { useLoadingFetch } from '@/hooks/common';
 import { useRoute } from '@/hooks/vueRouter';
 import type { ApiGetListResponse } from '@/types/api/baiduyun';
-import { onBeforeRouteUpdate } from 'vue-router';
+import { useRouter } from 'vue-router';
+import type { useSearch } from './search';
 
 /**
- * @description: 筛选条件
+ * @description: 列表数据
  */
-export interface Search {
-  dir: string; // 目录路径
-}
+export type List = ApiGetListResponse['list'];
+
+/**
+ * @description: 列表数据项
+ */
+export type ListItem = List[0];
 
 /**
  * @description: 列表逻辑-hook
  */
-export function useList() {
-  const route = useRoute();
+export function useList(search: ReturnType<typeof useSearch>['search']) {
+  const checkedList = ref<List>([]); // 选中数据列表
 
-  const search = reactive<Search>({
-    dir: <string>route.query.path || '/' // 目录路径
-  });
+  const list = ref<List>([]); // 文件列表
 
-  const list = ref<ApiGetListResponse['list']>([]); // 文件列表
+  const [loading, fetchList] = useLoadingFetch(async () => {
+    const res = await getList({
+      dir: search.dir,
+      page: 1,
+      num: 1000
+    });
+    checkedList.value = [];
+    list.value = res.list || [];
+  }, true);
 
-  const [loading, refreshList] = useLoadingFetch(async () => {
-    try {
-      const res = await getList({
-        dir: search.dir,
-        page: 1,
-        num: 1000
+  /**
+   * @description: 处理解析文件项
+   */
+  const handleParseItem = (item: ListItem): FileItem => {
+    return {
+      name: item.server_filename,
+      size: item.size,
+      type: item.isdir ? 'dir' : 'file',
+      cover: '',
+      updatedTime: item.local_mtime * 1000,
+      operate: {
+        download: !item.isdir,
+        rename: true,
+        delete: true
+      }
+    };
+  };
+
+  /**
+   * @description: 处理点击文件项
+   */
+  const handleClickItem = (item: ListItem) => {
+    if (item.isdir) {
+      // 进入文件夹
+      useRouter().push({
+        name: useRoute().name,
+        query: {
+          path: item.path
+        }
       });
-      list.value = res.list || [];
-    } catch {
-      /* empty */
+    } else {
+      // 浏览文件
     }
-  });
+  };
 
-  const checkedList = ref<ApiGetListResponse['list']>([]); // 选中数据列表
+  /**
+   * @description: 处理操作文件项
+   */
+  const handleOperateItem = (command: FileItemCommand, item: ListItem) => {
+    const handler: Record<FileItemCommand, () => void> = {
+      rename: () => {
+        ElMessageBox.prompt(`将“${item.server_filename}”修改为：`, '重命名', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^[^"*<>?\\|/:]+$/,
+          inputErrorMessage: '名称不合法',
+          beforeClose: async (action, ctx, close) => {
+            if (action !== 'confirm') {
+              close();
+              return;
+            }
+            ctx.confirmButtonLoading = true;
+            try {
+              await renameFile({
+                filelist: [
+                  {
+                    id: item.fs_id,
+                    path: item.path,
+                    newname: ctx.inputValue
+                  }
+                ]
+              });
+              ElMessage({
+                type: 'success',
+                message: '修改成功'
+              });
+              close();
+              fetchList();
+            } finally {
+              ctx.confirmButtonLoading = false;
+            }
+          }
+        }).catch(() => {});
+      },
+      delete: () => {
+        ElMessageBox.confirm(`即将删除“${item.server_filename}”，是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          beforeClose: async (action, ctx, close) => {
+            if (action !== 'confirm') {
+              close();
+              return;
+            }
+            ctx.confirmButtonLoading = true;
+            try {
+              await deleteFile({
+                filelist: [item.path]
+              });
+              ElMessage({
+                type: 'success',
+                message: '删除成功'
+              });
+              close();
+              fetchList();
+            } finally {
+              ctx.confirmButtonLoading = false;
+            }
+          }
+        }).catch(() => {});
+      },
+      download: () => {
+        getDownloadUrl({ fsids: [item.fs_id] }).then((res) => {
+          const a = document.createElement('a');
+          a.href = res.list[0].dlink;
+          a.download = 'download';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      }
+    };
+    handler[command]();
+  };
 
-  onBeforeRouteUpdate((to) => {
-    search.dir = <string>to.query.path || '/';
-    refreshList();
-  });
+  watch(search, () => fetchList());
 
-  return { search, list, checkedList, loading, refreshList };
+  return {
+    search,
+    list,
+    checkedList,
+    loading,
+    fetchList,
+    handleParseItem,
+    handleClickItem,
+    handleOperateItem
+  };
 }

@@ -4,30 +4,30 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-19 14:27:23
+ * @LastEditTime: 2024-11-26 15:06:53
  * @Description: 
 -->
 <template>
-  <div v-if="true" class="baiduyun" v-loading="loading">
+  <div v-if="accessToken" class="baiduyun" v-loading="loading">
     <div class="baiduyun-header">
-      <dir-breadcrumb class="baiduyun-header__left" :path="search.dir" />
+      <DirBreadcrumb class="baiduyun-header__left" :path="search.dir" />
 
       <div class="baiduyun-header__right">
-        <upload-button @select="handleUploadFile" />
+        <UploadButton @select="handleUploadFile" />
 
-        <el-button
+        <ElButton
           class="baiduyun-header__right-create-btn"
           type="primary"
           @click="handleCreateFolder"
         >
-          <el-icon class="el-icon--left"><i-ep-folder-add /></el-icon>
+          <ElIcon class="el-icon--left"><IEpFolderAdd /></ElIcon>
           <span>新建文件夹</span>
-        </el-button>
+        </ElButton>
 
-        <el-button v-if="checkedList.length" type="danger" @click="handleBatchDelete">
-          <el-icon class="el-icon--left"><i-ep-delete /></el-icon>
+        <ElButton v-if="checkedList.length" type="danger" @click="handleBatchDelete">
+          <ElIcon class="el-icon--left"><IEpDelete /></ElIcon>
           <span>批量删除</span>
-        </el-button>
+        </ElButton>
       </div>
     </div>
 
@@ -40,83 +40,36 @@
     />
   </div>
 
-  <BaiduyunLogin v-else />
+  <BaiduyunLogin v-else @login="setAccessToken" />
 </template>
 
 <script setup lang="ts" name="BaiduyunView">
-import { useRoute, useRouter } from 'vue-router';
-import BaiduyunLogin from './components/Login.vue';
-import type { FileItem } from '@/components/fileList/hooks/fileData';
-import type { FileItemCommand } from '@/components/fileList/FileList.vue';
+import BaiduyunLogin from './components/login/Login.vue';
 import { useList } from './hooks/list';
-import { useFileOperate } from './hooks/fileOperate';
-import type { ApiGetListResponse } from '@/types/api/baiduyun';
+import { useSearch } from './hooks/search';
+import DirBreadcrumb from '@/components/DirBreadcrumb.vue';
+import { useAccessToken } from './hooks/accessToken';
+import { useHeader } from './hooks/header';
 
-const route = useRoute();
-const router = useRouter();
+const { accessToken, setAccessToken } = useAccessToken();
 
-const { search, list, checkedList, loading, refreshList } = useList();
+const { search } = useSearch();
 
 const {
-  handleUploadFile,
-  handleCreateFolder,
-  handleBatchDelete,
-  handleDownload,
-  handleRename,
-  handleDelete
-} = useFileOperate(search, checkedList, refreshList);
+  list,
+  checkedList,
+  loading,
+  fetchList,
+  handleParseItem,
+  handleClickItem,
+  handleOperateItem
+} = useList(search);
 
-/**
- * @description: 处理解析文件数据项
- */
-const handleParseItem = (item: ApiGetListResponse['list'][0]): FileItem<any> => {
-  return {
-    name: item.server_filename,
-    size: item.size,
-    type: item.isdir ? 'dir' : 'file',
-    cover: '',
-    updatedTime: item.local_mtime * 1000,
-    operate: {
-      download: !item.isdir,
-      rename: true,
-      delete: true
-    }
-  };
-};
-
-/**
- * @description: 处理点击文件
- */
-const handleClickItem = (item: ApiGetListResponse['list'][0]) => {
-  if (item.isdir) {
-    // 进入文件夹
-    router.push({
-      name: route.name,
-      query: {
-        path: item.path
-      }
-    });
-  } else {
-    // 浏览文件
-  }
-};
-
-/**
- * @description: 处理操作文件
- */
-const handleOperateItem = (command: FileItemCommand, item: ApiGetListResponse['list'][0]) => {
-  switch (command) {
-    case 'download':
-      handleDownload(item);
-      break;
-    case 'rename':
-      handleRename(item);
-      break;
-    case 'delete':
-      handleDelete(item);
-      break;
-  }
-};
+const { handleUploadFile, handleCreateFolder, handleBatchDelete } = useHeader(
+  search,
+  checkedList,
+  fetchList
+);
 </script>
 
 <style lang="scss" scoped>
