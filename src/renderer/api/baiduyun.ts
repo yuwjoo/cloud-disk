@@ -22,6 +22,9 @@ import type {
 //   '123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw'
 // );
 
+// 认证接口
+// https://openapi.baidu.com/oauth/2.0/authorize?client_id=IlLqBbU3GjQ0t46TRwFateTprHWl39zF&response_type=token&redirect_uri=oob&confirm_login=0&scope=basic,netdisk
+
 /**
  * @description: 百度云-搜索文件
  */
