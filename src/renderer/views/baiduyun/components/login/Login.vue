@@ -71,7 +71,10 @@ const { formData, rules } = useForm();
 const [loginLoading, handleLogin] = useLoadingFetch(async () => {
   await formRef.value!.validate();
   await useUserStore().login(formData.value);
-  emits('login', '333333333333333');
+  emits(
+    'login',
+    '123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw'
+  );
 });
 </script>
 

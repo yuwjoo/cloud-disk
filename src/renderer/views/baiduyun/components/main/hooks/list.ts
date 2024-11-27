@@ -1,19 +1,9 @@
 import { deleteFile, getDownloadUrl, getList, renameFile } from '@/api/baiduyun';
 import { useLoadingFetch } from '@/hooks/common';
 import { useRoute, useRouter } from '@/hooks/vueRouter';
-import type { ApiGetListResponse } from '@/types/api/baiduyun';
 import type { useSearch } from './search';
 import type { FileItem, FileItemCommand } from '@/components/fileList/types';
-
-/**
- * @description: 列表数据
- */
-export type List = ApiGetListResponse['list'];
-
-/**
- * @description: 列表数据项
- */
-export type ListItem = List[0];
+import type { List, ListItem } from '../types';
 
 /**
  * @description: 列表逻辑-hook

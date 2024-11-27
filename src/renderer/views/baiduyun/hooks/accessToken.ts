@@ -1,5 +1,5 @@
 /**
- * @description: 认证token-hook
+ * @description: 认证token逻辑-hook
  */
 export function useAccessToken() {
   const accessToken = ref<string>(localStorage.getItem('baiduyun_access_token') || ''); // 认证token

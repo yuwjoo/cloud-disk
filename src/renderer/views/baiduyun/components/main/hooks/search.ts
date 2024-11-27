@@ -1,12 +1,6 @@
 import { useRoute } from '@/hooks/vueRouter';
 import { onBeforeRouteUpdate, type RouteLocationNormalizedLoadedGeneric } from 'vue-router';
-
-/**
- * @description: 筛选条件
- */
-export type Search = {
-  dir: string; // 目录路径
-};
+import type { Search } from '../types';
 
 /**
  * @description: 筛选逻辑-hook

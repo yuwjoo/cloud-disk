@@ -3,16 +3,16 @@ import compressedFile from '@/assets/images/fileSystem/small/compressedFile.png'
 import docmentFile from '@/assets/images/fileSystem/small/docmentFile.png';
 import executionFile from '@/assets/images/fileSystem/small/executionFile.png';
 import pdfFile from '@/assets/images/fileSystem/small/pdfFile.png';
-import type { FileType } from '../types';
 import dayjs from 'dayjs';
+import type { FileItemType } from '../types';
 
 /**
  * @description: 解析文件封面
  * @param {string} name 文件名
- * @param {FileType} type 文件类型
+ * @param {FileItemType} type 文件类型
  * @return {string} 文件封面
  */
-export function parseFileCover(name: string, type: FileType): string {
+export function parseFileCover(name: string, type: FileItemType): string {
   const suffix = name.match(/\.([^.]*)$/)?.[1].toLocaleLowerCase();
 
   if (type === 'dir') {
