@@ -91,7 +91,7 @@ export type ApiGetListResponse = {
     server_filename: string; // 名称
     unlist: number;
     fs_id: number; // 文件id
-    thumbs: {
+    thumbs?: {
       icon: string; // 迷你封面
       url3: string; // 大封面
       url2: string; // 中封面

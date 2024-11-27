@@ -1,6 +1,7 @@
 import type { CheckboxValueType } from 'element-plus';
 import type { Ref, MaybeRefOrGetter } from 'vue';
-import type { ItemType, PropsType } from '../FileList.vue';
+import type { ItemType } from '../types';
+import type { PropsType } from '../FileList.vue';
 
 /**
  * @description: 多选框逻辑-hook

@@ -1,10 +1,9 @@
 import { deleteFile, getDownloadUrl, getList, renameFile } from '@/api/baiduyun';
-import type { FileItem, FileItemCommand } from '@/components/fileList/FileList.vue';
 import { useLoadingFetch } from '@/hooks/common';
-import { useRoute } from '@/hooks/vueRouter';
+import { useRoute, useRouter } from '@/hooks/vueRouter';
 import type { ApiGetListResponse } from '@/types/api/baiduyun';
-import { useRouter } from 'vue-router';
 import type { useSearch } from './search';
+import type { FileItem, FileItemCommand } from '@/components/fileList/types';
 
 /**
  * @description: 列表数据
@@ -42,7 +41,7 @@ export function useList(search: ReturnType<typeof useSearch>['search']) {
       name: item.server_filename,
       size: item.size,
       type: item.isdir ? 'dir' : 'file',
-      cover: '',
+      cover: item.thumbs?.url1,
       updatedTime: item.local_mtime * 1000,
       operate: {
         download: !item.isdir,

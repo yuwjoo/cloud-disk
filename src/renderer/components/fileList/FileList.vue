@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-25 10:29:13
  * @LastEditors: YH
- * @LastEditTime: 2024-11-26 17:45:20
+ * @LastEditTime: 2024-11-27 14:12:23
  * @Description: 
 -->
 <template>
@@ -52,24 +52,26 @@
         </el-dropdown>
 
         <div class="file-list__item-content" @click="emits('clickItem', item.raw)">
-          <img class="file-list__item-content-cover" :src="item.cover" alt="" @dragstart.prevent />
+          <img
+            class="file-list__item-content-cover"
+            :src="item.cover || parseFileCover(item.name, item.type)"
+            alt=""
+            @dragstart.prevent
+          />
           <el-tooltip effect="dark" placement="bottom">
             <template #default>
               <div class="file-list__item-content-name">{{ item.name }}</div>
             </template>
             <template #content>
               <div>名称：{{ item.name }}</div>
-              <div>大小：{{ getFileSize(item.size) }}</div>
-              <div>最近修改：{{ dayjs(item.updatedTime).format('YYYY/MM/DD HH:mm:ss') }}</div>
+              <div>大小：{{ byteSizeToString(item.size) }}</div>
+              <div>最近修改：{{ parseFileDate(item.updatedTime) }}</div>
             </template>
           </el-tooltip>
           <div class="file-list__item-content-describe">
-            <template v-if="item.type === 'file'">
-              {{ getFileSize(item.size) }}
-            </template>
-            <template v-else>
-              {{ dayjs(item.updatedTime).format('YYYY/MM/DD HH:mm:ss') }}
-            </template>
+            {{
+              item.type === 'file' ? byteSizeToString(item.size) : parseFileDate(item.updatedTime)
+            }}
           </div>
         </div>
       </div>
@@ -80,9 +82,9 @@
 </template>
 
 <script setup lang="ts" name="FileList" generic="T extends ItemType">
-import dayjs from 'dayjs';
 import { useCheckbox } from './hooks/checkbox';
-import { getFileSize } from '@/utils/file';
+import { byteSizeToString, parseFileCover, parseFileDate } from './utils/parse';
+import type { ItemType, FileItem, FileItemCommand } from './types';
 
 export type PropsType<T extends ItemType> = {
   list: T[]; // 列表数据
@@ -93,33 +95,6 @@ export type EmitsType<T extends ItemType> = {
   operateItem: [command: FileItemCommand, item: T]; // 触发数据项操作
   clickItem: [item: T]; // 点击数据项
 };
-
-/**
- * @description: 列表数据项类型
- */
-export type ItemType = Record<string, any>;
-
-/**
- * @description: 文件数据项-操作指令
- */
-export type FileItemCommand = 'download' | 'rename' | 'delete';
-
-/**
- * @description: 文件数据项
- */
-export interface FileItem<T = any> {
-  name: string; // 名称
-  size: number; // 大小
-  type: 'file' | 'dir'; // 类型
-  cover?: string; // 封面
-  updatedTime: number; // 更新时间戳
-  operate?: {
-    download?: boolean; // 下载
-    rename?: boolean; // 重命名
-    delete?: boolean; // 删除
-  }; // 操作
-  raw?: T; // 原始数据
-}
 
 const { list, parseItem } = defineProps<PropsType<T>>();
 const emits = defineEmits<EmitsType<T>>();
