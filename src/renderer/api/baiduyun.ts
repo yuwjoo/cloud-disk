@@ -25,6 +25,17 @@ import type {
 // 认证接口
 // https://openapi.baidu.com/oauth/2.0/authorize?client_id=IlLqBbU3GjQ0t46TRwFateTprHWl39zF&response_type=token&redirect_uri=oob&confirm_login=0&scope=basic,netdisk
 
+useBaiduyunRequest({
+  url: 'https://openapi.baidu.com/oauth/2.0/device/code?response_type=device_code&client_id=5GFgMRfHOhIvI0B8AZB78nt676FeWA9n&scope=basic,netdisk',
+  method: 'get',
+}).then((res) => {
+  console.log('成功', res);
+});
+
+// # 开发者默认注册信息
+// CLIENT_ID = "5GFgMRfHOhIvI0B8AZB78nt676FeWA9n"
+// CLIENT_SECRET = "eq2eCNfbtOrGwdlA4vB1N1EaiwjBMu7i"
+
 /**
  * @description: 百度云-搜索文件
  */
