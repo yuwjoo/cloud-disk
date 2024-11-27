@@ -5,9 +5,9 @@ const routes = [
     redirect: { name: 'storage' },
     children: [
       {
-        path: 'storage',
-        name: 'storage',
-        component: () => import('@/views/storage/Storage.vue'),
+        path: 'privateyun',
+        name: 'privateyun',
+        component: () => import('@/views/privateyun/Privateyun.vue'),
         meta: {
           title: '私有云',
           aside: true,

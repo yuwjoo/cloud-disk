@@ -35,7 +35,7 @@ import { useLayoutStore } from '@/store/layout';
 
 const layoutStore = useLayoutStore(); // 布局仓库
 const menuItems = [
-  { label: '私有云', icon: IPrivateCloud, name: 'storage' },
+  { label: '私有云', icon: IPrivateCloud, name: 'privateyun' },
   { label: '百度云', icon: IBaiduyunLogo, name: 'baiduyun' }
 ];
 </script>
