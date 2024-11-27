@@ -10,6 +10,6 @@ export function joinCloudPath(dir: string): string {
   if (dir.startsWith(root)) {
     return dir;
   } else {
-    return root + dir.startsWith('/') ? dir.slice(1) : dir;
+    return root + (dir.startsWith('/') ? dir.slice(1) : dir);
   }
 }
