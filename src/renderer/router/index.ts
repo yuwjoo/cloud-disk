@@ -2,7 +2,7 @@ const routes = [
   {
     path: '/',
     component: () => import('@/layout/Layout.vue'),
-    redirect: { name: 'storage' },
+    redirect: { name: 'privateyun' },
     children: [
       {
         path: 'privateyun',
