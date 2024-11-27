@@ -4,7 +4,7 @@ import type { useSearch } from './search';
 import type { FileItem, FileItemCommand } from '@/components/fileList/types';
 import type { List, ListItem } from '../types';
 import { deleteFile, downloadFile, getFileList, renameFile } from '@/api/storage';
-import { joinCloudPath } from '../utils';
+import { joinCloudPath, parseCloudRelativePath } from '../utils';
 
 /**
  * @description: 列表逻辑-hook
@@ -49,7 +49,7 @@ export function useList(search: ReturnType<typeof useSearch>['search']) {
       useRouter().push({
         name: useRoute().name,
         query: {
-          path: item.path
+          path: parseCloudRelativePath(item.path)
         }
       });
     } else {
