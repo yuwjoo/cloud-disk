@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-09-24 11:14:08
  * @LastEditors: YH
- * @LastEditTime: 2024-11-26 15:06:53
+ * @LastEditTime: 2024-11-28 14:32:32
  * @Description: 
 -->
 <template>
@@ -16,6 +16,8 @@
 import BaiduyunLogin from './components/login/Login.vue';
 import BaiduyunMain from './components/main/Main.vue';
 import { useAccessToken } from './hooks/accessToken';
+
+// localStorage.removeItem('baiduyun_access_token');
 
 const { accessToken, setAccessToken } = useAccessToken();
 </script>

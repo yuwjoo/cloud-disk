@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-11-13 17:10:37
  * @LastEditors: YH
- * @LastEditTime: 2024-11-26 15:48:16
+ * @LastEditTime: 2024-11-28 15:28:27
  * @Description: 
 -->
 <template>
@@ -12,8 +12,9 @@
     <div class="login-panel">
       <div class="login-panel__title">登录您的百度云</div>
       <ElForm
+        v-if="activePanel === 'form'"
         class="login-panel__form"
-        ref="form"
+        ref="formRef"
         :model="formData"
         label-position="top"
         :rules="rules"
@@ -29,7 +30,7 @@
         </ElFormItem>
         <ElFormItem prop="password" label="密码">
           <ElInput
-            ref="passwordInput"
+            ref="passwordInputRef"
             v-model="formData.password"
             type="password"
             show-password
@@ -48,14 +49,35 @@
           </ElButton>
         </ElFormItem>
       </ElForm>
+      <div v-else class="login-panel__qrcode">
+        <ElImage v-loading="qrcodeLoading" class="login-panel__qrcode-img" :src="qrcodeUrl" />
+        <div v-if="isExpire" class="login-panel__qrcode-mask">
+          二维码已过期
+          <ElButton
+            class="login-panel__qrcode-mask-reset"
+            type="primary"
+            size="small"
+            @click="initQrcode"
+          >
+            重新生成
+          </ElButton>
+        </div>
+      </div>
+
+      <div class="login-panel__footer">
+        <ElLink v-if="activePanel === 'form'" type="primary" @click="activePanel = 'qrcode'">
+          切换扫码登录
+        </ElLink>
+        <ElLink v-else type="primary" @click="activePanel = 'form'">切换普通登录</ElLink>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" name="BaiduyunLogin">
-import { useLoadingFetch } from '@/hooks/common';
-import { useUserStore } from '@/store/user';
 import { useForm } from './hooks/form';
+import { useQrcode } from './hooks/qrcode';
+import type { ActivePanel } from './types';
 
 export type EmitsType = {
   login: [token: string]; // 登录成功
@@ -63,19 +85,14 @@ export type EmitsType = {
 
 const emits = defineEmits<EmitsType>();
 
-const formRef = useTemplateRef('form');
-const passwordInputRef = useTemplateRef('passwordInput');
+const activePanel = ref<ActivePanel>('form'); // 当前登录面板
 
-const { formData, rules } = useForm();
+const { formRef, passwordInputRef, formData, rules, loginLoading, handleLogin } = useForm(
+  activePanel,
+  emits
+);
 
-const [loginLoading, handleLogin] = useLoadingFetch(async () => {
-  await formRef.value!.validate();
-  await useUserStore().login(formData.value);
-  emits(
-    'login',
-    '123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw'
-  );
-});
+const { qrcodeUrl, qrcodeLoading, isExpire, init: initQrcode } = useQrcode(activePanel, emits);
 </script>
 
 <style lang="scss" scoped>
@@ -101,6 +118,41 @@ const [loginLoading, handleLogin] = useLoadingFetch(async () => {
         width: 100%;
         margin-top: var(--spacing-small);
       }
+    }
+
+    .login-panel__qrcode {
+      position: relative;
+      text-align: center;
+
+      .login-panel__qrcode-img {
+        display: inline-block;
+        width: 350px;
+        height: 350px;
+      }
+
+      .login-panel__qrcode-mask {
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        margin: auto;
+        background-color: var(--overlay-color-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: var(--color-white);
+
+        .login-panel__qrcode-mask-reset {
+          margin-top: var(--spacing-small);
+        }
+      }
+    }
+
+    .login-panel__footer {
+      text-align: right;
     }
   }
 }

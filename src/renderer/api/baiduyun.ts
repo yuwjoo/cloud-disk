@@ -1,40 +1,92 @@
-import { useBaiduyunRequest } from '@/hooks/axios';
+import { useBaiduyunAuthRequest, useBaiduyunRequest } from '@/hooks/axios';
 import type {
   ApiCreateDirRequest,
   ApiCreateDirResponse,
   ApiDeleteFileRequest,
   ApiDeleteFileResponse,
+  ApiDeviceCodeAuthResponse,
+  ApiDeviceCodeToTokenRequest,
+  ApiDeviceCodeToTokenResponse,
   ApiGetDownloadUrlRequest,
   ApiGetDownloadUrlResponse,
   ApiGetListRequest,
   ApiGetListResponse,
+  ApiRefreshAccessTokenRequest,
+  ApiRefreshAccessTokenResponse,
   ApiRenameFileRequest,
   ApiRenameFileResponse,
   ApiSearchFileRequest,
   ApiSearchFileResponse
 } from '@/types/api/baiduyun';
 
-// access_token
-// 123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw
+const apps = [
+  {
+    AppKey: '5GFgMRfHOhIvI0B8AZB78nt676FeWA9n',
+    SecretKey: 'eq2eCNfbtOrGwdlA4vB1N1EaiwjBMu7i'
+  },
+  {
+    AppKey: 'EVaI5x0U6lEmP125G0Su55ROEXZtItdD',
+    SecretKey: 'VPgfmrt8UBM5kgkeUemwRVmr5AjhFuEV'
+  },
+  {
+    AppKey: 'IlLqBbU3GjQ0t46TRwFateTprHWl39zF',
+    SecretKey: ''
+  }
+]; // 百度云开发者平台应用列表
 
-// localStorage.setItem(
-//   'baiduyun_access_token',
-//   '123.e3c48c85fb93d655ab8d1afb31ea9eca.YaUuhqczd7yB2zSXUx_sWuqMvVB3AA1GPvpbU4Q.6iO5Xw'
-// );
+// 网页认证接口
+// https://openapi.baidu.com/oauth/2.0/authorize?client_id=IlLqBbU3GjQ0t46TRwFateTprHWl39zF&response_type=token&redirect_uri=oob&confirm_login=0&scope=basic,netdisk&qrcode=1
 
-// 认证接口
-// https://openapi.baidu.com/oauth/2.0/authorize?client_id=IlLqBbU3GjQ0t46TRwFateTprHWl39zF&response_type=token&redirect_uri=oob&confirm_login=0&scope=basic,netdisk
+/**
+ * @description: 请求设备码授权
+ */
+export function deviceCodeAuth(): Promise<ApiDeviceCodeAuthResponse> {
+  return useBaiduyunAuthRequest({
+    url: '/device/code',
+    method: 'get',
+    params: {
+      response_type: 'device_code',
+      client_id: apps[0].AppKey,
+      scope: 'basic,netdisk'
+    }
+  });
+}
 
-useBaiduyunRequest({
-  url: 'https://openapi.baidu.com/oauth/2.0/device/code?response_type=device_code&client_id=5GFgMRfHOhIvI0B8AZB78nt676FeWA9n&scope=basic,netdisk',
-  method: 'get',
-}).then((res) => {
-  console.log('成功', res);
-});
+/**
+ * @description: 通过设备码换取 Access Token
+ */
+export function deviceCodeToToken(
+  params: ApiDeviceCodeToTokenRequest
+): Promise<ApiDeviceCodeToTokenResponse> {
+  return useBaiduyunAuthRequest({
+    url: '/token',
+    method: 'get',
+    params: {
+      grant_type: 'device_token',
+      code: params.deviceCode,
+      client_id: apps[0].AppKey,
+      client_secret: apps[0].SecretKey
+    }
+  });
+}
 
-// # 开发者默认注册信息
-// CLIENT_ID = "5GFgMRfHOhIvI0B8AZB78nt676FeWA9n"
-// CLIENT_SECRET = "eq2eCNfbtOrGwdlA4vB1N1EaiwjBMu7i"
+/**
+ * @description: 刷新 Access Token
+ */
+export function refreshAccessToken(
+  params: ApiRefreshAccessTokenRequest
+): Promise<ApiRefreshAccessTokenResponse> {
+  return useBaiduyunAuthRequest({
+    url: '/token',
+    method: 'get',
+    params: {
+      grant_type: 'refresh_token',
+      refresh_token: params.refreshToken,
+      client_id: apps[0].AppKey,
+      client_secret: apps[0].SecretKey
+    }
+  });
+}
 
 /**
  * @description: 百度云-搜索文件

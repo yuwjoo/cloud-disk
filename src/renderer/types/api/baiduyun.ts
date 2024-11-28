@@ -1,5 +1,51 @@
 /**
- * @description: 搜索文件-响应数据
+ * @description: 设备码授权-响应数据
+ */
+export type ApiDeviceCodeAuthResponse = {
+  device_code: string; // 设备码
+  user_code: string; // 用户码
+  verification_url: string; // 用户输入 user code 进行授权的 url
+  qrcode_url: string; // 二维码url
+  expires_in: number; // device_code 的过期时间，单位：秒
+  interval: number; // device_code 换 Access Token 轮询间隔时间，单位：秒
+};
+
+/**
+ * @description: 通过设备码换取 Access Token-请求数据
+ */
+export type ApiDeviceCodeToTokenRequest = {
+  deviceCode: string; // 设备码
+};
+
+/**
+ * @description: 通过设备码换取 Access Token-响应数据
+ */
+export type ApiDeviceCodeToTokenResponse = {
+  expires_in: number; // Access Token的有效期，单位为秒
+  refresh_token: string; // 用于刷新 Access Token, 有效期为10年
+  access_token: string; // 获取到的Access Token，Access Token是调用网盘开放API访问用户授权资源的凭证
+  scope: string; // Access Token 最终的访问权限，即用户的实际授权列表
+};
+
+/**
+ * @description: 刷新 Access Token-请求数据
+ */
+export type ApiRefreshAccessTokenRequest = {
+  refreshToken: string; // Refresh Token
+};
+
+/**
+ * @description: 刷新 Access Token-响应数据
+ */
+export type ApiRefreshAccessTokenResponse = {
+  expires_in: number; // Access Token的有效期，单位为秒
+  refresh_token: string; // 用于刷新 Access Token, 有效期为10年
+  access_token: string; // 获取到的Access Token，Access Token是调用网盘开放API访问用户授权资源的凭证
+  scope: string; // Access Token 最终的访问权限，即用户的实际授权列表
+};
+
+/**
+ * @description: 搜索文件-请求数据
  */
 export type ApiSearchFileRequest = {
   key: string; // 模糊搜索值
@@ -51,7 +97,7 @@ export type ApiSearchFileResponse = {
 };
 
 /**
- * @description: 获取列表数据-响应数据
+ * @description: 获取列表数据-请求数据
  */
 export type ApiGetListRequest = {
   dir: string; // 目录路径

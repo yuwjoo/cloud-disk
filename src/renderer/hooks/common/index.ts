@@ -3,12 +3,12 @@
  * @param {() => Promise<any>} request 请求函数
  * @param {boolean} immediate 是否立即请求
  */
-export const useLoadingFetch = (request: () => Promise<any>, immediate?: boolean) => {
+export const useLoadingFetch = <T = any>(request: () => Promise<T>, immediate?: boolean) => {
   const loading = ref<boolean>(false);
-  const fetch = async () => {
+  const fetch = async (): Promise<T> => {
     loading.value = true;
     try {
-      await request();
+      return await request();
     } finally {
       loading.value = false;
     }
