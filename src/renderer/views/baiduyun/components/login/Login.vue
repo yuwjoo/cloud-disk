@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-11-13 17:10:37
  * @LastEditors: YH
- * @LastEditTime: 2024-11-28 15:28:27
+ * @LastEditTime: 2024-11-28 17:05:30
  * @Description: 
 -->
 <template>
@@ -49,6 +49,7 @@
           </ElButton>
         </ElFormItem>
       </ElForm>
+
       <div v-else class="login-panel__qrcode">
         <ElImage v-loading="qrcodeLoading" class="login-panel__qrcode-img" :src="qrcodeUrl" />
         <div v-if="isExpire" class="login-panel__qrcode-mask">
