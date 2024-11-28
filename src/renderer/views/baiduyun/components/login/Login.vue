@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-11-13 17:10:37
  * @LastEditors: YH
- * @LastEditTime: 2024-11-28 17:05:30
+ * @LastEditTime: 2024-11-28 20:52:57
  * @Description: 
 -->
 <template>
@@ -51,7 +51,7 @@
       </ElForm>
 
       <div v-else class="login-panel__qrcode">
-        <ElImage v-loading="qrcodeLoading" class="login-panel__qrcode-img" :src="qrcodeUrl" />
+        <ElImage v-loading="qrcodeLoading" class="login-panel__qrcode-img" :src="qrcodeUrl" @mousedown.prevent />
         <div v-if="isExpire" class="login-panel__qrcode-mask">
           二维码已过期
           <ElButton
@@ -127,14 +127,14 @@ const { qrcodeUrl, qrcodeLoading, isExpire, init: initQrcode } = useQrcode(activ
 
       .login-panel__qrcode-img {
         display: inline-block;
-        width: 350px;
-        height: 350px;
+        width: 320px;
+        height: 320px;
       }
 
       .login-panel__qrcode-mask {
         position: absolute;
-        width: 350px;
-        height: 350px;
+        width: 320px;
+        height: 320px;
         top: 0px;
         left: 0px;
         right: 0px;

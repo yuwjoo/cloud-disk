@@ -11,6 +11,8 @@ if (started) {
   app.quit();
 }
 
+app.commandLine.appendSwitch('disable-site-isolation-trials');
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
