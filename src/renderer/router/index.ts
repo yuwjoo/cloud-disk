@@ -35,14 +35,6 @@ const routes = [
         }
       },
       {
-        path: 'login',
-        name: 'login',
-        component: () => import('@/views/login/Login.vue'),
-        meta: {
-          title: '登录'
-        }
-      },
-      {
         path: 'share/:id',
         name: 'share',
         component: () => import('@/views/share/ShareView.vue'),
@@ -59,6 +51,14 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/Login.vue'),
+    meta: {
+      title: '登录'
+    }
   }
 ];
 
