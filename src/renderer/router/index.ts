@@ -5,6 +5,14 @@ const routes = [
     redirect: { name: 'privateyun' },
     children: [
       {
+        path: 'home',
+        name: 'home',
+        component: () => import('@/views/home/Home.vue'),
+        meta: {
+          title: '主页'
+        }
+      },
+      {
         path: 'privateyun',
         name: 'privateyun',
         component: () => import('@/views/privateyun/Privateyun.vue'),
@@ -24,6 +32,14 @@ const routes = [
           aside: true,
           fuzzyQuery: true,
           KeepAlive: true
+        }
+      },
+      {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/login/Login.vue'),
+        meta: {
+          title: '登录'
         }
       },
       {
@@ -51,14 +67,6 @@ const routes = [
         }
       }
     ]
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/login/Login.vue'),
-    meta: {
-      title: '登录'
-    }
   }
 ];
 

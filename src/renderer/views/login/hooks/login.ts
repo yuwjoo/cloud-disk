@@ -14,8 +14,8 @@ export function useLogin() {
     password: ''
   }); // 表单数据
   const formRules = reactive<FormRules<ApiLoginRequest>>({
-    account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+    account: [{ required: true, message: '请输入账号', trigger: 'change' }],
+    password: [{ required: true, message: '请输入密码', trigger: 'change' }]
   }); // 表单规则
 
   /**

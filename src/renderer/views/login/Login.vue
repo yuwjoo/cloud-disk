@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-04-30 17:29:06
  * @LastEditors: YH
- * @LastEditTime: 2024-12-26 17:32:50
+ * @LastEditTime: 2024-12-30 15:05:59
  * @Description: 
 -->
 <template>
@@ -52,7 +52,7 @@
               <label class="login-form__footer-link" for="login-checkbox">
                 <ElLink>注册新账号</ElLink>
               </label>
-              <ElLink class="login-form__footer-link">忘记密码?</ElLink>
+              <ElLink class="login-form__footer-link" @click="handlePush">忘记密码?</ElLink>
             </div>
           </div>
         </div>
@@ -68,13 +68,6 @@
               :model="registerFormData"
               :rules="registerFormRules"
             >
-              <ElFormItem prop="nickname">
-                <ElInput
-                  v-model="registerFormData.nickname"
-                  placeholder="请输入昵称"
-                  :prefix-icon="IEUser"
-                />
-              </ElFormItem>
               <ElFormItem prop="account">
                 <ElInput
                   v-model="registerFormData.account"
@@ -128,6 +121,7 @@ import IEUser from '~icons/ep/user';
 import IELock from '~icons/ep/lock';
 import { useLogin } from './hooks/login';
 import { useRegister } from './hooks/register';
+import { useRouter } from 'vue-router';
 
 const {
   loading: loginLoading,
@@ -143,13 +137,21 @@ const {
   formRules: registerFormRules,
   handleRegister
 } = useRegister();
+
+const router = useRouter();
+
+function handlePush() {
+  router.push({ name: 'home' });
+}
 </script>
 
 <style lang="scss" scoped>
 .login {
-  background-color: #1f2029;
-  height: 100vh;
+  height: 100%;
   color: #c4c3ca;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   #login-checkbox {
     display: none;
@@ -160,12 +162,6 @@ const {
   }
 
   .login-card {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    right: 0;
-    margin: auto;
-    transform: translateY(-50%);
     width: 440px;
     max-width: 100%;
     height: 400px;
@@ -222,30 +218,40 @@ const {
     }
 
     .login-form__form {
-      .el-input {
-        :deep(.el-input__prefix) {
-          color: var(--color-warning);
-          font-size: 24px;
+      .el-form-item {
+        &.is-error {
+          .el-input {
+            :deep(.el-input__wrapper) {
+              box-shadow: 0 0 0 1px var(--color-danger) inset;
+            }
+          }
         }
 
-        :deep(.el-input__wrapper) {
-          padding: 0 20px;
-          height: 48px;
-          box-sizing: border-box;
-          background-color: #1f2029;
-          transition: all 200ms linear;
-          box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+        .el-input {
+          :deep(.el-input__prefix) {
+            color: var(--color-warning);
+            font-size: 24px;
+          }
 
-          .el-input__inner {
-            color: #c4c3ca;
+          :deep(.el-input__wrapper) {
+            padding: 0 20px;
+            height: 48px;
+            box-sizing: border-box;
+            background-color: #1f2029;
+            transition: all 200ms linear;
+            box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
 
-            &::placeholder {
-              opacity: 0.7;
-              transition: all 200ms linear;
-            }
+            .el-input__inner {
+              color: #c4c3ca;
 
-            &:focus::placeholder {
-              opacity: 0;
+              &::placeholder {
+                opacity: 0.7;
+                transition: all 200ms linear;
+              }
+
+              &:focus::placeholder {
+                opacity: 0;
+              }
             }
           }
         }
