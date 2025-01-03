@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-07-15 13:42:19
  * @LastEditors: YH
- * @LastEditTime: 2024-11-09 20:42:17
+ * @LastEditTime: 2025-01-03 11:28:42
  * @Description: 
 -->
 <template>
@@ -36,7 +36,8 @@ import { useLayoutStore } from '@/store/layout';
 const layoutStore = useLayoutStore(); // 布局仓库
 const menuItems = [
   { label: '私有云', icon: IPrivateCloud, name: 'privateyun' },
-  { label: '百度云', icon: IBaiduyunLogo, name: 'baiduyun' }
+  { label: '百度云', icon: IBaiduyunLogo, name: 'baiduyun' },
+  { label: 'markdown', icon: IBaiduyunLogo, name: 'markdown' },
 ];
 </script>
 

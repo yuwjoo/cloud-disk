@@ -27,6 +27,14 @@ const routes = [
         }
       },
       {
+        path: 'markdown',
+        name: 'markdown',
+        component: () => import('@/views/markdown/Markdown.vue'),
+        meta: {
+          title: 'markdown'
+        }
+      },
+      {
         path: 'settings',
         name: 'settings',
         component: () => import('@/views/settings/Settings.vue'),
