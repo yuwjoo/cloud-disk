@@ -1,205 +1,52 @@
 <template>
   <div class="home">
-    <h1 class="title">Hover over the cards</h1>
-
-    <div class="container">
-      <card
-        bg="https://images.unsplash.com/photo-1479660656269-197ebb83b540?dpr=2&auto=compress,format&fit=crop&w=1199&h=798&q=80&cs=tinysrgb&crop="
+    <div class="home__card-wrap">
+      <TiltCard
+        class="home__card"
+        bg="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg"
       >
-        <template v-slot:header>
-          <h1>Canyons</h1>
+        <template v-slot:default>
+          <h1>SYY</h1>
         </template>
-        <template v-slot:content>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        </template>
-      </card>
-      <card
-        bg="https://images.unsplash.com/photo-1479659929431-4342107adfc1?dpr=2&auto=compress,format&fit=crop&w=1199&h=799&q=80&cs=tinysrgb&crop="
+      </TiltCard>
+      <TiltCard
+        class="home__card"
+        bg="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg"
       >
-        <template v-slot:header>
-          <h1>Beaches</h1>
+        <template v-slot:default>
+          <h1>BDY</h1>
         </template>
-        <template v-slot:content>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        </template>
-      </card>
-      <card
-        bg="https://images.unsplash.com/photo-1479644025832-60dabb8be2a1?dpr=2&auto=compress,format&fit=crop&w=1199&h=799&q=80&cs=tinysrgb&crop="
+      </TiltCard>
+      <TiltCard
+        class="home__card"
+        bg="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg"
       >
-        <template v-slot:header>
-          <h1>Trees</h1>
+        <template v-slot:default>
+          <h1>LZY</h1>
         </template>
-        <template v-slot:content>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        </template>
-      </card>
-      <card
-        bg="https://images.unsplash.com/photo-1479621051492-5a6f9bd9e51a?dpr=2&auto=compress,format&fit=crop&w=1199&h=811&q=80&cs=tinysrgb&crop="
-      >
-        <template v-slot:header>
-          <h1>Lakes</h1>
-        </template>
-        <template v-slot:content>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        </template>
-      </card>
+      </TiltCard>
     </div>
   </div>
 </template>
 
 <script setup lang="ts" name="HomeView">
-import Card from './components/card/Card.vue';
+import TiltCard from './components/tiltCard/TiltCard.vue';
 </script>
 
 <style lang="scss" scoped>
-body {
-  margin: 40px 0;
-  font-family: 'Raleway';
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #bcaaa4;
-  -webkit-font-smoothing: antialiased;
+.home {
+  height: 100%;
+
+  .home__card-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .home__card {
+    margin: 0 40px;
+  }
 }
-
-.title {
-  font-family: 'Raleway';
-  font-size: 24px;
-  font-weight: 700;
-  color: #5d4037;
-  text-align: center;
-}
-
-p {
-  line-height: 1.5em;
-}
-
-h1 + p,
-p + p {
-  margin-top: 10px;
-}
-
-.container {
-  padding: 40px 80px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-// $hoverEasing: cubic-bezier(0.23, 1, 0.32, 1);
-// $returnEasing: cubic-bezier(0.445, 0.05, 0.55, 0.95);
-
-// .card {
-//   transform: perspective(800px);
-//   transform-style: preserve-3d;
-//   cursor: pointer;
-
-//   &:hover {
-//     .card__content {
-//       transform: translateY(0);
-//     }
-//     .card__content p {
-//       opacity: 1;
-//     }
-//     .card__content,
-//     .card__content p {
-//       transition: 0.6s $hoverEasing;
-//     }
-//     .card__content:after {
-//       transition: 5s $hoverEasing;
-//       opacity: 1;
-//       transform: translateY(0);
-//     }
-//     .card__bg {
-//       transition:
-//         0.6s $hoverEasing,
-//         opacity 5s $hoverEasing;
-//       opacity: 0.8;
-//     }
-//     .card__inner {
-//       transition:
-//         0.6s $hoverEasing,
-//         box-shadow 2s $hoverEasing;
-//       box-shadow:
-//         rgba(white, 0.2) 0 0 40px 5px,
-//         rgba(white, 1) 0 0 0 1px,
-//         rgba(black, 0.66) 0 30px 60px 0,
-//         inset #333 0 0 0 5px,
-//         inset white 0 0 0 6px;
-//     }
-//   }
-// }
-
-// .card__inner {
-//   position: relative;
-//   flex: 0 0 240px;
-//   width: 240px;
-//   height: 320px;
-//   background-color: #333;
-//   overflow: hidden;
-//   border-radius: 10px;
-//   box-shadow:
-//     rgba(black, 0.66) 0 30px 60px 0,
-//     inset #333 0 0 0 5px,
-//     inset rgba(white, 0.5) 0 0 0 6px;
-//   transition: 1s $returnEasing;
-// }
-
-// .card__bg {
-//   opacity: 0.5;
-//   position: absolute;
-//   top: -20px;
-//   left: -20px;
-//   width: 100%;
-//   height: 100%;
-//   padding: 20px;
-//   background-repeat: no-repeat;
-//   background-position: center;
-//   background-size: cover;
-//   transition:
-//     1s $returnEasing,
-//     opacity 5s 1s $returnEasing;
-//   pointer-events: none;
-// }
-
-// .card__content {
-//   padding: 20px;
-//   position: absolute;
-//   bottom: 0;
-//   color: #fff;
-//   transform: translateY(45%);
-//   transition: 0.6s 1.6s cubic-bezier(0.215, 0.61, 0.355, 1);
-
-//   p {
-//     opacity: 0;
-//     text-shadow: rgba(black, 1) 0 2px 3px;
-//     transition: 0.6s 1.6s cubic-bezier(0.215, 0.61, 0.355, 1);
-//   }
-
-//   * {
-//     position: relative;
-//     z-index: 1;
-//   }
-
-//   &:after {
-//     content: '';
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     z-index: 0;
-//     width: 100%;
-//     height: 100%;
-//     background-image: linear-gradient(to bottom, transparent 0%, rgba(#000, 0.6) 100%);
-//     background-blend-mode: overlay;
-//     opacity: 0;
-//     transform: translateY(100%);
-//     transition: 5s 1s $returnEasing;
-//   }
-// }
-
-// .card__content h1 {
-//   font-family: 'Playfair Display';
-//   font-size: 36px;
-//   font-weight: 700;
-//   text-shadow: rgba(black, 0.5) 0 10px 10px;
-// }
 </style>
