@@ -1,37 +1,36 @@
 <template>
-  <div class="markdown-body" id="editor"></div>
-  <!-- <un-i-zero-md src="http://localhost:3000/static/fixedBottomButton.md"></un-i-zero-md> -->
+  <el-page-header class="page-header" :icon="ArrowLeft">
+    <template #title>上一页</template>
+    <template #content>
+      <span> Markdown编辑器 </span>
+    </template>
+  </el-page-header>
+  <MdEditor id="md-editor" v-model="text" @onSave="onSave" />
 </template>
 
 <script setup lang="ts" name="MarkdownView">
-import '@/assets/styles/github-markdown.css';
-import '@/assets/styles/github.css';
-import axios from 'axios';
-import { Marked } from 'marked';
-import { markedHighlight } from 'marked-highlight';
-import hljs from 'highlight.js';
+import { ArrowLeft } from '@element-plus/icons-vue';
+import { MdEditor } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
-onMounted(async () => {
-  const marked = new Marked(
-    markedHighlight({
-      emptyLangClass: 'hljs',
-      langPrefix: 'hljs language-',
-      highlight(code, lang) {
-        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-        return hljs.highlight(code, { language }).value;
-      }
-    })
-  );
+const text = ref('# Hello Editor');
 
-  const container = document.querySelector('#editor') as HTMLElement;
-  const res = await axios({
-    url: 'http://localhost:3000/static/fixedBottomButton.md',
-    method: 'get'
+const onSave = (v, h) => {
+  console.log(v);
+
+  h.then((html) => {
+    console.log(html);
   });
-  container.innerHTML = await marked.parse(res.data);
-});
-
-// import ZeroMd from 'zero-md';
-
-// customElements.define('un-i-zero-md', ZeroMd);
+};
 </script>
+
+<style lang="scss" scoped>
+.page-header {
+  margin-bottom: var(--spacing-medium);
+}
+
+#md-editor {
+  flex-grow: 1;
+  width: 100%;
+}
+</style>

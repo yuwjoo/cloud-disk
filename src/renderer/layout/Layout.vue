@@ -4,13 +4,13 @@
  * @Author: YH
  * @Date: 2024-07-15 13:40:29
  * @LastEditors: YH
- * @LastEditTime: 2024-11-08 17:30:40
+ * @LastEditTime: 2025-01-07 17:50:00
  * @Description: 
 -->
 <template>
   <div class="layout">
-    <LayoutDesktopHeader v-if="isDesktop" />
-    <LayoutHeader />
+    <!-- <LayoutDesktopHeader v-if="isDesktop" /> -->
+    <!-- <LayoutHeader /> -->
     <div class="layout__content">
       <LayoutAside v-if="$route.meta.aside" class="layout__aside" />
       <main class="layout__main">
@@ -42,7 +42,7 @@ const userStore = useUserStore(); // 用户仓库
 .layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
 
   .layout__content {
     display: flex;
@@ -58,6 +58,9 @@ const userStore = useUserStore(); // 用户仓库
       box-sizing: border-box;
       padding: var(--spacing-medium);
       background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
     }
   }
 }

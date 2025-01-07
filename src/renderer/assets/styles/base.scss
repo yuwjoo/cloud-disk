@@ -1,5 +1,16 @@
+.cet-titlebar {
+  .cet-title,
+  .cet-icon {
+    display: none;
+  }
+}
+
 body {
   font-size: var(--text-size-base);
   color: var(--text-color-primary);
   line-height: var(--text-line-height-none);
+}
+
+#app {
+  height: 100%;
 }
