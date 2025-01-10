@@ -1,9 +1,8 @@
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import started from 'electron-squirrel-startup';
 import { send } from './utils/ipcMain';
 import.meta.glob('./ipc/*.ts', { eager: true }); // 导入所有ipc模块
-import { setupTitlebar, attachTitlebarToWindow } from 'custom-electron-titlebar/main';
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'; // 屏蔽安全策略警告
 
@@ -14,18 +13,16 @@ if (started) {
 
 app.commandLine.appendSwitch('disable-site-isolation-trials');
 
-setupTitlebar(); // 设置标题栏主进程
-
-Menu.setApplicationMenu(null);
-
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 900,
-    // frame: false,
     titleBarStyle: 'hidden', // 隐藏原生标题栏
-    titleBarOverlay: true, // 可以选择启用Windows原生控件样式
+    titleBarOverlay: {
+      color: 'rgb(250,250,250)',
+      height: 35
+    }, // Windows原生控件样式
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false // 允许跨域
@@ -55,9 +52,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   if (process.env.NODE_ENV === 'development') mainWindow.webContents.openDevTools();
-
-  // 添加标题栏事件监听等操作
-  attachTitlebarToWindow(mainWindow);
+  mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

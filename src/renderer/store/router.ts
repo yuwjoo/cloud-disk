@@ -6,7 +6,7 @@ import { defineStore } from 'pinia';
 export const useRouterStore = defineStore('router', setup);
 
 function setup() {
-  const whiteList = ref<string[]>(['login', 'notFound']); // 路由白名单
+  const whiteList = ref<string[]>(['login', 'notFound', 'desktopWindow']); // 路由白名单
 
   return {
     whiteList: readonly(whiteList)

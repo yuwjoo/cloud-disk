@@ -1,4 +1,5 @@
 <template>
+  <a href="https://juejin.cn/" target="_blank">跳转</a>
   <el-page-header class="page-header" :icon="ArrowLeft">
     <template #title>上一页</template>
     <template #content>

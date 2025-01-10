@@ -1,5 +1,13 @@
 const routes = [
   {
+    path: '/desktopWindow',
+    name: 'desktopWindow',
+    component: () => import('@/views/desktopWindow/DesktopWindow.vue'),
+    meta: {
+      title: 'DesktopWindow'
+    }
+  },
+  {
     path: '/',
     component: () => import('@/layout/Layout.vue'),
     redirect: { name: 'privateyun' },
