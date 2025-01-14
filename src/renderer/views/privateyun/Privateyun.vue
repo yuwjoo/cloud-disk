@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2024-11-27 15:24:31
  * @LastEditors: YH
- * @LastEditTime: 2024-11-27 15:25:10
+ * @LastEditTime: 2025-01-14 09:48:18
  * @Description: 
 -->
 <template>
@@ -45,6 +45,9 @@
 import { useList } from './hooks/list';
 import { useSearch } from './hooks/search';
 import { useHeader } from './hooks/header';
+import { useElectronApi } from '@/hooks/electron';
+
+console.log('Privateyun.vue', window, window.electronApi);
 
 const { search } = useSearch();
 

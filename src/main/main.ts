@@ -1,64 +1,19 @@
 import { app, BrowserWindow } from 'electron';
-import path from 'path';
 import started from 'electron-squirrel-startup';
-import { send } from './utils/ipcMain';
+import { createWindow } from './utils/window';
 import.meta.glob('./ipc/*.ts', { eager: true }); // 导入所有ipc模块
-
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'; // 屏蔽安全策略警告
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
 
-app.commandLine.appendSwitch('disable-site-isolation-trials');
-
-const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
-    titleBarStyle: 'hidden', // 隐藏原生标题栏
-    titleBarOverlay: {
-      color: 'rgb(250,250,250)',
-      height: 35
-    }, // Windows原生控件样式
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      webSecurity: false // 允许跨域
-    }
-  });
-
-  mainWindow.on('maximize', () => {
-    send(mainWindow.webContents, 'window-change-maximize', true);
-  });
-  mainWindow.on('unmaximize', () => {
-    send(mainWindow.webContents, 'window-change-maximize', false);
-  });
-
-  mainWindow.on('enter-full-screen', () => {
-    send(mainWindow.webContents, 'window-change-full-screen', true);
-  });
-  mainWindow.on('leave-full-screen', () => {
-    send(mainWindow.webContents, 'window-change-full-screen', false);
-  });
-
-  // and load the index.html of the app.
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
-  } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
-  }
-
-  // Open the DevTools.
-  if (process.env.NODE_ENV === 'development') mainWindow.webContents.openDevTools();
-  mainWindow.webContents.openDevTools();
-};
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
