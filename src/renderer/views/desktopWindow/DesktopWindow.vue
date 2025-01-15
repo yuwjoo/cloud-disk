@@ -4,7 +4,7 @@
  * @Author: YH
  * @Date: 2025-01-08 10:03:29
  * @LastEditors: YH
- * @LastEditTime: 2025-01-14 15:15:51
+ * @LastEditTime: 2025-01-15 16:04:34
  * @Description: 
 -->
 <template>
@@ -16,6 +16,8 @@
 import { useRoute } from 'vue-router';
 
 const webUrl = useRoute().query.url as string; // web页面地址
+
+console.log({ webUrl }, useRoute());
 
 /**
  * @description: 处理iframe加载

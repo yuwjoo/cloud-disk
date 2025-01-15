@@ -1,6 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import started from 'electron-squirrel-startup';
 import { createWindow } from './utils/window';
+import { isDevelopment } from '@/utils/env';
+import path from 'path';
 import.meta.glob('./ipc/*.ts', { eager: true }); // 导入所有ipc模块
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -12,7 +14,9 @@ if (started) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  createWindow();
+  createWindow(
+    isDevelopment ? '/' : path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+  );
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -28,7 +32,9 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createWindow(
+      isDevelopment ? '/' : path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+    );
   }
 });
 

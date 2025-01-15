@@ -10,7 +10,7 @@ import { isDevelopment } from '@/utils/env';
  * @returns {BrowserWindow} 窗口对象
  */
 export function createWindow(
-  url: string = '/',
+  url: string,
   options?: Electron.BrowserWindowConstructorOptions
 ): BrowserWindow {
   const window = new BrowserWindow({
@@ -22,9 +22,9 @@ export function createWindow(
       height: 35
     }, // 原生标题栏控制器样式
     webPreferences: {
-      preload: path.join(__dirname, '../preload.js'),
-      webSecurity: false, // 允许跨域
-      devTools: isDevelopment
+      preload: path.join(__dirname, './preload.js'),
+      webSecurity: true // 安全网络 (禁止跨域)
+      // devTools: isDevelopment
     },
     ...options
   });
@@ -52,15 +52,20 @@ export function createWindow(
   }); // 打开新窗口处理逻辑
 
   if (isDevelopment) {
-    window.loadURL(
-      MAIN_WINDOW_VITE_DEV_SERVER_URL + `/#/desktopWindow?url=${encodeURIComponent(url)}`
-    );
+    window.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`), {
+      hash: 'desktopWindow',
+      query: { url: '/' }
+    });
+    // window.loadURL(
+    //   `${MAIN_WINDOW_VITE_DEV_SERVER_URL}/#/desktopWindow?url=${encodeURIComponent(url)}`
+    // );
     window.webContents.openDevTools(); // 打开开发者工具
   } else {
-    window.loadFile(path.join(__dirname, `../../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`), {
+    window.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`), {
       hash: 'desktopWindow',
-      query: { url: encodeURIComponent(url) }
+      query: { url }
     });
+    window.webContents.openDevTools(); // 打开开发者工具
   }
 
   return window;
