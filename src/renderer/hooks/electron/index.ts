@@ -1,13 +1,15 @@
 import type { ElectronApi } from 'common/types/electronApi';
 
-export const isDesktop = window.electronApi?.desktop ?? false; // 是否桌面端
+const electronApi = window.electronApi || window.top?.electronApi;
+
+export const isDesktop = electronApi?.desktop ?? false; // 是否桌面端
 
 /**
  * @description: 使用electron api
  */
 export const useElectronApi = (): ElectronApi => {
-  if (!window.electronApi) throw 'not electron env';
-  return window.electronApi;
+  if (!electronApi) throw 'not electron env';
+  return electronApi;
 };
 
 /**

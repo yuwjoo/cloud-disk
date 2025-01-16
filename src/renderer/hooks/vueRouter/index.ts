@@ -1,13 +1,13 @@
 import routes from '@/router';
 import {
   createRouter,
-  createWebHashHistory,
+  createWebHistory,
   type RouteLocationNormalizedLoaded,
   type Router
 } from 'vue-router';
 import { beforeEach } from './interceptor';
 
-const router = createRouter({ history: createWebHashHistory(import.meta.env.BASE_URL), routes });
+const router = createRouter({ history: createWebHistory(import.meta.env.BASE_URL), routes });
 
 /**
  * @description: 使用router实例
