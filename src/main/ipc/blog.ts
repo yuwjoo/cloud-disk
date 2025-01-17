@@ -14,8 +14,7 @@ handle('blog-list', () => {
 handle('blog-add', (event, data) => {
   return new Promise((resolve) => {
     db.insert({ ...data, id: uuidV4() }, (err, newDoc) => {
-      console.log(err, newDoc);
-      resolve();
+      resolve(newDoc);
       broadcast(event.sender, 'blog-broadcast', [{ operate: 'add', data: newDoc }]);
     });
   });
@@ -23,8 +22,7 @@ handle('blog-add', (event, data) => {
 
 handle('blog-update', (event, data) => {
   return new Promise((resolve) => {
-    db.update({ id: data.id }, { $set: data }, {}, (err, numReplaced) => {
-      console.log(err, numReplaced);
+    db.update({ id: data.id }, { $set: data }, {}, () => {
       resolve();
       broadcast(event.sender, 'blog-broadcast', [{ operate: 'update', data }]);
     });
@@ -33,8 +31,7 @@ handle('blog-update', (event, data) => {
 
 handle('blog-delete', (event, data) => {
   return new Promise((resolve) => {
-    db.remove({ id: data.id }, {}, (err, numRemoved) => {
-      console.log(err, numRemoved);
+    db.remove({ id: data.id }, {}, () => {
       resolve();
       broadcast(event.sender, 'blog-broadcast', [{ operate: 'delete', data }]);
     });

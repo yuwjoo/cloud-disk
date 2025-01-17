@@ -12,7 +12,7 @@
         <div class="home__card-describe">{{ item.describe }}</div>
         <div class="home__card-footer">
           <ElText type="primary">编辑文档</ElText>
-          <ElText type="danger">删除文档</ElText>
+          <ElText type="danger" @click="handleDelete(item.id)">删除文档</ElText>
         </div>
       </ElCard>
     </div>
@@ -39,10 +39,19 @@ const handleAdd = () => {
   window.open('/markdown', '_blank');
 };
 
+const handleDelete = async (id: string) => {
+  try {
+    await electronApi.blog.delete({ id });
+    setList();
+    ElMessage.success('删除成功');
+  } catch {
+    ElMessage.error('删除失败');
+  }
+};
+
 setList();
 
 useAddListener('blog-broadcast', (_, data) => {
-  console.log('blog-broadcast', data);
   data.forEach(({ operate, data }) => {
     if (operate === 'add') {
       list.value.push(data);

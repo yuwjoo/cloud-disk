@@ -47,7 +47,7 @@ const handleEditTitle = () => {
 const onSave = (v, h) => {
   electronApi.blog.add({
     title: title.value,
-    describe: text.value,
+    describe: text.value.slice(0, 100),
     filePath: 'test.md'
   });
   // console.log(v);

@@ -26,7 +26,7 @@ export interface IpcChannelMap {
   'window-is-maximize': IpcC<[], boolean>; // 窗口-是否最大化
   'window-is-full-screen': IpcC<[], boolean>; // 窗口-是否全屏
   'blog-list': IpcC<[], BlogData[]>; // 博客-获取列表
-  'blog-add': IpcC<[Omit<BlogData, 'id'>]>; // 博客-新增
+  'blog-add': IpcC<[Omit<BlogData, 'id'>], BlogData>; // 博客-新增
   'blog-update': IpcC<[BlogData]>; // 博客-更新
   'blog-delete': IpcC<[Pick<BlogData, 'id'>]>; // 博客-删除
 }
