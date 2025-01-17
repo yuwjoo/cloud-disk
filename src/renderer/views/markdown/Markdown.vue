@@ -26,10 +26,12 @@
 </template>
 
 <script setup lang="ts" name="MarkdownView">
+import { useElectronApi } from '@/hooks/electron';
 import { Edit } from '@element-plus/icons-vue';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 
+const electronApi = useElectronApi();
 const titleInputRef = useTemplateRef('titleInputRef');
 const title = ref('');
 const isEditTitle = ref(false);
@@ -43,11 +45,16 @@ const handleEditTitle = () => {
 };
 
 const onSave = (v, h) => {
-  console.log(v);
-
-  h.then((html) => {
-    console.log(html);
+  electronApi.blog.add({
+    title: title.value,
+    describe: text.value,
+    filePath: 'test.md'
   });
+  // console.log(v);
+
+  // h.then((html) => {
+  //   console.log(html);
+  // });
 };
 </script>
 

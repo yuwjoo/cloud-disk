@@ -11,6 +11,7 @@ export interface ElectronApi {
   removeListener: RemoveListener; // 移除事件
   removeAllListener: RemoveAllListener; // 移除所有事件
   window: WindowApi; // 窗口api
+  blog: BlogApi; // 博客api
 }
 
 /**
@@ -67,4 +68,14 @@ export interface WindowApi {
   toggleFullScreen: IpcSendFun<'window-toggle-full-screen'>; // 切换全屏状态
   isMaximize: IpcSendFun<'window-is-maximize'>; // 是否最大化
   isFullScreen: IpcSendFun<'window-is-full-screen'>; // 是否全屏
+}
+
+/**
+ * @description: 博客api
+ */
+export interface BlogApi {
+  list: IpcInvokeFun<'blog-list'>; // 博客-获取列表
+  add: IpcInvokeFun<'blog-add'>; // 博客-新增
+  update: IpcInvokeFun<'blog-update'>; // 博客-更新
+  delete: IpcInvokeFun<'blog-delete'>; // 博客-删除
 }

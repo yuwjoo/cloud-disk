@@ -1,15 +1,15 @@
 import { app, BrowserWindow } from 'electron';
-import { BaseBrowserWindow } from './BaseBrowserWindow';
+import { BrowserWindowManager } from './BrowserWindowManager';
 
-export let mainWindow: BrowserWindow; // 主窗口
+export let browserWindowManager: BrowserWindowManager; // 窗口管理器
 
 app.on('ready', () => {
-  mainWindow = new BaseBrowserWindow('/');
+  browserWindowManager = new BrowserWindowManager('/');
 });
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    mainWindow = new BaseBrowserWindow('/');
+    browserWindowManager = new BrowserWindowManager('/');
   }
 });
 

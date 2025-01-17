@@ -10,8 +10,17 @@ const routes = [
   {
     path: '/',
     component: () => import('@/layout/Layout.vue'),
-    redirect: { name: 'privateyun' },
+    redirect: { name: 'home' },
     children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: () => import('@/views/home/Home.vue'),
+        meta: {
+          title: '主页',
+          KeepAlive: true
+        }
+      },
       {
         path: 'privateyun',
         name: 'privateyun',
