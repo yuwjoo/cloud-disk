@@ -28,7 +28,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="文件">
-        <el-button type="primary">编辑文档</el-button>
+        <el-button type="primary" @click="handleEditDoc">编辑文档</el-button>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -49,7 +49,7 @@ const newDocument = ref<BlogData>({
   id: '',
   title: '',
   describe: '',
-  filePath: ''
+  filePath: `./temp/${Date.now()}.md`
 });
 
 // 添加表单校验规则
@@ -63,7 +63,7 @@ const formRef = useTemplateRef('formRef');
  * @description: 显示对话框
  */
 const show = (data?: BlogData) => {
-  newDocument.value = data || { id: '', title: '', describe: '', filePath: '' };
+  newDocument.value = data || { id: '', title: '', describe: '', filePath: `./temp/${Date.now()}.md` };
   dialogVisible.value = true;
 };
 
@@ -85,6 +85,10 @@ const submitForm = () => {
       closeDialog();
     }
   });
+};
+
+const handleEditDoc = () => {
+  window.open('/markdown?filePath=' + newDocument.value.filePath);
 };
 
 defineExpose({

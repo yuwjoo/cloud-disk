@@ -75,15 +75,15 @@ const setList = async () => {
  * @description: 查看文档
  * @param {object} doc 文档对象
  */
-const viewDocument = (doc) => {
-  window.open('/markdown?id=' + doc.id);
+const viewDocument = (doc: BlogData) => {
+  window.open('/markdown?filePath=' + doc.filePath + '&preview=true');
 };
 
 /**
  * @description: 编辑文档
  * @param {object} doc 文档对象
  */
-const editDocument = (doc) => {
+const editDocument = (doc: BlogData) => {
   addDocumentDialogRef.value?.show(doc);
 };
 
@@ -96,12 +96,11 @@ const deleteDocument = (doc: BlogData) => {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  })
-    .then(async () => {
-      await electronApi.blog.delete(doc);
-      ElMessage.success('删除成功');
-    })
-    .catch(() => {});
+  }).then(async () => {
+    await electronApi.blog.delete(toRaw(doc));
+    ElMessage.success('删除成功');
+    setList();
+  });
 };
 
 /**
@@ -116,8 +115,9 @@ const showAddDialog = () => {
  * @param {object} newDoc 新增文档对象
  */
 const handleAddDocument = async (newDoc: BlogData) => {
-  await electronApi.blog.add(newDoc);
+  await electronApi.blog.add(toRaw(newDoc));
   ElMessage.success('新增成功');
+  setList();
 };
 
 /**
@@ -142,8 +142,9 @@ const batchDelete = () => {
     type: 'warning'
   })
     .then(async () => {
-      await Promise.all(selectedDocs.map((doc: BlogData) => electronApi.blog.delete(doc)));
+      await Promise.all(selectedDocs.map((doc: BlogData) => electronApi.blog.delete(toRaw(doc))));
       ElMessage.success('批量删除成功');
+      setList();
     })
     .catch(() => {});
 };

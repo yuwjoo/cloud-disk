@@ -46,10 +46,14 @@ export class BrowserWindowManager {
     });
 
     if (IS_DEVELOPMENT) {
-      this.mainWindow.loadURL(`${MAIN_WINDOW_VITE_DEV_SERVER_URL}/desktopWindow?target=${target}`);
+      this.mainWindow.loadURL(
+        `${MAIN_WINDOW_VITE_DEV_SERVER_URL}/desktopWindow?target=${encodeURIComponent(target)}`
+      );
       this.mainWindow.webContents.openDevTools(); // 打开开发者工具
     } else {
-      this.mainWindow.loadURL(`renderer://${MAIN_WINDOW_VITE_NAME}/desktopWindow?target=${target}`);
+      this.mainWindow.loadURL(
+        `renderer://${MAIN_WINDOW_VITE_NAME}/desktopWindow?target=${encodeURIComponent(target)}`
+      );
     }
   }
 }

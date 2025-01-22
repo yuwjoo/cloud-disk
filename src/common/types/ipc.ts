@@ -29,4 +29,8 @@ export interface IpcChannelMap {
   'blog-add': IpcC<[Omit<BlogData, 'id'>], BlogData>; // 博客-新增
   'blog-update': IpcC<[BlogData]>; // 博客-更新
   'blog-delete': IpcC<[Pick<BlogData, 'id'>]>; // 博客-删除
+  'read-file': IpcC<[filePath: string], string>; // 读取文件
+  'write-file': IpcC<[filePath: string, content: string]>; // 写入文件
+  'delete-file': IpcC<[filePath: string]>; // 删除文件
+  'move-file': IpcC<[filePath: string, newFilePath: string]>; // 移动文件
 }

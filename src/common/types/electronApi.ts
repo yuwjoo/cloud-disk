@@ -12,6 +12,7 @@ export interface ElectronApi {
   removeAllListener: RemoveAllListener; // 移除所有事件
   window: WindowApi; // 窗口api
   blog: BlogApi; // 博客api
+  file: FileApi; // 文件api
 }
 
 /**
@@ -78,4 +79,14 @@ export interface BlogApi {
   add: IpcInvokeFun<'blog-add'>; // 博客-新增
   update: IpcInvokeFun<'blog-update'>; // 博客-更新
   delete: IpcInvokeFun<'blog-delete'>; // 博客-删除
+}
+
+/**
+ * @description: 文件api
+ */
+export interface FileApi {
+  readFile: IpcInvokeFun<'read-file'>; // 读取文件
+  writeFile: IpcInvokeFun<'write-file'>; // 写入文件
+  deleteFile: IpcInvokeFun<'delete-file'>; // 删除文件
+  moveFile: IpcInvokeFun<'move-file'>; // 移动文件
 }
