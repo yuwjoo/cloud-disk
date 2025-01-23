@@ -43,7 +43,7 @@ export default defineConfig({
         ElementPlusResolver(),
         IconsResolver({
           prefix: 'i',
-          enabledCollections: ['ep'],
+          enabledCollections: ['ep', 'tabler'],
           customCollections: ['icons']
         })
       ],

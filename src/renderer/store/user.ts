@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', setup);
 
 function setup() {
   const user = ref<UserInfo | null>(JSON.parse(localStorage.getItem('user') || 'null')); // 用户信息
-  const token = ref<string>(localStorage.getItem('token') || ''); // token
+  const token = ref<string>(localStorage.getItem('token') || '111111'); // token
   const isLogin = computed<boolean>(() => !!token.value); // 是否已经登录
 
   /**
