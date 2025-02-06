@@ -1,0 +1,10 @@
+body {
+  font-size: var(--text-size-base);
+  color: var(--text-color-primary);
+  line-height: var(--text-line-height-none);
+  height: 100vh;
+}
+
+#app {
+  height: 100%;
+}

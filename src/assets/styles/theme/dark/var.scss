@@ -1,0 +1,224 @@
+@use 'sass:map';
+@use '@/assets/styles/utils.scss' as *;
+
+// 主题名称
+$theme-name: 'dark';
+
+// 基本颜色
+$color: (
+  'white': (
+    'default': #ffffff
+  ),
+  'black': (
+    'default': #000000
+  ),
+  'primary': (
+    'default': #4f46e5,
+    'rgb': getColorRGB(#4f46e5),
+    'light': (
+      '3': getColorMix(#141414, #4f46e5, 3),
+      '5': getColorMix(#141414, #4f46e5, 5),
+      '7': getColorMix(#141414, #4f46e5, 7),
+      '8': getColorMix(#141414, #4f46e5, 8),
+      '9': getColorMix(#141414, #4f46e5, 9)
+    ),
+    'dark': (
+      '2': getColorMix(#ffffff, #4f46e5, 2)
+    )
+  ),
+  'success': (
+    'default': #16a34a,
+    'rgb': getColorRGB(#16a34a),
+    'light': (
+      '3': getColorMix(#141414, #16a34a, 3),
+      '5': getColorMix(#141414, #16a34a, 5),
+      '7': getColorMix(#141414, #16a34a, 7),
+      '8': getColorMix(#141414, #16a34a, 8),
+      '9': getColorMix(#141414, #16a34a, 9)
+    ),
+    'dark': (
+      '2': getColorMix(#ffffff, #16a34a, 2)
+    )
+  ),
+  'warning': (
+    'default': #ea580c,
+    'rgb': getColorRGB(#ea580c),
+    'light': (
+      '3': getColorMix(#141414, #ea580c, 3),
+      '5': getColorMix(#141414, #ea580c, 5),
+      '7': getColorMix(#141414, #ea580c, 7),
+      '8': getColorMix(#141414, #ea580c, 8),
+      '9': getColorMix(#141414, #ea580c, 9)
+    ),
+    'dark': (
+      '2': getColorMix(#ffffff, #ea580c, 2)
+    )
+  ),
+  'danger': (
+    'default': #dc2626,
+    'rgb': getColorRGB(#dc2626),
+    'light': (
+      '3': getColorMix(#141414, #dc2626, 3),
+      '5': getColorMix(#141414, #dc2626, 5),
+      '7': getColorMix(#141414, #dc2626, 7),
+      '8': getColorMix(#141414, #dc2626, 8),
+      '9': getColorMix(#141414, #dc2626, 9)
+    ),
+    'dark': (
+      '2': getColorMix(#ffffff, #dc2626, 2)
+    )
+  ),
+  'error': (
+    'default': #dc2626,
+    'rgb': getColorRGB(#dc2626),
+    'light': (
+      '3': getColorMix(#141414, #dc2626, 3),
+      '5': getColorMix(#141414, #dc2626, 5),
+      '7': getColorMix(#141414, #dc2626, 7),
+      '8': getColorMix(#141414, #dc2626, 8),
+      '9': getColorMix(#141414, #dc2626, 9)
+    ),
+    'dark': (
+      '2': getColorMix(#ffffff, #dc2626, 2)
+    )
+  ),
+  'info': (
+    'default': #909399,
+    'rgb': getColorRGB(#909399),
+    'light': (
+      '3': getColorMix(#141414, #909399, 3),
+      '5': getColorMix(#141414, #909399, 5),
+      '7': getColorMix(#141414, #909399, 7),
+      '8': getColorMix(#141414, #909399, 8),
+      '9': getColorMix(#141414, #909399, 9)
+    ),
+    'dark': (
+      '2': getColorMix(#ffffff, #909399, 2)
+    )
+  )
+);
+
+// 文字
+$text: (
+  'font': (
+    'default':
+      "'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif"
+  ),
+  'color': (
+    'primary': rgba(#f0f5ff, 0.95),
+    'regular': rgba(#f0f5ff, 0.85),
+    'secondary': rgba(#f0f5ff, 0.65),
+    'placeholder': rgba(#f0f5ff, 0.55),
+    'disabled': rgba(#f0f5ff, 0.4)
+  ),
+  'size': (
+    'extra-large': 20px,
+    'large': 18px,
+    'medium': 16px,
+    'base': 14px,
+    'small': 13px,
+    'extra-small': 12px
+  ),
+  'line-height': (
+    'extra-large': 2,
+    'large': 1.75,
+    'base': 1.5,
+    'small': 1.2,
+    'none': 1
+  )
+);
+
+// 边框
+$border: (
+  'color': (
+    'darker': rgba(#f5f8ff, 0.35),
+    'dark': rgba(#f5f8ff, 0.3),
+    'default': rgba(#f5f8ff, 0.25),
+    'light': rgba(#f5f8ff, 0.2),
+    'lighter': rgba(#f5f8ff, 0.15),
+    'extra-light': rgba(#f5f8ff, 0.1),
+    'hover': map.get($text, 'color', 'disabled')
+  ),
+  'radius': (
+    'base': 4px,
+    'small': 2px,
+    'round': 20px,
+    'circle': 100%
+  ),
+  'width': 1px,
+  'style': solid
+);
+
+// 阴影
+$box-shadow: (
+  'default': (
+    0px 12px 32px 4px rgba(0, 0, 0, 0.36),
+    0px 8px 20px rgba(0, 0, 0, 0.72)
+  ),
+  'light': (
+    0px 0px 12px rgba(0, 0, 0, 0.72)
+  ),
+  'lighter': (
+    0px 0px 6px rgba(0, 0, 0, 0.72)
+  ),
+  'dark': (
+    0px 16px 48px 16px rgba(0, 0, 0, 0.72),
+    0px 12px 32px #000000,
+    0px 8px 16px -8px #000000
+  )
+);
+
+// 背景颜色
+$bg-color: (
+  'default': #141414,
+  'header': #181818,
+  'nav': #181818,
+  'page': #0a0a0a,
+  'overlay': #1d1e1f
+);
+
+// 覆盖颜色
+$overlay-color: (
+  'default': rgba(0, 0, 0, 0.8),
+  'light': rgba(0, 0, 0, 0.7),
+  'lighter': rgba(0, 0, 0, 0.5)
+);
+
+// 遮罩颜色
+$mask-color: (
+  'default': rgba(0, 0, 0, 0.8),
+  'extra-light': rgba(0, 0, 0, 0.3)
+);
+
+// 填充颜色
+$fill-color: (
+  'darker': rgba(#fafcff, 0.2),
+  'dark': rgba(#fafcff, 0.16),
+  'default': rgba(#fafcff, 0.12),
+  'light': rgba(#fafcff, 0.08),
+  'lighter': rgba(#fafcff, 0.04),
+  'extra-light': rgba(#fafcff, 0.02),
+  'blank': transparent
+);
+
+// 禁用状态颜色
+$disabled: (
+  'bg-color': map.get($fill-color, 'light'),
+  'text-color': map.get($text, 'color', 'placeholder'),
+  'border-color': map.get($border, 'color', 'light')
+);
+
+// z-index 值
+$z-index: (
+  'normal': 1,
+  'top': 1000,
+  'popper': 2000
+);
+
+// 间距
+$spacing: (
+  'extra-large': 32px,
+  'large': 24px,
+  'medium': 16px,
+  'small': 8px
+);
