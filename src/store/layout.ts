@@ -1,13 +1,11 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 /**
- * @description: 布局-仓库
+ * @description: 布局-store
  */
-export const useLayoutStore = defineStore('layout', setup);
-
-function setup() {
+export const useLayoutStore = defineStore("layout", () => {
   const isCollapsed = ref<boolean>(false); // 折叠侧边栏
-  const searchValue = ref<string>(''); // 模糊搜索值
+  const searchValue = ref<string>(""); // 模糊搜索值
 
   /**
    * @description: 切换侧边栏展开状态
@@ -18,4 +16,4 @@ function setup() {
   }
 
   return { isCollapsed, searchValue, toggleAside };
-}
+});

@@ -1,17 +1,15 @@
-import { defineStore } from 'pinia';
-import { login as apiLogin, logout as apiLogout } from '@/api/auth';
-import { useRouter } from '@/hooks/vueRouter';
-import type { UserInfo } from '@/types/user';
-import type { ApiLoginRequest } from '@/types/api/auth';
+import { defineStore } from "pinia";
+import { login as apiLogin, logout as apiLogout } from "@/api/auth";
+import { useRouter } from "@/router";
+import type { UserInfo } from "@/types/user";
+import type { ApiLoginRequest } from "@/types/api/auth";
 
 /**
- * @description: 用户-仓库
+ * @description: 用户-store
  */
-export const useUserStore = defineStore('user', setup);
-
-function setup() {
-  const user = ref<UserInfo | null>(JSON.parse(localStorage.getItem('user') || 'null')); // 用户信息
-  const token = ref<string>(localStorage.getItem('token') || '111111'); // token
+export const useUserStore = defineStore("user", () => {
+  const user = ref<UserInfo | null>(JSON.parse(localStorage.getItem("user") || "null")); // 用户信息
+  const token = ref<string>(localStorage.getItem("token") || "111111"); // token
   const isLogin = computed<boolean>(() => !!token.value); // 是否已经登录
 
   /**
@@ -22,9 +20,9 @@ function setup() {
     const res = await apiLogin(data);
     user.value = res.data.user;
     token.value = res.data.token;
-    localStorage.setItem('user', JSON.stringify(user.value));
-    localStorage.setItem('token', token.value);
-    useRouter().replace('/');
+    localStorage.setItem("user", JSON.stringify(user.value));
+    localStorage.setItem("token", token.value);
+    useRouter().replace("/");
   };
 
   /**
@@ -37,10 +35,10 @@ function setup() {
       /* empty */
     }
     user.value = null;
-    token.value = '';
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    useRouter().replace('/login');
+    token.value = "";
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    useRouter().replace("/login");
   };
 
   return {
@@ -50,4 +48,4 @@ function setup() {
     login,
     logout
   };
-}
+});

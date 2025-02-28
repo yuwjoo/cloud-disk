@@ -1,0 +1,82 @@
+// 基本信息
+$scss-theme-class: "" !default; // 主题类名
+$scss-color-scheme: "light" !default; // 颜色模式
+
+// 基本颜色
+$scss-color-white: #ffffff !default; // 白色
+$scss-color-black: #000000 !default; // 黑色
+$scss-color-mix-dark: #000000 !default; // 用于混合更暗的颜色
+$scss-color-mix-light: #ffffff !default; // 用于混合更亮的颜色
+
+// 调色板
+$scss-color-primary: #4f46e5 !default; // 主色
+$scss-color-success: #16a34a !default; // 成功色
+$scss-color-warning: #ea580c !default; // 警告色
+$scss-color-danger: #dc2626 !default; // 危险色
+$scss-color-error: #dc2626 !default; // 错误色
+$scss-color-info: #909399 !default; // 信息色
+
+// 文字颜色
+$scss-text-color-primary: #303133 !default; // 主要文字颜色
+$scss-text-color-regular: #606266 !default; // 常规文字颜色
+$scss-text-color-secondary: #909399 !default; // 次要文字颜色
+$scss-text-color-placeholder: #a8abb2 !default; // 占位符文字颜色
+$scss-text-color-disabled: #c0c4cc !default; // 禁用状态文字颜色
+
+// 文字大小
+$scss-font-size-extra-large: 20px !default; // 特大号字体尺寸
+$scss-font-size-large: 18px !default; // 大号字体尺寸
+$scss-font-size-medium: 16px !default; // 中等字体尺寸
+$scss-font-size-base: 14px !default; // 基础字体尺寸
+$scss-font-size-small: 13px !default; // 小号字体尺寸
+$scss-font-size-extra-small: 12px !default; // 特小号字体尺寸
+
+// 字体
+$scss-font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial,
+  sans-serif !default; // 系统默认字体栈
+
+// 文字行高
+$scss-line-height-extra-large: 2 !default; // 特大行高
+$scss-line-height-large: 1.75 !default; // 大号行高
+$scss-line-height-medium: 1.5 !default; // 中等行高
+$scss-line-height-small: 1.2 !default; // 小号行高
+$scss-line-height-none: 1 !default; // 没有行高
+
+// 边框颜色
+$scss-border-color-base: #dcdfe6 !default; // 基础边框颜色
+$scss-border-color-light: #e4e7ed !default; // 浅色边框
+$scss-border-color-lighter: #ebeef5 !default; // 更浅边框
+$scss-border-color-extra-light: #f2f6fc !default; // 最浅边框
+$scss-border-color-dark: #d4d7de !default; // 深色边框
+$scss-border-color-darker: #cdd0d6 !default; // 更深边框
+$scss-border-color-hover: $scss-text-color-disabled !default; // 悬停边框颜色
+$scss-border-color-disabled: $scss-border-color-light !default; // 禁用边框颜色
+
+// 边框圆角
+$scss-border-radius-base: 4px !default; // 基础圆角
+$scss-border-radius-small: 2px !default; // 小圆角
+$scss-border-radius-round: 20px !default; // 圆形边框
+$scss-border-radius-circle: 100% !default; // 圆形
+
+// 边框属性
+$scss-border-width: 1px !default; // 边框宽度
+$scss-border-style: solid !default; // 边框样式
+
+// 阴影
+$scss-box-shadow-default: 0px 12px 32px 4px rgba(0, 0, 0, 0.04), 0px 8px 20px rgba(0, 0, 0, 0.08) !default; // 默认阴影
+$scss-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, 0.12) !default; // 浅色阴影
+$scss-box-shadow-lighter: 0px 0px 6px rgba(0, 0, 0, 0.12) !default; // 更浅阴影
+$scss-box-shadow-dark: 0px 16px 48px 16px rgba(0, 0, 0, 0.08), 0px 12px 32px rgba(0, 0, 0, 0.12),
+  0px 8px 16px -8px rgba(0, 0, 0, 0.16) !default; // 深色阴影
+
+// 间距
+$scss-spacing-extra-large: 32px !default; // 特大间距
+$scss-spacing-large: 24px !default; // 大间距
+$scss-spacing-medium: 16px !default; // 中等间距
+$scss-spacing-small: 8px !default; // 小间距
+
+// 背景颜色
+$scss-bg-color-header: $scss-color-primary !default; // 头部背景色
+$scss-bg-color-nav: #f6f6f7 !default; // 导航背景色
+$scss-bg-color-page: #f2f3f5 !default; // 页面背景色
+$scss-bg-color-block: #ffffff !default; // 块级背景色

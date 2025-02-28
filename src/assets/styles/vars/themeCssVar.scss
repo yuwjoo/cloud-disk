@@ -1,0 +1,91 @@
+@use "./themeScssVar.scss" as *;
+@use "../utils/color.scss" as *;
+
+:root#{$scss-theme-class} {
+  color-scheme: #{$scss-color-scheme}; // 颜色模式
+
+  // 基本颜色
+  --var-color-white: #{$scss-color-white}; // 白色
+  --var-color-black: #{$scss-color-black}; // 黑色
+  --var-color-mix-dark: #{$scss-color-mix-dark}; // 用于混合更暗的颜色
+  --var-color-mix-light: #{$scss-color-mix-light}; // 用于混合更亮的颜色
+
+  // 调色板
+  --var-color-primary: #{$scss-color-primary}; // 主色
+  --var-color-success: #{$scss-color-success}; // 成功色
+  --var-color-warning: #{$scss-color-warning}; // 警告色
+  --var-color-danger: #{$scss-color-danger}; // 危险色
+  --var-color-error: #{$scss-color-error}; // 错误色
+  --var-color-info: #{$scss-color-info}; // 信息色
+
+  // 调色板-rgb
+  --var-color-primary-rgb: #{getColorRGB($scss-color-primary)}; // 主色-rgb
+  --var-color-success-rgb: #{getColorRGB($scss-color-success)}; // 成功色-rgb
+  --var-color-warning-rgb: #{getColorRGB($scss-color-warning)}; // 警告色-rgb
+  --var-color-danger-rgb: #{getColorRGB($scss-color-danger)}; // 危险色-rgb
+  --var-color-error-rgb: #{getColorRGB($scss-color-error)}; // 错误色-rgb
+  --var-color-info-rgb: #{getColorRGB($scss-color-info)}; // 信息色-rgb
+
+  // 文字颜色
+  --var-text-color-primary: #{$scss-text-color-primary}; // 主要文字颜色
+  --var-text-color-regular: #{$scss-text-color-regular}; // 常规文字颜色
+  --var-text-color-secondary: #{$scss-text-color-secondary}; // 次要文字颜色
+  --var-text-color-placeholder: #{$scss-text-color-placeholder}; // 占位符文字颜色
+  --var-text-color-disabled: #{$scss-text-color-disabled}; // 禁用状态文字颜色
+
+  // 字体大小
+  --var-font-size-extra-large: #{$scss-font-size-extra-large}; // 特大号字体尺寸
+  --var-font-size-large: #{$scss-font-size-large}; // 大号字体尺寸
+  --var-font-size-medium: #{$scss-font-size-medium}; // 中等字体尺寸
+  --var-font-size-base: #{$scss-font-size-base}; // 基础字体尺寸
+  --var-font-size-small: #{$scss-font-size-small}; // 小号字体尺寸
+  --var-font-size-extra-small: #{$scss-font-size-extra-small}; // 特小号字体尺寸
+
+  // 字体
+  --var-font-family: #{$scss-font-family}; // 系统默认字体栈
+
+  // 文字行高
+  --var-line-height-extra-large: #{$scss-line-height-extra-large}; // 特大行高
+  --var-line-height-large: #{$scss-line-height-large}; // 大号行高
+  --var-line-height-medium: #{$scss-line-height-medium}; // 中等行高
+  --var-line-height-small: #{$scss-line-height-small}; // 小号行高
+  --var-line-height-none: #{$scss-line-height-none}; // 没有行高
+
+  // 边框颜色
+  --var-border-color-base: #{$scss-border-color-base}; // 基础边框颜色
+  --var-border-color-light: #{$scss-border-color-light}; // 浅色边框
+  --var-border-color-lighter: #{$scss-border-color-lighter}; // 更浅边框
+  --var-border-color-extra-light: #{$scss-border-color-extra-light}; // 最浅边框
+  --var-border-color-dark: #{$scss-border-color-dark}; // 深色边框
+  --var-border-color-darker: #{$scss-border-color-darker}; // 更深边框
+  --var-border-color-hover: #{$scss-border-color-hover}; // 悬停边框颜色
+  --var-border-color-disabled: #{$scss-border-color-disabled}; // 禁用边框颜色
+
+  // 边框圆角
+  --var-border-radius-base: #{$scss-border-radius-base}; // 基础圆角
+  --var-border-radius-small: #{$scss-border-radius-small}; // 小圆角
+  --var-border-radius-round: #{$scss-border-radius-round}; // 圆形边框
+  --var-border-radius-circle: #{$scss-border-radius-circle}; // 圆形
+
+  // 边框属性
+  --var-border-width: #{$scss-border-width}; // 边框宽度
+  --var-border-style: #{$scss-border-style}; // 边框样式
+
+  // 阴影
+  --var-box-shadow-default: #{$scss-box-shadow-default}; // 默认阴影
+  --var-box-shadow-light: #{$scss-box-shadow-light}; // 浅色阴影
+  --var-box-shadow-lighter: #{$scss-box-shadow-lighter}; // 更浅阴影
+  --var-box-shadow-dark: #{$scss-box-shadow-dark}; // 深色阴影
+
+  // 间距
+  --var-spacing-extra-large: #{$scss-spacing-extra-large}; // 特大间距
+  --var-spacing-large: #{$scss-spacing-large}; // 大间距
+  --var-spacing-medium: #{$scss-spacing-medium}; // 中等间距
+  --var-spacing-small: #{$scss-spacing-small}; // 小间距
+
+  // 背景色
+  --var-bg-color-header: #{$scss-bg-color-header}; // 头部背景色
+  --var-bg-color-nav: #{$scss-bg-color-nav}; // 导航背景色
+  --var-bg-color-page: #{$scss-bg-color-page}; // 页面背景色
+  --var-bg-color-block: #{$scss-bg-color-block}; // 块级背景色
+}

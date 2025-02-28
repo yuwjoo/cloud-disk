@@ -1,0 +1,4 @@
+{
+    "vue-scss-variable-scan.globalPath": "src/assets/styles/vars/*.scss", // 插件：vue-scss-variable-scan，用于提示css和scss变量
+    "scss.suggestVariables": false // 插件：SCSS IntelliSense， 用于提示scss函数和混入
+}

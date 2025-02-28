@@ -15,13 +15,15 @@ export function initAutoImport() {
     imports: ["vue"],
     // 配置资源解析器
     resolvers: [
-      ElementPlusResolver(),
-      IconsResolver({
-        prefix: "Icon",
+      ElementPlusResolver({
+        importStyle: "sass"
       }),
+      IconsResolver({
+        prefix: "Icon"
+      })
     ],
     // 类型声明文件路径
-    dts: toFilePath("./autoImports.d.ts"),
+    dts: toFilePath("./autoImports.d.ts")
   });
 }
 
@@ -36,15 +38,17 @@ export function initComponents() {
     extensions: ["vue", "tsx"],
     // 引入第三方解析器
     resolvers: [
-      ElementPlusResolver(),
+      ElementPlusResolver({
+        importStyle: "sass"
+      }),
       IconsResolver({
         prefix: "i",
         enabledCollections: ["ep", "tabler"],
-        customCollections: ["icons"],
-      }),
+        customCollections: ["icons"]
+      })
     ],
     // 类型声明文件路径
-    dts: toFilePath("./components.d.ts"),
+    dts: toFilePath("./components.d.ts")
   });
 }
 
@@ -56,11 +60,8 @@ export function initIcons() {
     // 自定义图标集
     customCollections: {
       icons: FileSystemIconLoader(toFilePath("./src/assets/icons"), (svg) => {
-        return svg.replace(
-          /^<svg /,
-          '<svg fill="currentColor" width="1em" height="1em" '
-        );
-      }),
+        return svg.replace(/^<svg /, '<svg fill="currentColor" width="1em" height="1em" ');
+      })
     },
     // 自定义图标属性
     iconCustomizer(_collection, _icon, props) {
@@ -68,6 +69,6 @@ export function initIcons() {
       props.height = "1em";
     },
     // 当前使用未下载过的图标集时自动安装到本地
-    autoInstall: true,
+    autoInstall: true
   });
 }

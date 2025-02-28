@@ -1,0 +1,167 @@
+@use "./themeScssVar.scss" as *;
+@use "../utils/color.scss" as *;
+
+:root#{$scss-theme-class} {
+  // 基础颜色-白色/黑色
+  --el-color-white: #{$scss-color-white};
+  --el-color-black: #{$scss-color-black};
+
+  // 基础颜色-rgb
+  --el-color-primary-rgb: #{getColorRGB($scss-color-primary)};
+  --el-color-success-rgb: #{getColorRGB($scss-color-success)};
+  --el-color-warning-rgb: #{getColorRGB($scss-color-warning)};
+  --el-color-danger-rgb: #{getColorRGB($scss-color-danger)};
+  --el-color-error-rgb: #{getColorRGB($scss-color-error)};
+  --el-color-info-rgb: #{getColorRGB($scss-color-info)};
+
+  // 文字大小
+  --el-font-size-extra-large: #{$scss-font-size-extra-large};
+  --el-font-size-large: #{$scss-font-size-large};
+  --el-font-size-medium: #{$scss-font-size-medium};
+  --el-font-size-base: #{$scss-font-size-base};
+  --el-font-size-small: #{$scss-font-size-small};
+  --el-font-size-extra-small: #{$scss-font-size-extra-small};
+
+  // 字体
+  --el-font-family: #{$scss-font-family};
+
+  // 字体加粗
+  --el-font-weight-primary: 500;
+
+  // 字体行高
+  --el-font-line-height-primary: 24px;
+
+  // 层级
+  --el-index-normal: 1;
+  --el-index-top: 1000;
+  --el-index-popper: 2000;
+
+  // 边框圆角
+  --el-border-radius-base: #{$scss-border-radius-base};
+  --el-border-radius-small: #{$scss-border-radius-small};
+  --el-border-radius-round: #{$scss-border-radius-round};
+  --el-border-radius-circle: #{$scss-border-radius-circle};
+
+  // 过渡相关
+  --el-transition-duration: 0.3s;
+  --el-transition-duration-fast: 0.2s;
+  --el-transition-function-ease-in-out-bezier: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --el-transition-function-fast-bezier: cubic-bezier(0.23, 1, 0.32, 1);
+  --el-transition-all: all var(--el-transition-duration) var(--el-transition-function-ease-in-out-bezier);
+  --el-transition-fade: opacity var(--el-transition-duration) var(--el-transition-function-fast-bezier);
+  --el-transition-md-fade: transform var(--el-transition-duration) var(--el-transition-function-fast-bezier),
+    opacity var(--el-transition-duration) var(--el-transition-function-fast-bezier);
+  --el-transition-fade-linear: opacity var(--el-transition-duration-fast) linear;
+  --el-transition-border: border-color var(--el-transition-duration-fast)
+    var(--el-transition-function-ease-in-out-bezier);
+  --el-transition-box-shadow: box-shadow var(--el-transition-duration-fast)
+    var(--el-transition-function-ease-in-out-bezier);
+  --el-transition-color: color var(--el-transition-duration-fast) var(--el-transition-function-ease-in-out-bezier);
+
+  // 组件大小
+  --el-component-size-large: 40px;
+  --el-component-size: 32px;
+  --el-component-size-small: 24px;
+
+  // 基础颜色-light/dark
+  --el-color-primary: #{$scss-color-primary};
+  --el-color-primary-light-3: #{getColorMix($scss-color-mix-light, $scss-color-primary, 3)};
+  --el-color-primary-light-5: #{getColorMix($scss-color-mix-light, $scss-color-primary, 5)};
+  --el-color-primary-light-7: #{getColorMix($scss-color-mix-light, $scss-color-primary, 7)};
+  --el-color-primary-light-8: #{getColorMix($scss-color-mix-light, $scss-color-primary, 8)};
+  --el-color-primary-light-9: #{getColorMix($scss-color-mix-light, $scss-color-primary, 9)};
+  --el-color-primary-dark-2: #{getColorMix($scss-color-mix-dark, $scss-color-primary, 2)};
+  --el-color-success: #{$scss-color-success};
+  --el-color-success-light-3: #{getColorMix($scss-color-mix-light, $scss-color-success, 3)};
+  --el-color-success-light-5: #{getColorMix($scss-color-mix-light, $scss-color-success, 5)};
+  --el-color-success-light-7: #{getColorMix($scss-color-mix-light, $scss-color-success, 7)};
+  --el-color-success-light-8: #{getColorMix($scss-color-mix-light, $scss-color-success, 8)};
+  --el-color-success-light-9: #{getColorMix($scss-color-mix-light, $scss-color-success, 9)};
+  --el-color-success-dark-2: #{getColorMix($scss-color-mix-dark, $scss-color-success, 2)};
+  --el-color-warning: #{$scss-color-warning};
+  --el-color-warning-light-3: #{getColorMix($scss-color-mix-light, $scss-color-warning, 3)};
+  --el-color-warning-light-5: #{getColorMix($scss-color-mix-light, $scss-color-warning, 5)};
+  --el-color-warning-light-7: #{getColorMix($scss-color-mix-light, $scss-color-warning, 7)};
+  --el-color-warning-light-8: #{getColorMix($scss-color-mix-light, $scss-color-warning, 8)};
+  --el-color-warning-light-9: #{getColorMix($scss-color-mix-light, $scss-color-warning, 9)};
+  --el-color-warning-dark-2: #{getColorMix($scss-color-mix-dark, $scss-color-warning, 2)};
+  --el-color-danger: #{$scss-color-danger};
+  --el-color-danger-light-3: #{getColorMix($scss-color-mix-light, $scss-color-danger, 3)};
+  --el-color-danger-light-5: #{getColorMix($scss-color-mix-light, $scss-color-danger, 5)};
+  --el-color-danger-light-7: #{getColorMix($scss-color-mix-light, $scss-color-danger, 7)};
+  --el-color-danger-light-8: #{getColorMix($scss-color-mix-light, $scss-color-danger, 8)};
+  --el-color-danger-light-9: #{getColorMix($scss-color-mix-light, $scss-color-danger, 9)};
+  --el-color-danger-dark-2: #{getColorMix($scss-color-mix-dark, $scss-color-danger, 2)};
+  --el-color-error: #{$scss-color-error};
+  --el-color-error-light-3: #{getColorMix($scss-color-mix-light, $scss-color-error, 3)};
+  --el-color-error-light-5: #{getColorMix($scss-color-mix-light, $scss-color-error, 5)};
+  --el-color-error-light-7: #{getColorMix($scss-color-mix-light, $scss-color-error, 7)};
+  --el-color-error-light-8: #{getColorMix($scss-color-mix-light, $scss-color-error, 8)};
+  --el-color-error-light-9: #{getColorMix($scss-color-mix-light, $scss-color-error, 9)};
+  --el-color-error-dark-2: #{getColorMix($scss-color-mix-dark, $scss-color-error, 2)};
+  --el-color-info: #{$scss-color-info};
+  --el-color-info-light-3: #{getColorMix($scss-color-mix-light, $scss-color-info, 3)};
+  --el-color-info-light-5: #{getColorMix($scss-color-mix-light, $scss-color-info, 5)};
+  --el-color-info-light-7: #{getColorMix($scss-color-mix-light, $scss-color-info, 7)};
+  --el-color-info-light-8: #{getColorMix($scss-color-mix-light, $scss-color-info, 8)};
+  --el-color-info-light-9: #{getColorMix($scss-color-mix-light, $scss-color-info, 9)};
+  --el-color-info-dark-2: #{getColorMix($scss-color-mix-dark, $scss-color-info, 2)};
+
+  // 背景颜色
+  --el-bg-color: #{$scss-bg-color-block};
+  --el-bg-color-page: #{$scss-bg-color-page};
+  --el-bg-color-overlay: light-dark(#ffffff, #1d1e1f);
+
+  // 文字颜色
+  --el-text-color-primary: #{$scss-text-color-primary};
+  --el-text-color-regular: #{$scss-text-color-regular};
+  --el-text-color-secondary: #{$scss-text-color-secondary};
+  --el-text-color-placeholder: #{$scss-text-color-placeholder};
+  --el-text-color-disabled: #{$scss-text-color-disabled};
+
+  // 边框颜色
+  --el-border-color: #{$scss-border-color-base};
+  --el-border-color-light: #{$scss-border-color-light};
+  --el-border-color-lighter: #{$scss-border-color-lighter};
+  --el-border-color-extra-light: #{$scss-border-color-extra-light};
+  --el-border-color-dark: #{$scss-border-color-dark};
+  --el-border-color-darker: #{$scss-border-color-darker};
+
+  // 填充颜色
+  --el-fill-color: light-dark(#f0f2f5, rgba(#fafcff, 0.2));
+  --el-fill-color-light: light-dark(#f5f7fa, rgba(#fafcff, 0.16));
+  --el-fill-color-lighter: light-dark(#fafafa, rgba(#fafcff, 0.12));
+  --el-fill-color-extra-light: light-dark(#fafcff, rgba(#fafcff, 0.08));
+  --el-fill-color-dark: light-dark(#ebedf0, rgba(#fafcff, 0.04));
+  --el-fill-color-darker: light-dark(#e6e8eb, rgba(#fafcff, 0.02));
+  --el-fill-color-blank: light-dark(#ffffff, transparent);
+
+  // 阴影
+  --el-box-shadow: #{$scss-box-shadow-default};
+  --el-box-shadow-light: #{$scss-box-shadow-light};
+  --el-box-shadow-lighter: #{$scss-box-shadow-lighter};
+  --el-box-shadow-dark: #{$scss-box-shadow-dark};
+
+  // 禁用颜色
+  --el-disabled-bg-color: var(--el-fill-color-light);
+  --el-disabled-text-color: var(--el-text-color-placeholder);
+  --el-disabled-border-color: var(--el-border-color-light);
+
+  // 覆盖颜色
+  --el-overlay-color: light-dark(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+  --el-overlay-color-light: light-dark(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+  --el-overlay-color-lighter: light-dark(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+
+  // 遮罩颜色
+  --el-mask-color: light-dark(rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0.8));
+  --el-mask-color-extra-light: light-dark(rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.3));
+
+  // 边框属性
+  --el-border-width: #{$scss-border-width};
+  --el-border-style: #{$scss-border-style};
+  --el-border-color-hover: var(--el-text-color-disabled);
+  --el-border: var(--el-border-width) var(--el-border-style) var(--el-border-color);
+
+  // svg相关
+  --el-svg-monochrome-grey: var(--el-border-color);
+}

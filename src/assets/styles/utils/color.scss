@@ -1,0 +1,55 @@
+@use "sass:color";
+@use "sass:math";
+@use "sass:string";
+
+/**
+ * @description: 获取颜色RGB
+ * @param {*} $color 颜色
+ * @return {*} xxx, xxx, xxx
+ */
+@function getColorRGB($color) {
+  @return color.channel($color, "red", $space: rgb) + ", " + color.channel($color, "green", $space: rgb) + ", " +
+    color.channel($color, "blue", $space: rgb);
+}
+
+/**
+ * @description: 获取混合后的颜色
+ * @param {*} $mix-color 混合颜色
+ * @param {*} $color 颜色
+ * @param {*} $num 混合比例
+ * @return {*} 混合后的颜色
+ */
+@function getColorMix($mix-color, $color, $num) {
+  @return color.mix($mix-color, $color, math.percentage(math.div($num, 10)));
+}
+
+/**
+ * @description: 获取混合后的颜色css
+ * @param {*} $mix-color 混合颜色
+ * @param {*} $color 颜色
+ * @param {*} $num 混合比例
+ * @return {*} 混合后的颜色css
+ */
+@function getColorMixCss($mix-color, $color, $num) {
+  @return color-mix(in srgb, $color, $mix-color ($num * 10) + string.unquote("%"));
+}
+
+/**
+ * @description: 获取更暗的颜色
+ * @param {*} $color 颜色
+ * @param {*} $level 等级
+ * @return {*} 更暗的颜色
+ */
+@function colorDark($color, $level) {
+  @return getColorMixCss(var(--var-color-mix-dark), $color, $level);
+}
+
+/**
+ * @description: 获取更亮的颜色
+ * @param {*} $color 颜色
+ * @param {*} $level 等级
+ * @return {*} 更亮的颜色
+ */
+@function colorLight($color, $level) {
+  @return getColorMixCss(var(--var-color-mix-light), $color, $level);
+}

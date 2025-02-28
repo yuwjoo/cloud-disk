@@ -1,4 +1,4 @@
-import type { ElectronApi } from 'common/types/electronApi';
+import type { ElectronApi } from '@/common/types/electronApi';
 
 const electronApi = window.electronApi || window.top?.electronApi;
 

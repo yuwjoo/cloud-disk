@@ -1,12 +1,10 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 /**
- * @description: 主题-仓库
+ * @description: 主题-store
  */
-export const useThemeStore = defineStore('theme', setup);
-
-function setup() {
-  const matchMedia = window.matchMedia('(prefers-color-scheme: dark)'); // 浏览器主题查询器
+export const useThemeStore = defineStore("theme", () => {
+  const matchMedia = window.matchMedia("(prefers-color-scheme: dark)"); // 浏览器主题查询器
   const isDark = ref<boolean>(matchMedia.matches); // 是否深色模式
 
   /**
@@ -35,8 +33,8 @@ function setup() {
         },
         {
           duration: 500,
-          easing: 'ease-in',
-          pseudoElement: darkMode ? '::view-transition-new(root)' : '::view-transition-old(root)'
+          easing: "ease-in",
+          pseudoElement: darkMode ? "::view-transition-new(root)" : "::view-transition-old(root)"
         }
       );
       isDark.value = darkMode;
@@ -45,24 +43,24 @@ function setup() {
 
   appendAnimationCss();
   toggleClass(isDark.value);
-  matchMedia.addEventListener('change', (ev) => toggleClass(ev.matches));
+  matchMedia.addEventListener("change", (ev) => toggleClass(ev.matches));
 
   return { isDark, toggleDark };
-}
+});
 
 /**
  * @description: 切换主题class
  * @param {boolean} [darkMode] 是否深色模式
  */
 function toggleClass(darkMode: boolean) {
-  document.documentElement.classList[darkMode ? 'add' : 'remove']('dark');
+  document.documentElement.classList[darkMode ? "add" : "remove"]("dark");
 }
 
 /**
  * @description: 添加动画样式
  */
 function appendAnimationCss() {
-  const styleElement = document.createElement('style');
+  const styleElement = document.createElement("style");
 
   styleElement.textContent = `
     ::view-transition-old(root),
