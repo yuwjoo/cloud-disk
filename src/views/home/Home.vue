@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="home-container">
     <h1 class="home-container__title">文档列表</h1>
     <div class="home-container__actions">
@@ -289,4 +289,8 @@ electronApi.addListener('blog-broadcast', (_event, data) => {
     }
   }
 }
-</style>
+</style> -->
+
+<template>
+  <div>888</div>
+</template>

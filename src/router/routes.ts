@@ -15,7 +15,7 @@ export const routes = [
       {
         path: "home",
         name: "home",
-        component: () => import("@/views/home/Home.vue"),
+        component: () => import("@/views/bookmark/index.vue"),
         meta: {
           title: "主页",
           KeepAlive: true
