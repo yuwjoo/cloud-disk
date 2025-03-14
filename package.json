@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "chcp 65001 && electron-forge start",
     "start:web": "vite --config vite.renderer.config.ts",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -24,6 +24,7 @@
     "@electron/fuses": "^1.8.0",
     "@iconify-json/ep": "^1.2.2",
     "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/express": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "@vitejs/plugin-vue": "^5.2.1",
@@ -52,9 +53,15 @@
   "dependencies": {
     "axios": "^1.7.9",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-store": "^10.0.1",
     "element-plus": "^2.9.3",
+    "express": "^4.21.2",
+    "http-proxy-agent": "^7.0.2",
+    "http-proxy-middleware": "^3.0.3",
+    "node-html-parser": "^7.0.1",
     "normalize.css": "^8.0.1",
     "pinia": "^2.3.1",
+    "quantize": "^1.0.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   }

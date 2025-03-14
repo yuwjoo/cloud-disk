@@ -2,7 +2,7 @@
   <div class="bookmark">
     <el-card class="bookmark__groups">
       <template #header>
-        <BookmarkHeader @manage-groups="groupManagerVisible = true" />
+        <BookmarkHeader @manage-groups="groupManagerVisible = true" @sync-favicons="handleSyncFavicons" />
       </template>
       <el-collapse v-model="activeGroup">
         <el-collapse-item v-for="group in bookmarkGroups" :key="group.id" :name="group.id">
@@ -67,21 +67,19 @@ import BookmarkHeader from "./components/BookmarkHeader.vue";
 import BookmarkItem from "./components/BookmarkItem.vue";
 import BookmarkGroupManager from "./components/BookmarkGroupManager.vue";
 import { defaultBookmarkGroups, type BookmarkGroup, type Bookmark } from "./data";
+import { extractFaviconFromHtml } from "./utils/faviconExtractor";
 
 // 书签组数据
 const bookmarkGroups = ref<BookmarkGroup[]>(defaultBookmarkGroups);
 
 // 当前选中的书签组
-const activeGroup = ref("1");
+const activeGroup = ref<string[]>(bookmarkGroups.value.map(group => group.id));
 
 // 书签表单相关
 const bookmarkDialog = ref<{
   visible: boolean;
   type: 'add' | 'edit';
-}>({
-  visible: false,
-  type: 'add'
-});
+}>({  visible: false,  type: 'add'});
 
 const bookmarkForm = ref({
   id: "",
@@ -170,6 +168,49 @@ const handleBookmarkSubmit = (formData: Bookmark) => {
     }
   }
 };
+
+// 同步所有书签图标
+const handleSyncFavicons = async () => {
+  try {
+    // 创建书签数据副本
+    const bookmarksCopy = JSON.parse(JSON.stringify(bookmarkGroups.value));
+    console.log('原始书签数据:', JSON.stringify(bookmarksCopy, null, 2));
+
+    // 收集所有书签的图标请求任务
+    const tasks: any[] = [];
+    const total = bookmarksCopy.reduce((sum, group) => sum + group.bookmarks.length, 0);
+    let completed = 0;
+
+    for (const group of bookmarksCopy) {
+      for (const bookmark of group.bookmarks) {
+        tasks.push(
+          extractFaviconFromHtml(bookmark.url)
+            .then(iconUrl => {
+              bookmark.iconUrl = iconUrl;
+              completed++;
+              ElMessage.success(`同步进度: ${completed}/${total}`);
+            })
+            .catch(error => {
+              console.error(`获取书签 ${bookmark.title} 的图标失败:`, error);
+              completed++;
+              ElMessage.warning(`${bookmark.title} 图标同步失败`);
+            })
+        );
+      }
+    }
+
+    // 并发执行所有请求
+    await Promise.all(tasks);
+
+    // 更新书签数据
+    bookmarkGroups.value = bookmarksCopy;
+    console.log('更新后的书签数据:', JSON.stringify(bookmarksCopy, null, 2));
+    ElMessage.success('所有图标同步完成');
+  } catch (error) {
+    console.error('同步图标失败:', error);
+    ElMessage.error('同步图标失败');
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -198,54 +239,38 @@ const handleBookmarkSubmit = (formData: Bookmark) => {
       font-size: 14px;
     }
 
-    &-actions {
-      display: flex;
-      gap: 8px;
-    }
-
     &-content {
-      padding: 16px;
+      padding: 16px 0;
     }
   }
 
   &__list {
-    margin-top: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
   }
 
   &__item-wrapper {
-    flex: 0 0 calc(25% - 15px);
-    min-width: 200px;
+    height: 100px;
   }
 
-  &__add {
-    &-card {
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.02);
-      border: 2px dashed #dcdfe6;
-      transition: all 0.3s;
+  &__add-card {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
 
-      &:hover {
-        border-color: var(--el-color-primary);
-        background-color: rgba(var(--el-color-primary-rgb), 0.1);
-      }
-    }
+  &__add-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--el-text-color-secondary);
 
-    &-content {
-      height: 100%;
-      min-height: 100px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      color: #909399;
-
-      &:hover {
-        color: var(--el-color-primary);
-      }
+    span {
+      font-size: 14px;
     }
   }
 }

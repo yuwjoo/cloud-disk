@@ -1,7 +1,11 @@
 <template>
   <el-card class="bookmark-item" shadow="hover">
     <div class="bookmark-item__content" @click="openBookmark(bookmark.url)">
-      <img :src="getFavicon(bookmark.url)" class="bookmark-item__favicon" alt="favicon" />
+      <el-image :src="favicon" class="bookmark-item__favicon" @load="onFaviconLoad">
+        <template #error>
+          <el-icon class="bookmark-item__favicon"><Picture /></el-icon>
+        </template>
+      </el-image>
       <div class="bookmark-item__info">
         <h3 class="bookmark-item__title">{{ bookmark.title }}</h3>
         <p class="bookmark-item__url">{{ bookmark.url }}</p>
@@ -30,26 +34,21 @@
 </template>
 
 <script setup lang="ts">
-import { Edit, Delete, MoreFilled } from '@element-plus/icons-vue';
-import { ElMessageBox, ElMessage } from 'element-plus';
-import type { Bookmark } from '../data';
+import { Edit, Delete, MoreFilled, Picture } from "@element-plus/icons-vue";
+import { ElMessageBox, ElMessage } from "element-plus";
+import { ref } from "vue";
+import type { Bookmark } from "../data";
+import { extractDominantColor } from "../utils/colorExtractor";
+import { loadFavicon } from "../utils/faviconExtractor";
 
 interface Props {
   bookmark: Bookmark;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['edit', 'delete']);
-
-// 获取网站图标
-const getFavicon = (url: string) => {
-  try {
-    const urlObj = new URL(url);
-    return `${urlObj.protocol}//${urlObj.hostname}/favicon.ico`;
-  } catch (e) {
-    return "";
-  }
-};
+const emit = defineEmits(["edit", "delete"]);
+const dominantColor = ref("rgba(255, 255, 255, 0.1)");
+const favicon = ref("");
 
 // 打开书签
 const openBookmark = (url: string) => {
@@ -57,36 +56,63 @@ const openBookmark = (url: string) => {
 };
 
 // 处理下拉菜单命令
-const handleCommand = (command: string) => {
+const handleCommand = async (command: string) => {
   switch (command) {
-    case 'edit':
-      emit('edit', props.bookmark);
+    case "edit":
+      emit("edit", props.bookmark);
       break;
-    case 'delete':
-      ElMessageBox.confirm('确定要删除该书签吗？', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+    case "delete":
+      ElMessageBox.confirm("确定要删除该书签吗？", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       }).then(() => {
-        emit('delete', props.bookmark);
-        ElMessage.success('删除成功');
+        emit("delete", props.bookmark);
+        ElMessage.success("删除成功");
       });
       break;
   }
 };
+
+// 图标加载完成时提取主色调
+const onFaviconLoad = (event: Event) => {
+  const imgElement = event.target as HTMLImageElement;
+  dominantColor.value = extractDominantColor(imgElement);
+};
+
+// 初始化加载图标
+loadFavicon(props.bookmark.iconUrl).then(url => {
+  favicon.value = url;
+});
 </script>
 
 <style lang="scss" scoped>
 .bookmark-item {
+  box-sizing: border-box;
   height: 100%;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, v-bind(dominantColor), transparent);
+    backdrop-filter: blur(10px);
+    z-index: 0;
+  }
 
   &__content {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 8px;
+    z-index: 1;
   }
 
   &__favicon {
@@ -123,6 +149,7 @@ const handleCommand = (command: string) => {
     top: 8px;
     right: 8px;
     display: none;
+    z-index: 1;
   }
 
   &:hover {
