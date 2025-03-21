@@ -39,9 +39,13 @@ export const extractFaviconFromHtml = async (url: string): Promise<string> => {
 export const loadFavicon = async (url: string): Promise<string> => {
   try {
     const response = await axios({
-      url: "http://localhost:30003/proxy-server?target=" + url,
+      url: "http://localhost:30003/api/proxy-server?target=" + url,
       method: "get",
-      responseType: "blob"
+      responseType: "blob",
+      headers: {
+        'X-Proxy-Server-Origin': "",
+        'X-Proxy-Server-Referer': ""
+      }
     });
 
     return URL.createObjectURL(response.data);

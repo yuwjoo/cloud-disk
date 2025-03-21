@@ -56,12 +56,14 @@
     "electron-store": "^10.0.1",
     "element-plus": "^2.9.3",
     "express": "^4.21.2",
-    "http-proxy-agent": "^7.0.2",
     "http-proxy-middleware": "^3.0.3",
-    "node-html-parser": "^7.0.1",
+    "https-proxy-agent": "^7.0.6",
     "normalize.css": "^8.0.1",
     "pinia": "^2.3.1",
     "quantize": "^1.0.2",
+    "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.21",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   }
