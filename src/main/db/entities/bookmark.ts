@@ -3,23 +3,23 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity()
 export class Bookmark {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  title: string;
+  title!: string;
 
   @Column()
-  url: string;
+  url!: string;
 
   @Column({ nullable: true })
-  icon_url: string;
+  icon_url!: string;
 
   @Column({ nullable: true })
-  group_id: number;
+  group_id!: number;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updated_at!: Date;
 }
