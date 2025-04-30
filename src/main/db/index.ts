@@ -1,30 +1,25 @@
-import "reflect-metadata";
-import { AppDataSource } from "./data-source";
+import * as PrismaClient from "generated/prisma2/index";
 
-/**
- * @description: 初始化数据库连接
- */
-export async function initDB() {
-  try {
-    if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
-    }
-  } catch (error) {
-    console.error("Error during Data Source initialization", error);
-    throw error;
-  }
-}
+console.log(PrismaClient);
 
-/**
- * @description: 关闭数据库连接
- */
-export async function closeDB() {
-  try {
-    if (AppDataSource.isInitialized) {
-      await AppDataSource.destroy();
-    }
-  } catch (error) {
-    console.error("Error during Data Source destruction", error);
-    throw error;
-  }
-}
+// const prisma = new PrismaClient();
+
+// async function main() {
+//   const user = await prisma.user.create({
+//     data: {
+//       name: "Alice",
+//       email: "alice@prisma.io"
+//     }
+//   });
+//   console.log(user);
+// }
+
+// main()
+//   .then(async () => {
+//     await prisma.$disconnect();
+//   })
+//   .catch(async (e) => {
+//     console.error(e);
+//     await prisma.$disconnect();
+//     process.exit(1);
+//   });

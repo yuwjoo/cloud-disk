@@ -5,7 +5,16 @@ import { toFilePath } from "./builder/common";
 export default defineConfig({
   resolve: {
     alias: {
-      "@": toFilePath("./src")
+      "@": toFilePath("./src"),
+      "~": toFilePath("./")
+    }
+  },
+  build: {
+    rollupOptions: {
+      external: ['generated/prisma2/index', '../../generated/prisma2/client']
     }
   }
+  // optimizeDeps: {
+  //   include: ["generated/prisma"]
+  // }
 });
